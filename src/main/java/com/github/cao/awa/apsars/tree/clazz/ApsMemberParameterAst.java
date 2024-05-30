@@ -5,6 +5,7 @@ import com.github.cao.awa.apsars.element.clazz.ApsMemberParameterModifierType;
 import com.github.cao.awa.apsars.element.modifier.method.ApsMethodModifier;
 import com.github.cao.awa.apsars.element.modifier.method.param.ApsMethodParamModifier;
 import com.github.cao.awa.apsars.element.modifier.parameter.ApsMemberParameterModifier;
+import com.github.cao.awa.apsars.parser.token.keyword.ApsMemberParameterKeyword;
 import com.github.cao.awa.apsars.parser.token.keyword.ApsMethodKeyword;
 import com.github.cao.awa.apsars.parser.token.keyword.ApsMethodParamKeyword;
 import com.github.cao.awa.apsars.tree.ApsAst;
@@ -91,6 +92,10 @@ public class ApsMemberParameterAst extends ApsAst {
 
     @Override
     public void preprocess() {
+        if (this.modifiers.get(ApsMemberParameterModifierType.ACCESSIBLE) == null) {
+            this.modifiers.put(ApsMemberParameterModifierType.ACCESSIBLE, ApsMemberParameterModifier.create(ApsMemberParameterKeyword.PRIVATE));
+        }
+
         if (this.modifiers.get(ApsMemberParameterModifierType.HOLDER) != null) {
             this.modifiers.remove(ApsMemberParameterModifierType.HOLDER_GET);
             this.modifiers.remove(ApsMemberParameterModifierType.HOLDER_SET);
@@ -121,6 +126,9 @@ public class ApsMemberParameterAst extends ApsAst {
             methodAst.nameIdentity(this.nameIdentity);
             methodAst.addModifier(ApsMethodModifier.create(ApsMethodKeyword.PUBLIC));
             methodAst.addCompilerFlag("holder-set", "generated");
+            if (isPublic()) {
+                methodAst.addCompilerFlag("try-inline");
+            }
             if (!isHolderOverridable()) {
                 methodAst.addModifier(ApsMethodModifier.create(ApsMethodKeyword.FINAL));
             }
@@ -147,6 +155,9 @@ public class ApsMemberParameterAst extends ApsAst {
             methodAst.nameIdentity(this.nameIdentity);
             methodAst.addModifier(ApsMethodModifier.create(ApsMethodKeyword.PUBLIC));
             methodAst.addCompilerFlag("holder-get", "generated");
+            if (isPublic()) {
+                methodAst.addCompilerFlag("try-inline");
+            }
             if (!isHolderOverridable()) {
                 methodAst.addModifier(ApsMethodModifier.create(ApsMethodKeyword.FINAL));
             }
@@ -174,6 +185,14 @@ public class ApsMemberParameterAst extends ApsAst {
 
     private boolean isFinal() {
         return this.modifiers.get(ApsMemberParameterModifierType.IS_FINAL) != null;
+    }
+
+    private boolean isPublic() {
+        return this.modifiers.get(ApsMemberParameterModifierType.ACCESSIBLE).literal().equals("public");
+    }
+
+    private boolean isPrivate() {
+        return this.modifiers.get(ApsMemberParameterModifierType.ACCESSIBLE).literal().equals("private");
     }
 
     private boolean isHolderOverridable() {

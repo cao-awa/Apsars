@@ -1,6 +1,6 @@
 class Sample2 {
     public holder first: int;
-    public overridable holder second: int = 13245;
+    private holder second: int = 13245;
 
     public static sync xxx(a: int, val b: int): long {
         int x = a + b;

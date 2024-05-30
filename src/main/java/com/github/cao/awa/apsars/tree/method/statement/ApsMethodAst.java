@@ -5,6 +5,7 @@ import com.github.cao.awa.apsars.element.method.ApsMethodModifierType;
 import com.github.cao.awa.apsars.element.method.ApsMethodParamModifierType;
 import com.github.cao.awa.apsars.element.modifier.method.ApsMethodModifier;
 import com.github.cao.awa.apsars.tree.ApsAst;
+import com.github.cao.awa.apsars.tree.annotation.ApsAnnotationAst;
 import com.github.cao.awa.apsars.tree.method.ApsMethodExtraCatchAst;
 import com.github.cao.awa.apsars.tree.method.ApsMethodParamAst;
 import com.github.cao.awa.sinuatum.function.ecception.consumer.ExceptingConsumer;
@@ -34,6 +35,7 @@ public class ApsMethodAst extends ApsAst {
     @Setter
     private ApsMethodExtraCatchAst extraCatch;
     private final Map<ApsMethodModifierType, ApsMethodModifier> modifiers = ApricotCollectionFactor.hashMap();
+    private final Map<String, ApsAnnotationAst> annotations = ApricotCollectionFactor.hashMap();
     private final List<String> compilerFlags = ApricotCollectionFactor.arrayList();
 
     public ApsMethodAst(ApsAst parent) {
@@ -46,6 +48,14 @@ public class ApsMethodAst extends ApsAst {
             throw new IllegalArgumentException("The modifier type '" + definedModifier.type() + "' already defined as '" + definedModifier.literal() + "'");
         }
         this.modifiers.put(modifier.type(), modifier);
+    }
+
+    public void addAnnotation(ApsAnnotationAst annotation) {
+        ApsAnnotationAst definedModifier = this.annotations.get(annotation.nameIdentity());
+        if (definedModifier != null) {
+            throw new IllegalArgumentException("The annotation '" + annotation.nameIdentity() + "' already defined as '" + annotation + "'");
+        }
+        this.annotations.put(annotation.nameIdentity(), annotation);
     }
 
     public void addCompilerFlag(String... flag) {
@@ -68,16 +78,20 @@ public class ApsMethodAst extends ApsAst {
             System.out.println(ident + "|_ param type: ");
             this.param.print(ident);
         }
-        System.out.println(ident + "|_ return type: " + this.returnType);
         this.methodBody.print(ident);
         if (this.extraCatch != null) {
             this.extraCatch.print(ident);
         }
         if (!this.compilerFlags.isEmpty()) {
             System.out.println(ident + "|_ compiler flags: ");
-            ident += "    ";
             for (String compilerFlag : this.compilerFlags) {
-                System.out.println(ident + "|_ " + compilerFlag);
+                System.out.println(ident + "    |_ " + compilerFlag);
+            }
+        }
+        if (!this.annotations.isEmpty()) {
+            System.out.println(ident + "|_ compiler flags: ");
+            for (ApsAnnotationAst annotationAst : this.annotations.values()) {
+                System.out.println(ident + "    |_ " + annotationAst.nameIdentity());
             }
         }
     }
@@ -85,6 +99,13 @@ public class ApsMethodAst extends ApsAst {
     @Override
     public String generateJava() {
         StringBuilder builder = new StringBuilder();
+
+        if (!this.annotations.isEmpty()) {
+            for (ApsAnnotationAst annotationAst : this.annotations.values()) {
+                builder.append(annotationAst.generateJava());
+                builder.append(" ");
+            }
+        }
 
         // 设置修饰符
         for (ApsMethodModifierType modifierType : ApsMethodModifierType.values()) {
@@ -96,12 +117,9 @@ public class ApsMethodAst extends ApsAst {
             });
         }
 
-        if (this.returnType == null) {
-            builder.append("void ");
-        } else {
-            builder.append(this.returnType);
-            builder.append(" ");
-        }
+        this.returnType = this.returnType == null ? "void" : this.returnType;
+        builder.append(this.returnType);
+        builder.append(" ");
 
         builder.append(this.nameIdentity);
         builder.append("(");

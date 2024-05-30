@@ -7,7 +7,7 @@ public class Test {
 
 class Sample2 {
     public int first;
-    public int second = 13245;
+    private int second = 13245;
 
     public static synchronized long xxx(int a, final int b) {
         try {
@@ -28,12 +28,11 @@ class Sample2 {
         this.first = first_;
     }
 
-    public int second() {
+    public final int second() {
         return this.second;
     }
 
-    public void second(final int second_) {
+    public final void second(final int second_) {
         this.second = second_;
     }
 }
-
