@@ -1,0 +1,13 @@
+class Sample2 {
+    public holder first: int;
+    public overridable holder second: int = 13245;
+
+    public static sync xxx(a: int, val b: int): long {
+        int x = a + b;
+        int y = x * b;
+        int z = y * a;
+        return z;
+    } catch (ex: ConcurrentModificationException or NullPointerException) {
+        return a + b;
+    }
+}
