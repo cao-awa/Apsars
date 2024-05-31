@@ -5,6 +5,7 @@ import com.github.cao.awa.apsars.element.modifier.parameter.ApsMemberParameterMo
 import com.github.cao.awa.apsars.parser.ApsParser;
 import com.github.cao.awa.apsars.parser.token.ApsTokens;
 import com.github.cao.awa.apsars.parser.token.keyword.ApsMemberParameterKeyword;
+import com.github.cao.awa.apsars.parser.vararg.ApsVarargParser;
 import com.github.cao.awa.apsars.tree.clazz.ApsMemberParameterAst;
 import com.github.cao.awa.catheter.pair.Pair;
 import org.apache.logging.log4j.LogManager;
@@ -29,7 +30,7 @@ public class ApsMemberParameterParser extends ApsParser<ApsMemberParameterAst> {
 
         if (strings.length > 2) {
             LOGGER.warn("Extras assignment was found, unable to processes");
-        } else if (strings.length == 2){
+        } else if (strings.length == 2) {
             reset(strings[1]);
             processAssignment(ast);
         }
@@ -47,7 +48,7 @@ public class ApsMemberParameterParser extends ApsParser<ApsMemberParameterAst> {
         ApsElementType type = ApsElementType.LITERAL_IDENTITY;
 
         while (readable()) {
-            Pair<String, Boolean> nextToken = nextToken(List.of(" ", ":"), true);
+            Pair<String, Boolean> nextToken = nextToken(List.of(" ", ":"), List.of(new Pair<>("<", ">")), true);
             if (!nextToken.second()) {
                 ApsMemberParameterKeyword keyword = ApsTokens.MEMBER_PARAMETER_KEYWORDS.get(nextToken.first());
                 if (keyword != null) {
@@ -60,7 +61,7 @@ public class ApsMemberParameterParser extends ApsParser<ApsMemberParameterAst> {
                         skipAndFeedback(1);
                     } else if (type == ApsElementType.TYPE) {
                         type = ApsElementType.UNEXPECTED;
-                        ast.type(nextToken.first());
+                        processVararg(ast, nextToken.first());
                     } else {
                         LOGGER.warn("Unexpected token: " + nextToken.first());
                         break;
@@ -82,7 +83,7 @@ public class ApsMemberParameterParser extends ApsParser<ApsMemberParameterAst> {
         ApsElementType type = ApsElementType.TYPE;
 
         while (readable()) {
-            Pair<String, Boolean> nextToken = nextToken(" ", true);
+            Pair<String, Boolean> nextToken = nextToken(" ", List.of(new Pair<>("<", ">")), true);
             if (!nextToken.second()) {
                 ApsMemberParameterKeyword keyword = ApsTokens.MEMBER_PARAMETER_KEYWORDS.get(nextToken.first());
                 if (keyword != null) {
@@ -90,7 +91,7 @@ public class ApsMemberParameterParser extends ApsParser<ApsMemberParameterAst> {
                 } else {
                     if (type == ApsElementType.TYPE) {
                         type = ApsElementType.LITERAL_IDENTITY;
-                        ast.type(nextToken.first());
+                        processVararg(ast, nextToken.first());
                     } else if (type == ApsElementType.LITERAL_IDENTITY) {
                         type = ApsElementType.UNEXPECTED;
                         ast.nameIdentity(nextToken.first());
@@ -109,6 +110,11 @@ public class ApsMemberParameterParser extends ApsParser<ApsMemberParameterAst> {
         if (type == ApsElementType.LITERAL_IDENTITY) {
             LOGGER.warn("Missing member parameter name");
         }
+    }
+
+    private void processVararg(ApsMemberParameterAst ast, String token) {
+        ApsVarargParser parser = (ApsVarargParser) parser(ApsElementType.VARARG);
+        parser.parse(token, ast);
     }
 
     private void processAssignment(ApsMemberParameterAst ast) {

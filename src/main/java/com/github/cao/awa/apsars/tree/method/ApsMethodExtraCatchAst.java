@@ -27,7 +27,9 @@ public class ApsMethodExtraCatchAst extends ApsAst {
         System.out.println(ident + "|_ Aps extra catch");
         ident += "    ";
         this.catchList.print(ident);
-        this.methodBody.print(ident);
+        if (this.methodBody != null) {
+            this.methodBody.print(ident);
+        }
     }
 
     @Override
@@ -45,7 +47,9 @@ public class ApsMethodExtraCatchAst extends ApsAst {
         builder.append("}catch(");
         builder.append(this.catchList.generateJava());
         builder.append("){");
-        builder.append(this.methodBody.generateJava());
+        if (this.methodBody != null) {
+            builder.append(this.methodBody.generateJava());
+        }
         builder.append("}");
 
         builder.append("}");

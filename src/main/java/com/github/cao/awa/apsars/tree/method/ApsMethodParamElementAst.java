@@ -5,6 +5,7 @@ import com.github.cao.awa.apsars.element.clazz.ApsMemberParameterModifierType;
 import com.github.cao.awa.apsars.element.method.ApsMethodParamModifierType;
 import com.github.cao.awa.apsars.element.modifier.method.param.ApsMethodParamModifier;
 import com.github.cao.awa.apsars.tree.ApsAst;
+import com.github.cao.awa.apsars.tree.vararg.ApsArgTypeAst;
 import com.github.cao.awa.sinuatum.function.ecception.consumer.ExceptingConsumer;
 import com.github.cao.awa.sinuatum.manipulate.Manipulate;
 import lombok.Getter;
@@ -20,7 +21,7 @@ public class ApsMethodParamElementAst extends ApsAst {
     private String nameIdentity;
     @Getter
     @Setter
-    private String type;
+    private ApsArgTypeAst argType;
     private final Map<ApsMethodParamModifierType, ApsMethodParamModifier> modifiers = ApricotCollectionFactor.hashMap();
 
     public ApsMethodParamElementAst(ApsAst parent) {
@@ -38,7 +39,8 @@ public class ApsMethodParamElementAst extends ApsAst {
     @Override
     public void print(String ident) {
         System.out.println(ident + "|_ Aps method parameter: " + this.nameIdentity);
-        System.out.println(ident + "    |_ type: " + this.type);
+        System.out.println(ident + "    |_ type: ");
+        this.argType.print(ident + "        ");
     }
 
     @Override
@@ -55,7 +57,7 @@ public class ApsMethodParamElementAst extends ApsAst {
             Manipulate.notNull(this.modifiers.get(modifierType), modifierBuilder);
         }
 
-        builder.append(this.type);
+        builder.append(this.argType.generateJava());
         builder.append(" ");
         builder.append(this.nameIdentity);
         return builder.toString();

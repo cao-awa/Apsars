@@ -7,6 +7,8 @@ public enum ApsElementType {
 
     TYPE,
 
+    VARARG,
+
     METHOD,
     METHOD_PARAM,
     METHOD_EXTRA,

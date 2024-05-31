@@ -10,4 +10,6 @@ public enum ApsMethodModifierType implements ApsModifierType {
     IS_STATIC,
 
     SYNCHRONIZED,
+
+    SAFEPOINT,
 }

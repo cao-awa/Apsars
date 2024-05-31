@@ -12,7 +12,7 @@ import org.apache.logging.log4j.Logger;
 import java.util.List;
 
 public class ApsMethodExtraCatchParser extends ApsParser<ApsMethodExtraCatchAst> {
-    private static final Logger LOGGER = LogManager.getLogger("ApsMethodExtraParser");
+    private static final Logger LOGGER = LogManager.getLogger("ApsMethodExtraCatchParser");
 
     @Override
     public boolean canTryProcess(String codes) {
@@ -41,8 +41,8 @@ public class ApsMethodExtraCatchParser extends ApsParser<ApsMethodExtraCatchAst>
                 skipAndFeedback(handlerCodes.first() + 1);
                 ast.methodBody(bodyAst);
             }
-        }
 
-        accumulateFeedbackSkip(stripedSkip());
+            accumulateFeedbackSkip(stripedSkip());
+        }
     }
 }

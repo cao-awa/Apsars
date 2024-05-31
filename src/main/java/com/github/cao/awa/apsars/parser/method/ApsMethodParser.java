@@ -33,7 +33,7 @@ public class ApsMethodParser extends ApsParser<ApsMethodAst> {
             Pair<String, Boolean> nextToken = nextToken(List.of("(", " "), true);
             if (!nextToken.second()) {
                 ApsMethodKeyword keyword = ApsTokens.METHOD_KEYWORDS.get(nextToken.first());
-                if (keyword != null) {
+                if (keyword != null && type != ApsElementType.METHOD_EXTRA_CATCH) {
                     ast.addModifier(ApsMethodModifier.create(keyword));
                 } else {
                     if (type == ApsElementType.LITERAL_IDENTITY) {
@@ -75,6 +75,8 @@ public class ApsMethodParser extends ApsParser<ApsMethodAst> {
                             skipAndFeedback(parser.feedbackSkip());
                             ast.extraCatch(extraCatchAst);
                         }
+
+                        break;
                     } else {
                         LOGGER.warn("Unexpected token: " + nextToken.first());
                         break;

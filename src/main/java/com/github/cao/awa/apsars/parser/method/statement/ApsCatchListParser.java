@@ -34,6 +34,8 @@ public class ApsCatchListParser extends ApsParser<ApsCatchListAst> {
     }
 
     private void processTargets(ApsCatchListAst ast) {
-        ast.catchTarget(codes().replaceAll(" or ", "|"));
+        for (String target : codes().replaceAll(" or ", "|").split("\\|")) {
+            ast.addCatchTarget(target);
+        }
     }
 }

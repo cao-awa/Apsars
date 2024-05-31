@@ -6,8 +6,10 @@ import com.github.cao.awa.apsars.element.method.ApsMethodParamModifierType;
 import com.github.cao.awa.apsars.element.modifier.method.ApsMethodModifier;
 import com.github.cao.awa.apsars.tree.ApsAst;
 import com.github.cao.awa.apsars.tree.annotation.ApsAnnotationAst;
+import com.github.cao.awa.apsars.tree.clazz.ApsClassAst;
 import com.github.cao.awa.apsars.tree.method.ApsMethodExtraCatchAst;
 import com.github.cao.awa.apsars.tree.method.ApsMethodParamAst;
+import com.github.cao.awa.apsars.tree.vararg.ApsArgTypeAst;
 import com.github.cao.awa.sinuatum.function.ecception.consumer.ExceptingConsumer;
 import com.github.cao.awa.sinuatum.manipulate.Manipulate;
 import lombok.Getter;
@@ -24,7 +26,7 @@ public class ApsMethodAst extends ApsAst {
     private String nameIdentity;
     @Getter
     @Setter
-    private String returnType;
+    private ApsArgTypeAst returnType;
     @Getter
     @Setter
     private ApsMethodParamAst param;
@@ -73,9 +75,15 @@ public class ApsMethodAst extends ApsAst {
                 System.out.println(modifierIdent + "|_ " + modifier.type() + ": " + modifier.literal());
             });
         }
-        System.out.println(ident + "|_ return type: " + (this.returnType == null ? "void" : this.returnType));
+        if (this.returnType == null) {
+            System.out.println(ident + "|_ return type: void");
+        } else {
+            System.out.println(ident + "|_ return type: ");
+            this.returnType.print(ident);
+        }
+
         if (this.param != null) {
-            System.out.println(ident + "|_ param type: ");
+            System.out.println(ident + "|_ params: ");
             this.param.print(ident);
         }
         this.methodBody.print(ident);
@@ -117,8 +125,11 @@ public class ApsMethodAst extends ApsAst {
             });
         }
 
-        this.returnType = this.returnType == null ? "void" : this.returnType;
-        builder.append(this.returnType);
+        if (this.returnType == null) {
+            builder.append("void");
+        } else {
+            builder.append(this.returnType.generateJava());
+        }
         builder.append(" ");
 
         builder.append(this.nameIdentity);
@@ -151,6 +162,61 @@ public class ApsMethodAst extends ApsAst {
 
     @Override
     public void preprocess() {
+        if (this.modifiers.get(ApsMethodModifierType.SAFEPOINT) != null) {
+            Map<ApsMethodModifierType, ApsMethodModifier> newMethodModifiers = ApricotCollectionFactor.hashMap(this.modifiers);
+            newMethodModifiers.remove(ApsMethodModifierType.SAFEPOINT);
+
+            String safepointMethod = this.nameIdentity + "$safepoint";
+
+            ApsMethodAst newMethod = new ApsMethodAst(parent());
+            newMethod.nameIdentity(safepointMethod);
+            newMethod.methodBody(this.methodBody);
+            newMethod.param(this.param);
+            newMethod.extraCatch(this.extraCatch);
+            newMethod.returnType(this.returnType);
+            for (ApsMethodModifier modifier : newMethodModifiers.values()) {
+                newMethod.addModifier(modifier);
+            }
+            findAst(ApsClassAst.class).addMethod(newMethod);
+
+            ApsMethodBodyAst selfMethodBody = new ApsMethodBodyAst(this);
+            ApsStatementAst safepointStatementAst = new ApsStatementAst(selfMethodBody, "try{Thread.sleep(0);}catch (InterruptedException ignored){}");
+
+            StringBuilder paramBuilder = new StringBuilder();
+            int index = 0;
+            int edge = this.param.names().size() - 1;
+            for (String name : this.param.names()) {
+                paramBuilder.append(name);
+                if (index != edge) {
+                    paramBuilder.append(",");
+                }
+                index++;
+            }
+
+            try {
+                Thread.sleep(0);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+
+            ApsStatementAst invokeStatementAst;
+            if (this.returnType == null) {
+                invokeStatementAst = new ApsStatementAst(selfMethodBody, safepointMethod + "(" + paramBuilder + ")");
+            } else {
+                invokeStatementAst = new ApsStatementAst(selfMethodBody, this.returnType.generateJava() + " result=" + safepointMethod + "(" + paramBuilder + ")");
+            }
+
+            selfMethodBody.addStatement(invokeStatementAst);
+            selfMethodBody.addStatement(safepointStatementAst);
+            if (this.returnType != null) {
+                ApsStatementAst returnStatementAst = new ApsStatementAst(selfMethodBody, "return result");
+                selfMethodBody.addStatement(returnStatementAst);
+            }
+            methodBody(selfMethodBody);
+
+            extraCatch(null);
+        }
+
         Manipulate.notNull(this.param, ApsMethodParamAst::preprocess);
         Manipulate.notNull(this.methodBody, ApsMethodBodyAst::preprocess);
         Manipulate.notNull(this.extraCatch, ApsMethodExtraCatchAst::preprocess);

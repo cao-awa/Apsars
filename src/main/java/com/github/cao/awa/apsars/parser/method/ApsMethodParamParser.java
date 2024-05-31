@@ -5,8 +5,10 @@ import com.github.cao.awa.apsars.element.modifier.method.param.ApsMethodParamMod
 import com.github.cao.awa.apsars.parser.ApsParser;
 import com.github.cao.awa.apsars.parser.token.ApsTokens;
 import com.github.cao.awa.apsars.parser.token.keyword.ApsMethodParamKeyword;
+import com.github.cao.awa.apsars.parser.vararg.ApsVarargParser;
 import com.github.cao.awa.apsars.tree.method.ApsMethodParamAst;
 import com.github.cao.awa.apsars.tree.method.ApsMethodParamElementAst;
+import com.github.cao.awa.apsars.tree.vararg.producer.ApsVarargProducer;
 import com.github.cao.awa.catheter.pair.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -28,7 +30,7 @@ public class ApsMethodParamParser extends ApsParser<ApsMethodParamAst> {
         ApsMethodParamElementAst paramElement = new ApsMethodParamElementAst(ast);
 
         while (true) {
-            Pair<String, Boolean> nextToken = nextToken(List.of(" ", ":"), true);
+            Pair<String, Boolean> nextToken = nextTokenLimited(List.of(" ", ",", ":"), List.of("<"), true);
             if (!nextToken.second()) {
                 ApsMethodParamKeyword keyword = ApsTokens.METHOD_PARAM_KEYWORDS.get(nextToken.first());
                 if (keyword != null) {
@@ -44,9 +46,12 @@ public class ApsMethodParamParser extends ApsParser<ApsMethodParamAst> {
                     } else if (type == ApsElementType.TYPE) {
                         type = ApsElementType.UNEXPECTED;
 
-                        nextToken = nextToken(",", true);
-                        System.out.println("TYPE: " + nextToken.first());
-                        paramElement.type(nextToken.first());
+                        ApsVarargParser varargParser = (ApsVarargParser) parser(ApsElementType.VARARG);
+                        ApsVarargProducer varargProducer = new ApsVarargProducer(ast);
+                        varargParser.parse(nextToken.first(), varargProducer);
+                        paramElement.argType(varargProducer.argType());
+
+                        skipAndFeedback(varargParser.feedbackSkip());
 
                         ast.addParam(paramElement);
                     } else {
@@ -55,7 +60,9 @@ public class ApsMethodParamParser extends ApsParser<ApsMethodParamAst> {
                     }
                 }
 
-                skipAndFeedback(nextToken.first().length());
+                if (type != ApsElementType.UNEXPECTED) {
+                    skipAndFeedback(nextToken.first().length());
+                }
 
                 if (type == ApsElementType.UNEXPECTED) {
                     if (startWith(",")) {

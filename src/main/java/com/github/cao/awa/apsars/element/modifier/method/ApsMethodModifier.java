@@ -11,7 +11,7 @@ public abstract class ApsMethodModifier extends ApsModifier<ApsMethodModifierTyp
             case FINAL -> new ApsMethodFinalModifier();
             case STATIC -> new ApsMethodStaticModifier();
             case SYNC, SYNCHRONIZED -> new ApsMethodSynchronizedModifier();
-
+            case SAFEPOINT -> new ApsMethodSafepointModifier();
         };
     }
 }

@@ -21,7 +21,7 @@ public class ApsFileParser extends ApsParser<ApsFileAst> {
 
     public void parse(ApsFileAst ast) {
         while (readable()) {
-            Pair<String, Boolean> nextToken = nextToken(" ", false);
+            Pair<String, Boolean> nextToken = nextToken(" ", false, true);
 
             if (!nextToken.second()) {
                 ApsFileKeyword keyword = ApsTokens.FILE_KEYWORDS.get(nextToken.first());
@@ -30,8 +30,6 @@ public class ApsFileParser extends ApsParser<ApsFileAst> {
                     LOGGER.warn("Wrongly parses next token: " + nextToken.first());
                     return;
                 }
-
-                skip(nextToken.first().length());
 
                 switch (keyword) {
                     case CLASS -> processClass(ast);
@@ -47,14 +45,13 @@ public class ApsFileParser extends ApsParser<ApsFileAst> {
     private void processImport(ApsFileAst ast) {
         stripCodes();
 
-        Pair<String, Boolean> nameIdentity = nextToken(";", false);
+        Pair<String, Boolean> nameIdentity = nextToken(";", false, true);
 
         ApsImportAst classAst = new ApsImportAst(ast);
 
         // 设置类名
         classAst.fullName(nameIdentity.first());
 
-        skip(nameIdentity.first().length());
         // 跳过分号的长度
         skip(1);
 

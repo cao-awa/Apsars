@@ -8,13 +8,12 @@ import com.github.cao.awa.apsars.element.modifier.parameter.ApsMemberParameterMo
 import com.github.cao.awa.apsars.parser.token.keyword.ApsMemberParameterKeyword;
 import com.github.cao.awa.apsars.parser.token.keyword.ApsMethodKeyword;
 import com.github.cao.awa.apsars.parser.token.keyword.ApsMethodParamKeyword;
-import com.github.cao.awa.apsars.tree.ApsAst;
 import com.github.cao.awa.apsars.tree.method.ApsMethodParamAst;
 import com.github.cao.awa.apsars.tree.method.ApsMethodParamElementAst;
 import com.github.cao.awa.apsars.tree.method.statement.ApsMethodAst;
 import com.github.cao.awa.apsars.tree.method.statement.ApsMethodBodyAst;
 import com.github.cao.awa.apsars.tree.method.statement.ApsStatementAst;
-import com.github.cao.awa.sinuatum.function.ecception.consumer.ExceptingConsumer;
+import com.github.cao.awa.apsars.tree.vararg.ApsAstWithVarargs;
 import com.github.cao.awa.sinuatum.manipulate.Manipulate;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,15 +24,12 @@ import org.apache.logging.log4j.Logger;
 import java.util.Map;
 
 @Accessors(fluent = true)
-public class ApsMemberParameterAst extends ApsAst {
+public class ApsMemberParameterAst extends ApsAstWithVarargs {
     private static final Logger LOGGER = LogManager.getLogger("ApsMemberParameterAst");
 
     @Setter
     @Getter
     private String nameIdentity;
-    @Getter
-    @Setter
-    private String type;
     @Setter
     @Getter
     private String value;
@@ -54,7 +50,8 @@ public class ApsMemberParameterAst extends ApsAst {
     @Override
     public void print(String ident) {
         System.out.println(ident + "|_ Aps member parameter: " + this.nameIdentity);
-        System.out.println(ident + "    |_ type: " + this.type);
+        System.out.println(ident + "    |_ type: ");
+        argType().print(ident + "        ");
         System.out.println(ident + "    |_ value: " + (this.value == null ? "<UNSETTED>" : this.value));
         System.out.println(ident + "    |_ Aps member parameter modifier: ");
         ident += "        ";
@@ -79,7 +76,7 @@ public class ApsMemberParameterAst extends ApsAst {
             });
         }
 
-        builder.append(this.type);
+        builder.append(super.generateJava());
         builder.append(" ");
         builder.append(this.nameIdentity);
         if (this.value != null) {
@@ -122,7 +119,7 @@ public class ApsMemberParameterAst extends ApsAst {
             ApsMethodAst methodAst = new ApsMethodAst(
                     classAst
             );
-            methodAst.returnType(this.type);
+            methodAst.returnType(argType());
             methodAst.nameIdentity(this.nameIdentity);
             methodAst.addModifier(ApsMethodModifier.create(ApsMethodKeyword.PUBLIC));
             methodAst.addCompilerFlag("holder-set", "generated");
@@ -169,7 +166,7 @@ public class ApsMemberParameterAst extends ApsAst {
             ApsMethodParamAst methodParamAst = new ApsMethodParamAst(methodAst);
             ApsMethodParamElementAst methodParamElementAst = new ApsMethodParamElementAst(methodParamAst);
             methodParamElementAst.addModifier(ApsMethodParamModifier.create(ApsMethodParamKeyword.FINAL));
-            methodParamElementAst.type(this.type);
+            methodParamElementAst.argType(argType());
             methodParamElementAst.nameIdentity(this.nameIdentity + "_");
             methodParamAst.addParam(methodParamElementAst);
             methodAst.param(methodParamAst);

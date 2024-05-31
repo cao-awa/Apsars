@@ -7,6 +7,7 @@ import lombok.experimental.Accessors;
 
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 @Accessors(fluent = true)
 public class ApsMethodParamAst extends ApsAst {
@@ -40,6 +41,10 @@ public class ApsMethodParamAst extends ApsAst {
         }
 
         return builder.toString();
+    }
+
+    public Set<String> names() {
+        return this.params.keySet();
     }
 
     @Override

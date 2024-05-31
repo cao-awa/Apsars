@@ -1,8 +1,10 @@
+
 class Sample2 {
     public holder first: int;
     private holder second: int = 13245;
+    private holder HashMap<String|HashMap<Integer|Integer>> map;
 
-    public static sync xxx(a: int, val b: int): long {
+    public static safepoint sync xxx(a: int,val b: int): long {
         int x = a + b;
         int y = x * b;
         int z = y * a;
@@ -10,4 +12,13 @@ class Sample2 {
     } catch (ex: ConcurrentModificationException or NullPointerException) {
         return a + b;
     }
+
+    static test() {
+        System.out.println("Hello world");
+    }
+
+    static safepoint testXx() {
+        System.out.println("Hello world");
+    }
 }
+
