@@ -52,6 +52,10 @@ public class ApsMethodAst extends ApsAst {
         this.modifiers.put(modifier.type(), modifier);
     }
 
+    public void removeModifier(ApsMethodModifierType modifierType) {
+        this.modifiers.remove(modifierType);
+    }
+
     public void addAnnotation(ApsAnnotationAst annotation) {
         ApsAnnotationAst definedModifier = this.annotations.get(annotation.nameIdentity());
         if (definedModifier != null) {
@@ -82,7 +86,7 @@ public class ApsMethodAst extends ApsAst {
             this.returnType.print(ident);
         }
 
-        if (this.param != null) {
+        if (this.param != null && !this.param.names().isEmpty()) {
             System.out.println(ident + "|_ params: ");
             this.param.print(ident);
         }
@@ -162,6 +166,13 @@ public class ApsMethodAst extends ApsAst {
 
     @Override
     public void preprocess() {
+        if (this.modifiers.get(ApsMethodModifierType.IS_FINAL) != null) {
+            if (findAst(ApsClassAst.class).isFinal()) {
+                // 让生成的代码更简洁，class是final时方法设置final是多余的
+                this.modifiers.remove(ApsMethodModifierType.IS_FINAL);
+            }
+        }
+
         if (this.modifiers.get(ApsMethodModifierType.SAFEPOINT) != null) {
             Map<ApsMethodModifierType, ApsMethodModifier> newMethodModifiers = ApricotCollectionFactor.hashMap(this.modifiers);
             newMethodModifiers.remove(ApsMethodModifierType.SAFEPOINT);

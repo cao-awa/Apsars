@@ -33,6 +33,9 @@ public class ApsVarargParser extends ApsParser<ApsAstWithVarargs> {
 
     private ApsArgTypeAst produceArgType(ApsAstWithVarargs ast) {
         Pair<String, Boolean> nextToken = nextToken("<", true, true);
+        if (nextToken.second()) {
+            return null;
+        }
         ApsArgTypeAst argTypeAst = new ApsArgTypeAst(ast);
         argTypeAst.nameIdentity(nextToken.first());
         Pair<Integer, Boolean> braces = reservedClosureBraces();

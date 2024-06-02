@@ -49,11 +49,13 @@ public class ApsMethodParamParser extends ApsParser<ApsMethodParamAst> {
                         ApsVarargParser varargParser = (ApsVarargParser) parser(ApsElementType.VARARG);
                         ApsVarargProducer varargProducer = new ApsVarargProducer(ast);
                         varargParser.parse(nextToken.first(), varargProducer);
-                        paramElement.argType(varargProducer.argType());
+                        if (varargProducer.argType() != null) {
+                            paramElement.argType(varargProducer.argType());
 
-                        skipAndFeedback(varargParser.feedbackSkip());
+                            skipAndFeedback(varargParser.feedbackSkip());
 
-                        ast.addParam(paramElement);
+                            ast.addParam(paramElement);
+                        }
                     } else {
                         LOGGER.warn("Unexpected token: " + nextToken.first());
                         break;

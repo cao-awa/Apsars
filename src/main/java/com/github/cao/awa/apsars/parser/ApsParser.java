@@ -57,6 +57,10 @@ public abstract class ApsParser<T extends ApsAst> {
         this.codes = codes;
     }
 
+    public void resetOnlyCodes(String codes) {
+        this.codes = codes;
+    }
+
     public void accumulateFeedbackSkip(int length) {
         this.feedbackSkip += length;
     }
@@ -177,9 +181,12 @@ public abstract class ApsParser<T extends ApsAst> {
             }
             String token = this.codes.substring(0, delimiterIndex);
 
+            if (token.isEmpty()) {
+                return new Pair<>(null, true);
+            }
             return new Pair<>(token, false);
         } else {
-            if (wantEnding) {
+            if (wantEnding && !this.codes.isEmpty()) {
                 return new Pair<>(this.codes, false);
             }
             return new Pair<>(null, true);
@@ -210,10 +217,12 @@ public abstract class ApsParser<T extends ApsAst> {
                 }
             }
             String token = this.codes.substring(0, delimiterIndex);
-
+            if (token.isEmpty()) {
+                return new Pair<>(null, true);
+            }
             return new Pair<>(token, false);
         } else {
-            if (wantEnding) {
+            if (wantEnding && !this.codes.isEmpty()) {
                 return new Pair<>(this.codes, false);
             }
             return new Pair<>(null, true);

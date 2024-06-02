@@ -49,6 +49,8 @@ public class ApsMethodParser extends ApsParser<ApsMethodAst> {
                         parser.parse(makeSubstring(1, params.first()), paramAst);
                         skipAndFeedback(params.first() + 1);
                         ast.param(paramAst);
+
+                        continue;
                     } else if (type == ApsElementType.METHOD_BODY) {
                         if (startWith("{")) {
                             type = ApsElementType.METHOD_EXTRA_CATCH;
@@ -59,6 +61,8 @@ public class ApsMethodParser extends ApsParser<ApsMethodAst> {
                             parser.parse(makeSubstring(1, body.first()), bodyAst);
                             skipAndFeedback(body.first() + 1);
                             ast.methodBody(bodyAst);
+
+                            continue;
                         } else {
                             // 若不是方法体，则此时预期的应该是返回值和异常
                             nextToken = nextToken("{", false);

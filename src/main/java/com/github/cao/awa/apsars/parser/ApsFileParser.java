@@ -21,18 +21,19 @@ public class ApsFileParser extends ApsParser<ApsFileAst> {
 
     public void parse(ApsFileAst ast) {
         while (readable()) {
-            Pair<String, Boolean> nextToken = nextToken(" ", false, true);
+            Pair<String, Boolean> nextToken = nextToken(" ", false);
 
             if (!nextToken.second()) {
                 ApsFileKeyword keyword = ApsTokens.FILE_KEYWORDS.get(nextToken.first());
 
                 if (keyword == null) {
-                    LOGGER.warn("Wrongly parses next token: " + nextToken.first());
-                    return;
+                    processClass(ast);
+                    continue;
+                } else {
+                    skipAndFeedback(nextToken.first().length());
                 }
 
                 switch (keyword) {
-                    case CLASS -> processClass(ast);
                     case IMPORT -> processImport(ast);
                 }
             } else {

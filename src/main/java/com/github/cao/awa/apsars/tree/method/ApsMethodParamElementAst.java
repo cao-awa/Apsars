@@ -57,9 +57,11 @@ public class ApsMethodParamElementAst extends ApsAst {
             Manipulate.notNull(this.modifiers.get(modifierType), modifierBuilder);
         }
 
-        builder.append(this.argType.generateJava());
-        builder.append(" ");
-        builder.append(this.nameIdentity);
+        if (this.argType != null && this.nameIdentity != null) {
+            builder.append(this.argType.generateJava());
+            builder.append(" ");
+            builder.append(this.nameIdentity);
+        }
         return builder.toString();
     }
 

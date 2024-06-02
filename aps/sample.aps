@@ -1,5 +1,12 @@
 
-class Sample2 {
+final class Sample2 {
+    let {
+        publicMember1: int;
+        publicMember2: int;
+        publicMember3: int;
+        publicMember4: int;
+    }
+
     public holder first: int;
     private holder second: int = 13245;
     private holder HashMap<String|HashMap<Integer|Integer>> map;
@@ -13,11 +20,11 @@ class Sample2 {
         return a + b;
     }
 
-    static test() {
+    final test() {
         System.out.println("Hello world");
     }
 
-    static safepoint testXx() {
+    safepoint testXx() {
         System.out.println("Hello world");
     }
 }

@@ -118,6 +118,7 @@ public class ApsMemberParameterParser extends ApsParser<ApsMemberParameterAst> {
     }
 
     private void processAssignment(ApsMemberParameterAst ast) {
+        stripCodes();
         ast.value(codes());
     }
 }

@@ -1,10 +1,7 @@
 package com.github.cao.awa.apsars.parser.token;
 
 import com.github.cao.awa.apricot.util.collection.ApricotCollectionFactor;
-import com.github.cao.awa.apsars.parser.token.keyword.ApsFileKeyword;
-import com.github.cao.awa.apsars.parser.token.keyword.ApsMemberParameterKeyword;
-import com.github.cao.awa.apsars.parser.token.keyword.ApsMethodKeyword;
-import com.github.cao.awa.apsars.parser.token.keyword.ApsMethodParamKeyword;
+import com.github.cao.awa.apsars.parser.token.keyword.*;
 import com.github.cao.awa.sinuatum.manipulate.Manipulate;
 
 import java.util.Map;
@@ -47,6 +44,12 @@ public class ApsTokens {
 
     public static final Map<String, ApsMethodParamKeyword> METHOD_PARAM_KEYWORDS = Manipulate.operation(ApricotCollectionFactor.hashMap(), map -> {
         for (ApsMethodParamKeyword value : ApsMethodParamKeyword.values()) {
+            map.put(value.literal(), value);
+        }
+    });
+
+    public static final Map<String, ApsClassKeyword> CLASS_KEYWORDS = Manipulate.operation(ApricotCollectionFactor.hashMap(), map -> {
+        for (ApsClassKeyword value : ApsClassKeyword.values()) {
             map.put(value.literal(), value);
         }
     });

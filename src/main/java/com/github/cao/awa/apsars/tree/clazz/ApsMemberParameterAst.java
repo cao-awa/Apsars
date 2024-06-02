@@ -21,6 +21,7 @@ import lombok.experimental.Accessors;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.List;
 import java.util.Map;
 
 @Accessors(fluent = true)
@@ -45,6 +46,10 @@ public class ApsMemberParameterAst extends ApsAstWithVarargs {
             throw new IllegalArgumentException("The modifier type '" + definedModifier.type() + "' already defined as '" + definedModifier.literal() + "'");
         }
         this.modifiers.put(modifier.type(), modifier);
+    }
+
+    public void removeModifier(ApsMemberParameterModifierType modifierType) {
+        this.modifiers.remove(modifierType);
     }
 
     @Override
@@ -98,17 +103,15 @@ public class ApsMemberParameterAst extends ApsAstWithVarargs {
             this.modifiers.remove(ApsMemberParameterModifierType.HOLDER_SET);
         }
 
-        for (ApsMemberParameterModifierType modifierType : ApsMemberParameterModifierType.values()) {
+        for (ApsMemberParameterModifierType modifierType : List.of(ApsMemberParameterModifierType.HOLDER, ApsMemberParameterModifierType.HOLDER_GET, ApsMemberParameterModifierType.HOLDER_SET)) {
             Manipulate.notNull(this.modifiers.get(modifierType), modifier -> {
-                if (!modifier.isLiteral()) {
-                    switch (modifierType) {
-                        case HOLDER -> {
-                            appendGetHolder();
-                            appendSetHolder();
-                        }
-                        case HOLDER_GET -> appendGetHolder();
-                        case HOLDER_SET -> appendSetHolder();
+                switch (modifierType) {
+                    case HOLDER -> {
+                        appendGetHolder();
+                        appendSetHolder();
                     }
+                    case HOLDER_GET -> appendGetHolder();
+                    case HOLDER_SET -> appendSetHolder();
                 }
             });
         }
@@ -176,23 +179,23 @@ public class ApsMemberParameterAst extends ApsAstWithVarargs {
         }
     }
 
-    private boolean isStatic() {
+    public boolean isStatic() {
         return this.modifiers.get(ApsMemberParameterModifierType.IS_STATIC) != null;
     }
 
-    private boolean isFinal() {
+    public boolean isFinal() {
         return this.modifiers.get(ApsMemberParameterModifierType.IS_FINAL) != null;
     }
 
-    private boolean isPublic() {
+    public boolean isPublic() {
         return this.modifiers.get(ApsMemberParameterModifierType.ACCESSIBLE).literal().equals("public");
     }
 
-    private boolean isPrivate() {
+    public boolean isPrivate() {
         return this.modifiers.get(ApsMemberParameterModifierType.ACCESSIBLE).literal().equals("private");
     }
 
-    private boolean isHolderOverridable() {
+    public boolean isHolderOverridable() {
         return this.modifiers.get(ApsMemberParameterModifierType.OVERRIDABLE) != null;
     }
 
