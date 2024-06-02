@@ -3,6 +3,7 @@ package com.github.cao.awa.apsars.parser.method;
 import com.github.cao.awa.apsars.element.ApsElementType;
 import com.github.cao.awa.apsars.element.modifier.method.ApsMethodModifier;
 import com.github.cao.awa.apsars.parser.ApsParser;
+import com.github.cao.awa.apsars.parser.method.parameter.ApsMethodParameterParser;
 import com.github.cao.awa.apsars.parser.method.statement.ApsMethodBodyParser;
 import com.github.cao.awa.apsars.parser.method.statement.ApsMethodExtraCatchParser;
 import com.github.cao.awa.apsars.parser.token.ApsTokens;
@@ -10,7 +11,7 @@ import com.github.cao.awa.apsars.parser.token.keyword.ApsMethodKeyword;
 import com.github.cao.awa.apsars.tree.method.statement.ApsMethodAst;
 import com.github.cao.awa.apsars.tree.method.statement.ApsMethodBodyAst;
 import com.github.cao.awa.apsars.tree.method.ApsMethodExtraCatchAst;
-import com.github.cao.awa.apsars.tree.method.ApsMethodParamAst;
+import com.github.cao.awa.apsars.tree.method.parameter.ApsMethodParameterAst;
 import com.github.cao.awa.catheter.pair.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -44,8 +45,8 @@ public class ApsMethodParser extends ApsParser<ApsMethodAst> {
                         type = ApsElementType.METHOD_BODY;
 
                         Pair<Integer, Boolean> params = findClosureBraces(true);
-                        ApsMethodParamAst paramAst = new ApsMethodParamAst(ast);
-                        ApsMethodParamParser parser = (ApsMethodParamParser) parser(ApsElementType.METHOD_PARAM);
+                        ApsMethodParameterAst paramAst = new ApsMethodParameterAst(ast);
+                        ApsMethodParameterParser parser = (ApsMethodParameterParser) parser(ApsElementType.METHOD_PARAM);
                         parser.parse(makeSubstring(1, params.first()), paramAst);
                         skipAndFeedback(params.first() + 1);
                         ast.param(paramAst);
@@ -74,11 +75,10 @@ public class ApsMethodParser extends ApsParser<ApsMethodAst> {
 
                         ApsMethodExtraCatchAst extraCatchAst = new ApsMethodExtraCatchAst(ast);
                         ApsMethodExtraCatchParser parser = (ApsMethodExtraCatchParser) parser(ApsElementType.METHOD_EXTRA_CATCH);
-                        if (parser.canTryProcess(codes())) {
-                            parser.parse(codes(), extraCatchAst);
+                        parser.parse(codes(), extraCatchAst, () -> {
                             skipAndFeedback(parser.feedbackSkip());
                             ast.extraCatch(extraCatchAst);
-                        }
+                        });
 
                         break;
                     } else {

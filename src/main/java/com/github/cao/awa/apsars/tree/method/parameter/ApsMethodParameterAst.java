@@ -1,4 +1,4 @@
-package com.github.cao.awa.apsars.tree.method;
+package com.github.cao.awa.apsars.tree.method.parameter;
 
 import com.github.cao.awa.apricot.util.collection.ApricotCollectionFactor;
 import com.github.cao.awa.apsars.tree.ApsAst;
@@ -10,10 +10,10 @@ import java.util.Map;
 import java.util.Set;
 
 @Accessors(fluent = true)
-public class ApsMethodParamAst extends ApsAst {
+public class ApsMethodParameterAst extends ApsAst {
     private final Map<String, ApsMethodParamElementAst> params = ApricotCollectionFactor.hashMap();
 
-    public ApsMethodParamAst(ApsMethodAst parent) {
+    public ApsMethodParameterAst(ApsMethodAst parent) {
         super(parent);
     }
 

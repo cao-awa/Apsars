@@ -8,6 +8,7 @@ public enum ApsMemberParameterKeyword {
     STATIC("static"),
 
     FINAL("final"),
+    VAL("val"),
 
     TRANSIENT("transient"),
 

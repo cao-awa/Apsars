@@ -27,9 +27,17 @@ public abstract class ApsAst {
 
     public abstract void preprocess();
 
+    public void postprocess() {
+
+    }
+
+    public void finalProcess() {
+
+    }
+
     @SuppressWarnings("all")
     public <T extends ApsAst> T findAst(Class<T> target) {
-        if (this.getClass() == target) {
+        if (getClass() == target) {
             return (T) this;
         } else {
             if (this.parent != null) {

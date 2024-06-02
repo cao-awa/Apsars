@@ -3,13 +3,13 @@ package com.github.cao.awa.apsars.tree.clazz;
 import com.github.cao.awa.apricot.util.collection.ApricotCollectionFactor;
 import com.github.cao.awa.apsars.element.clazz.ApsMemberParameterModifierType;
 import com.github.cao.awa.apsars.element.modifier.method.ApsMethodModifier;
-import com.github.cao.awa.apsars.element.modifier.method.param.ApsMethodParamModifier;
+import com.github.cao.awa.apsars.element.modifier.method.parameter.ApsMethodParamModifier;
 import com.github.cao.awa.apsars.element.modifier.parameter.ApsMemberParameterModifier;
 import com.github.cao.awa.apsars.parser.token.keyword.ApsMemberParameterKeyword;
 import com.github.cao.awa.apsars.parser.token.keyword.ApsMethodKeyword;
 import com.github.cao.awa.apsars.parser.token.keyword.ApsMethodParamKeyword;
-import com.github.cao.awa.apsars.tree.method.ApsMethodParamAst;
-import com.github.cao.awa.apsars.tree.method.ApsMethodParamElementAst;
+import com.github.cao.awa.apsars.tree.method.parameter.ApsMethodParameterAst;
+import com.github.cao.awa.apsars.tree.method.parameter.ApsMethodParamElementAst;
 import com.github.cao.awa.apsars.tree.method.statement.ApsMethodAst;
 import com.github.cao.awa.apsars.tree.method.statement.ApsMethodBodyAst;
 import com.github.cao.awa.apsars.tree.method.statement.ApsStatementAst;
@@ -166,9 +166,9 @@ public class ApsMemberParameterAst extends ApsAstWithVarargs {
                     methodBodyAst,
                     (isStatic() ? "" : "this.") + this.nameIdentity + "=" + this.nameIdentity + "_"
             );
-            ApsMethodParamAst methodParamAst = new ApsMethodParamAst(methodAst);
+            ApsMethodParameterAst methodParamAst = new ApsMethodParameterAst(methodAst);
             ApsMethodParamElementAst methodParamElementAst = new ApsMethodParamElementAst(methodParamAst);
-            methodParamElementAst.addModifier(ApsMethodParamModifier.create(ApsMethodParamKeyword.FINAL));
+            methodParamElementAst.addModifier(ApsMethodParamModifier.create(ApsMethodParamKeyword.VAL));
             methodParamElementAst.argType(argType());
             methodParamElementAst.nameIdentity(this.nameIdentity + "_");
             methodParamAst.addParam(methodParamElementAst);

@@ -18,6 +18,8 @@ public class Main {
             parser.parse(aps, ast);
 
             ast.preprocess();
+            ast.postprocess();
+            ast.finalProcess();
 
             ast.print();
 

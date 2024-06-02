@@ -1,8 +1,9 @@
 package com.github.cao.awa.apsars.parser.token.keyword;
 
 public enum ApsMethodParamKeyword {
-    FINAL("val"),
-    FINAL_JAVA("final"),
+    VAL("val"),
+    FINAL("final"),
+    DEFAULT("default")
     ;
 
     private final String literal;

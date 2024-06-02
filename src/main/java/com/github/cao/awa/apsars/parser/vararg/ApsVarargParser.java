@@ -40,6 +40,19 @@ public class ApsVarargParser extends ApsParser<ApsAstWithVarargs> {
         argTypeAst.nameIdentity(nextToken.first());
         Pair<Integer, Boolean> braces = reservedClosureBraces();
         if (!braces.second()) {
+            // 支持使用&符号替代|符号
+            replaceCodes("&", "|");
+
+            // 支持自然语言
+            replaceCodes(" and ", "|");
+            replaceCodes(" also ", "|");
+
+            // 支持空格分隔
+            while (codes().contains("  ")) {
+                replaceCodes("  ", " ");
+            }
+            replaceCodes(" ", "|");
+
             // 逗号比左尖括号更前面说明必然有至少2个参数且后面的参数有vararg而前面（第一个）的没有
             if (codes().indexOf("|") < codes().indexOf("<")) {
                 nextToken = nextToken("|", true, true);

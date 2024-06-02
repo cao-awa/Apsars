@@ -2,15 +2,13 @@ package com.github.cao.awa.apsars.tree.method.statement;
 
 import com.github.cao.awa.apricot.util.collection.ApricotCollectionFactor;
 import com.github.cao.awa.apsars.element.method.ApsMethodModifierType;
-import com.github.cao.awa.apsars.element.method.ApsMethodParamModifierType;
 import com.github.cao.awa.apsars.element.modifier.method.ApsMethodModifier;
 import com.github.cao.awa.apsars.tree.ApsAst;
 import com.github.cao.awa.apsars.tree.annotation.ApsAnnotationAst;
 import com.github.cao.awa.apsars.tree.clazz.ApsClassAst;
 import com.github.cao.awa.apsars.tree.method.ApsMethodExtraCatchAst;
-import com.github.cao.awa.apsars.tree.method.ApsMethodParamAst;
+import com.github.cao.awa.apsars.tree.method.parameter.ApsMethodParameterAst;
 import com.github.cao.awa.apsars.tree.vararg.ApsArgTypeAst;
-import com.github.cao.awa.sinuatum.function.ecception.consumer.ExceptingConsumer;
 import com.github.cao.awa.sinuatum.manipulate.Manipulate;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,6 +16,7 @@ import lombok.experimental.Accessors;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @Accessors(fluent = true)
 public class ApsMethodAst extends ApsAst {
@@ -29,7 +28,7 @@ public class ApsMethodAst extends ApsAst {
     private ApsArgTypeAst returnType;
     @Getter
     @Setter
-    private ApsMethodParamAst param;
+    private ApsMethodParameterAst param;
     @Getter
     @Setter
     private ApsMethodBodyAst methodBody;
@@ -38,7 +37,7 @@ public class ApsMethodAst extends ApsAst {
     private ApsMethodExtraCatchAst extraCatch;
     private final Map<ApsMethodModifierType, ApsMethodModifier> modifiers = ApricotCollectionFactor.hashMap();
     private final Map<String, ApsAnnotationAst> annotations = ApricotCollectionFactor.hashMap();
-    private final List<String> compilerFlags = ApricotCollectionFactor.arrayList();
+    private final Set<String> compilerFlags = ApricotCollectionFactor.hashSet();
 
     public ApsMethodAst(ApsAst parent) {
         super(parent);
@@ -185,6 +184,8 @@ public class ApsMethodAst extends ApsAst {
             newMethod.param(this.param);
             newMethod.extraCatch(this.extraCatch);
             newMethod.returnType(this.returnType);
+            newMethod.addCompilerFlag("generated");
+            newMethod.addCompilerFlag("safepoint");
             for (ApsMethodModifier modifier : newMethodModifiers.values()) {
                 newMethod.addModifier(modifier);
             }
@@ -228,7 +229,7 @@ public class ApsMethodAst extends ApsAst {
             extraCatch(null);
         }
 
-        Manipulate.notNull(this.param, ApsMethodParamAst::preprocess);
+        Manipulate.notNull(this.param, ApsMethodParameterAst::preprocess);
         Manipulate.notNull(this.methodBody, ApsMethodBodyAst::preprocess);
         Manipulate.notNull(this.extraCatch, ApsMethodExtraCatchAst::preprocess);
     }

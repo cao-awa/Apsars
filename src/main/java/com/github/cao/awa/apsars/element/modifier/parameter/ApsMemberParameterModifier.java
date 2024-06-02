@@ -10,7 +10,7 @@ public abstract class ApsMemberParameterModifier extends ApsModifier<ApsMemberPa
     public static ApsMemberParameterModifier create(ApsMemberParameterKeyword keyword) {
         return switch (keyword) {
             case PUBLIC, PROTECTED, PRIVATE -> new ApsMemberParameterAccessibleModifier(keyword);
-            case FINAL -> new ApsMemberParameterFinalModifier();
+            case FINAL, VAL -> new ApsMemberParameterFinalModifier();
             case STATIC -> new ApsMemberParameterStaticModifier();
             case TRANSIENT -> new ApsMemberParameterTransientModifier();
             case VOLATILE -> new ApsMemberParameterVolatileModifier();

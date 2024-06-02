@@ -11,6 +11,7 @@ public enum ApsElementType {
 
     METHOD,
     METHOD_PARAM,
+    METHOD_PARAM_DEFAULT,
     METHOD_EXTRA,
     METHOD_EXTRA_CATCH,
     METHOD_BODY,

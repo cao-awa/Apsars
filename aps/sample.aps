@@ -9,9 +9,9 @@ final class Sample2 {
 
     public holder first: int;
     private holder second: int = 13245;
-    private holder HashMap<String|HashMap<Integer|Integer>> map;
+    private holder HashMap<String and HashMap<Integer and Integer>> map;
 
-    public static safepoint sync xxx(a: int,val b: int): long {
+    public static safepoint sync xxx(a: int default 1234,val b: int): long {
         int x = a + b;
         int y = x * b;
         int z = y * a;

@@ -21,7 +21,6 @@ final class Sample2 {
             Thread.sleep(0);
         } catch (InterruptedException ignored) {
         }
-        ;
         return result;
     }
 
@@ -34,8 +33,8 @@ final class Sample2 {
         try {
             Thread.sleep(0);
         } catch (InterruptedException ignored) {
+
         }
-        ;
     }
 
     public int first() {

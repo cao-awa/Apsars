@@ -5,15 +5,15 @@ import com.github.cao.awa.apsars.element.ApsElementType;
 import com.github.cao.awa.apsars.parser.clazz.ApsClassParser;
 import com.github.cao.awa.apsars.parser.clazz.ApsMemberParameterParser;
 import com.github.cao.awa.apsars.parser.method.ApsMethodExtraParser;
-import com.github.cao.awa.apsars.parser.method.ApsMethodParamParser;
+import com.github.cao.awa.apsars.parser.method.parameter.ApsMethodParameterParser;
 import com.github.cao.awa.apsars.parser.method.ApsMethodParser;
+import com.github.cao.awa.apsars.parser.method.parameter.element.ApsMethodParameterPresetValueElementParser;
 import com.github.cao.awa.apsars.parser.method.statement.ApsCatchListParser;
 import com.github.cao.awa.apsars.parser.method.statement.ApsMethodBodyParser;
 import com.github.cao.awa.apsars.parser.method.statement.ApsMethodExtraCatchParser;
 import com.github.cao.awa.apsars.parser.token.ApsTokens;
 import com.github.cao.awa.apsars.parser.vararg.ApsVarargParser;
 import com.github.cao.awa.apsars.tree.ApsAst;
-import com.github.cao.awa.catheter.Catheter;
 import com.github.cao.awa.catheter.pair.Pair;
 import com.github.cao.awa.sinuatum.manipulate.Manipulate;
 import lombok.Getter;
@@ -27,12 +27,14 @@ import java.util.*;
 @Accessors(fluent = true)
 public abstract class ApsParser<T extends ApsAst> {
     private static final Logger LOGGER = LogManager.getLogger("ApsParser");
+    private static final Runnable DO_NOTHING = () -> {};
     private static final Map<ApsElementType, ApsParser<?>> elementParsers = Manipulate.operation(ApricotCollectionFactor.hashMap(), map -> {
         map.put(ApsElementType.FILE, new ApsFileParser());
         map.put(ApsElementType.KEYWORD_CLASS, new ApsClassParser());
         map.put(ApsElementType.MEMBER_PARAMETER, new ApsMemberParameterParser());
         map.put(ApsElementType.METHOD, new ApsMethodParser());
-        map.put(ApsElementType.METHOD_PARAM, new ApsMethodParamParser());
+        map.put(ApsElementType.METHOD_PARAM, new ApsMethodParameterParser());
+        map.put(ApsElementType.METHOD_PARAM_DEFAULT, new ApsMethodParameterPresetValueElementParser());
         map.put(ApsElementType.METHOD_BODY, new ApsMethodBodyParser());
         map.put(ApsElementType.METHOD_EXTRA, new ApsMethodExtraParser());
         map.put(ApsElementType.METHOD_EXTRA_CATCH, new ApsMethodExtraCatchParser());
@@ -72,9 +74,16 @@ public abstract class ApsParser<T extends ApsAst> {
     public abstract boolean canTryProcess(String codes);
 
     public void parse(String codes, T ast) {
+        parse(codes, ast, DO_NOTHING);
+    }
+
+    public void parse(String codes, T ast, Runnable callback) {
         reset(codes);
         stripCodes();
-        parse(ast);
+        if (canTryProcess(codes)) {
+            parse(ast);
+            callback.run();
+        }
     }
 
     public abstract void parse(T ast);
