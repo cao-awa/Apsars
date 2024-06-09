@@ -1,20 +1,11 @@
 package com.github.cao.awa.apsars.parser.vararg;
 
-import com.github.cao.awa.apsars.element.ApsElementType;
 import com.github.cao.awa.apsars.parser.ApsParser;
-import com.github.cao.awa.apsars.parser.clazz.ApsMemberParameterParser;
-import com.github.cao.awa.apsars.parser.method.ApsMethodParser;
-import com.github.cao.awa.apsars.tree.ApsAst;
-import com.github.cao.awa.apsars.tree.clazz.ApsClassAst;
-import com.github.cao.awa.apsars.tree.clazz.ApsMemberParameterAst;
-import com.github.cao.awa.apsars.tree.method.statement.ApsMethodAst;
 import com.github.cao.awa.apsars.tree.vararg.ApsArgTypeAst;
 import com.github.cao.awa.apsars.tree.vararg.ApsAstWithVarargs;
 import com.github.cao.awa.catheter.pair.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import java.util.List;
 
 public class ApsVarargParser extends ApsParser<ApsAstWithVarargs> {
     private static final Logger LOGGER = LogManager.getLogger("ApsVarargParser");

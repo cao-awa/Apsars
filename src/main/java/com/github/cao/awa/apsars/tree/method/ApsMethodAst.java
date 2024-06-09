@@ -1,4 +1,4 @@
-package com.github.cao.awa.apsars.tree.method.statement;
+package com.github.cao.awa.apsars.tree.method;
 
 import com.github.cao.awa.apricot.util.collection.ApricotCollectionFactor;
 import com.github.cao.awa.apsars.element.method.ApsMethodModifierType;
@@ -6,8 +6,10 @@ import com.github.cao.awa.apsars.element.modifier.method.ApsMethodModifier;
 import com.github.cao.awa.apsars.tree.ApsAst;
 import com.github.cao.awa.apsars.tree.annotation.ApsAnnotationAst;
 import com.github.cao.awa.apsars.tree.clazz.ApsClassAst;
-import com.github.cao.awa.apsars.tree.method.ApsMethodExtraCatchAst;
 import com.github.cao.awa.apsars.tree.method.parameter.ApsMethodParameterAst;
+import com.github.cao.awa.apsars.tree.statement.ApsStatementAst;
+import com.github.cao.awa.apsars.tree.statement.special.literal.ApsLiteralStatementAst;
+import com.github.cao.awa.apsars.tree.statement.trys.ApsMethodExtraCatchAst;
 import com.github.cao.awa.apsars.tree.vararg.ApsArgTypeAst;
 import com.github.cao.awa.sinuatum.manipulate.Manipulate;
 import lombok.Getter;
@@ -192,7 +194,7 @@ public class ApsMethodAst extends ApsAst {
             findAst(ApsClassAst.class).addMethod(newMethod);
 
             ApsMethodBodyAst selfMethodBody = new ApsMethodBodyAst(this);
-            ApsStatementAst safepointStatementAst = new ApsStatementAst(selfMethodBody, "try{Thread.sleep(0);}catch (InterruptedException ignored){}");
+            ApsLiteralStatementAst safepointStatementAst = new ApsLiteralStatementAst(selfMethodBody, "try{Thread.sleep(0);}catch (InterruptedException ignored){}");
 
             StringBuilder paramBuilder = new StringBuilder();
             int index = 0;
@@ -211,17 +213,17 @@ public class ApsMethodAst extends ApsAst {
                 throw new RuntimeException(e);
             }
 
-            ApsStatementAst invokeStatementAst;
+            ApsLiteralStatementAst invokeStatementAst;
             if (this.returnType == null) {
-                invokeStatementAst = new ApsStatementAst(selfMethodBody, safepointMethod + "(" + paramBuilder + ")");
+                invokeStatementAst = new ApsLiteralStatementAst(selfMethodBody, safepointMethod + "(" + paramBuilder + ")");
             } else {
-                invokeStatementAst = new ApsStatementAst(selfMethodBody, this.returnType.generateJava() + " result=" + safepointMethod + "(" + paramBuilder + ")");
+                invokeStatementAst = new ApsLiteralStatementAst(selfMethodBody, this.returnType.generateJava() + " result=" + safepointMethod + "(" + paramBuilder + ")");
             }
 
             selfMethodBody.addStatement(invokeStatementAst);
             selfMethodBody.addStatement(safepointStatementAst);
             if (this.returnType != null) {
-                ApsStatementAst returnStatementAst = new ApsStatementAst(selfMethodBody, "return result");
+                ApsLiteralStatementAst returnStatementAst = new ApsLiteralStatementAst(selfMethodBody, "return result");
                 selfMethodBody.addStatement(returnStatementAst);
             }
             methodBody(selfMethodBody);

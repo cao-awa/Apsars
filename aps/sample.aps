@@ -1,31 +1,19 @@
+global {
+    alias println as System.out.println(x: Object);
 
-final class Sample2 {
-    let {
-        publicMember1: int;
-        publicMember2: int;
-        publicMember3: int;
-        publicMember4: int;
-    }
-
-    public holder first: int;
-    private holder second: int = 13245;
-    private holder HashMap<String and HashMap<Integer and Integer>> map;
-
-    public static safepoint sync xxx(a: int default 1234,val b: int): long {
-        int x = a + b;
-        int y = x * b;
-        int z = y * a;
-        return z;
-    } catch (ex: ConcurrentModificationException or NullPointerException) {
-        return a + b;
-    }
-
-    final test() {
-        System.out.println("Hello world");
-    }
-
-    safepoint testXx() {
-        System.out.println("Hello world");
-    }
+    alias printlnAwa as com.github.cao.awa.apsars.ApsGlobal.println(x: Object);
 }
 
+final class Sample2 {
+    public static xxx() {
+        int x = 0;
+        int y = 100;
+        int z = 123;
+        try {
+            println("Hello world");
+        } catch (ex: IllegalArgumentException or IllegalStateException or IllformedLocaleException) {
+            println("Hello exception");
+        }
+        int n = 111;
+    }
+}

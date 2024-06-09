@@ -1,7 +1,8 @@
-package com.github.cao.awa.apsars.tree.method.statement;
+package com.github.cao.awa.apsars.tree.method;
 
 import com.github.cao.awa.apricot.util.collection.ApricotCollectionFactor;
 import com.github.cao.awa.apsars.tree.ApsAst;
+import com.github.cao.awa.apsars.tree.statement.ApsStatementAst;
 import lombok.experimental.Accessors;
 
 import java.util.LinkedList;
@@ -27,7 +28,7 @@ public class ApsMethodBodyAst extends ApsAst {
 
         for (ApsStatementAst statement : this.statements) {
             System.out.print(ident + statements++ + ": ");
-            statement.print("");
+            statement.print(ident);
         }
     }
 
@@ -37,7 +38,6 @@ public class ApsMethodBodyAst extends ApsAst {
 
         for (ApsStatementAst statement : this.statements) {
             builder.append(statement.generateJava());
-            builder.append(";");
         }
 
         return builder.toString();

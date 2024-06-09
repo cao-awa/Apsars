@@ -10,6 +10,12 @@ public class ApsImportAst extends ApsAst {
     @Setter
     @Getter
     private String fullName;
+    @Setter
+    @Getter
+    private boolean importStatic;
+    @Setter
+    @Getter
+    private boolean importAll;
 
     public ApsImportAst(ApsFileAst parent) {
         super(parent);
@@ -24,7 +30,13 @@ public class ApsImportAst extends ApsAst {
     public String generateJava() {
         StringBuilder builder = new StringBuilder();
         builder.append("import ");
+        if (this.importStatic) {
+            builder.append("static ");
+        }
         builder.append(this.fullName);
+        if (this.importAll) {
+            builder.append(".*");
+        }
         builder.append(";");
         return builder.toString();
     }

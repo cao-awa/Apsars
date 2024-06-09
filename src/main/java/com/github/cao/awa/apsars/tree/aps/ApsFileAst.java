@@ -54,5 +54,11 @@ public class ApsFileAst extends ApsAst {
         for (ApsImportAst importAst : this.imports) {
             importAst.preprocess();
         }
+
+        ApsImportAst importAst = new ApsImportAst(this);
+        importAst.fullName("com.github.cao.awa.apsars.ApsGlobal");
+        importAst.importStatic(true);
+        importAst.importAll(true);
+        addImport(importAst);
     }
 }

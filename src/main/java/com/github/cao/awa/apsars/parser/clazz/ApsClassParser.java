@@ -13,7 +13,7 @@ import com.github.cao.awa.apsars.parser.token.keyword.ApsMemberParameterKeyword;
 import com.github.cao.awa.apsars.parser.token.keyword.ApsMethodKeyword;
 import com.github.cao.awa.apsars.tree.clazz.ApsClassAst;
 import com.github.cao.awa.apsars.tree.clazz.ApsMemberParameterAst;
-import com.github.cao.awa.apsars.tree.method.statement.ApsMethodAst;
+import com.github.cao.awa.apsars.tree.method.ApsMethodAst;
 import com.github.cao.awa.catheter.pair.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

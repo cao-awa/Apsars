@@ -10,9 +10,10 @@ import com.github.cao.awa.apsars.parser.token.keyword.ApsMethodKeyword;
 import com.github.cao.awa.apsars.parser.token.keyword.ApsMethodParamKeyword;
 import com.github.cao.awa.apsars.tree.method.parameter.ApsMethodParameterAst;
 import com.github.cao.awa.apsars.tree.method.parameter.ApsMethodParamElementAst;
-import com.github.cao.awa.apsars.tree.method.statement.ApsMethodAst;
-import com.github.cao.awa.apsars.tree.method.statement.ApsMethodBodyAst;
-import com.github.cao.awa.apsars.tree.method.statement.ApsStatementAst;
+import com.github.cao.awa.apsars.tree.method.ApsMethodAst;
+import com.github.cao.awa.apsars.tree.method.ApsMethodBodyAst;
+import com.github.cao.awa.apsars.tree.statement.ApsStatementAst;
+import com.github.cao.awa.apsars.tree.statement.special.literal.ApsLiteralStatementAst;
 import com.github.cao.awa.apsars.tree.vararg.ApsAstWithVarargs;
 import com.github.cao.awa.sinuatum.manipulate.Manipulate;
 import lombok.Getter;
@@ -133,7 +134,7 @@ public class ApsMemberParameterAst extends ApsAstWithVarargs {
                 methodAst.addModifier(ApsMethodModifier.create(ApsMethodKeyword.FINAL));
             }
             ApsMethodBodyAst methodBodyAst = new ApsMethodBodyAst(methodAst);
-            ApsStatementAst statementAst = new ApsStatementAst(
+            ApsLiteralStatementAst statementAst = new ApsLiteralStatementAst(
                     methodBodyAst,
                     "return " + (isStatic() ? "" : "this.") + this.nameIdentity
             );
@@ -162,7 +163,7 @@ public class ApsMemberParameterAst extends ApsAstWithVarargs {
                 methodAst.addModifier(ApsMethodModifier.create(ApsMethodKeyword.FINAL));
             }
             ApsMethodBodyAst methodBodyAst = new ApsMethodBodyAst(methodAst);
-            ApsStatementAst statementAst = new ApsStatementAst(
+            ApsLiteralStatementAst statementAst = new ApsLiteralStatementAst(
                     methodBodyAst,
                     (isStatic() ? "" : "this.") + this.nameIdentity + "=" + this.nameIdentity + "_"
             );

@@ -1,4 +1,4 @@
-package com.github.cao.awa.apsars.tree.method.statement;
+package com.github.cao.awa.apsars.tree.statement.trys;
 
 import com.github.cao.awa.apricot.util.collection.ApricotCollectionFactor;
 import com.github.cao.awa.apsars.tree.ApsAst;

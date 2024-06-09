@@ -5,6 +5,8 @@ public enum ApsElementType {
 
     FILE,
 
+    GLOBAL,
+
     TYPE,
 
     VARARG,
@@ -13,8 +15,10 @@ public enum ApsElementType {
     METHOD_PARAM,
     METHOD_PARAM_DEFAULT,
     METHOD_EXTRA,
-    METHOD_EXTRA_CATCH,
+    TRY_CATCHING,
     METHOD_BODY,
+    STATEMENT,
+    TRY_STATEMENT,
 
     CATCH_LIST,
 

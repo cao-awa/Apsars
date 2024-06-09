@@ -4,13 +4,16 @@ import com.github.cao.awa.apricot.util.collection.ApricotCollectionFactor;
 import com.github.cao.awa.apsars.element.ApsElementType;
 import com.github.cao.awa.apsars.parser.clazz.ApsClassParser;
 import com.github.cao.awa.apsars.parser.clazz.ApsMemberParameterParser;
+import com.github.cao.awa.apsars.parser.global.ApsGlobalParser;
 import com.github.cao.awa.apsars.parser.method.ApsMethodExtraParser;
 import com.github.cao.awa.apsars.parser.method.parameter.ApsMethodParameterParser;
 import com.github.cao.awa.apsars.parser.method.ApsMethodParser;
 import com.github.cao.awa.apsars.parser.method.parameter.element.ApsMethodParameterPresetValueElementParser;
 import com.github.cao.awa.apsars.parser.method.statement.ApsCatchListParser;
 import com.github.cao.awa.apsars.parser.method.statement.ApsMethodBodyParser;
-import com.github.cao.awa.apsars.parser.method.statement.ApsMethodExtraCatchParser;
+import com.github.cao.awa.apsars.parser.method.statement.ApsMethodCatchingParser;
+import com.github.cao.awa.apsars.parser.statement.ApsStatementParser;
+import com.github.cao.awa.apsars.parser.statement.trys.ApsTryStatementParser;
 import com.github.cao.awa.apsars.parser.token.ApsTokens;
 import com.github.cao.awa.apsars.parser.vararg.ApsVarargParser;
 import com.github.cao.awa.apsars.tree.ApsAst;
@@ -23,23 +26,28 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.*;
+import java.util.function.Supplier;
 
 @Accessors(fluent = true)
 public abstract class ApsParser<T extends ApsAst> {
     private static final Logger LOGGER = LogManager.getLogger("ApsParser");
-    private static final Runnable DO_NOTHING = () -> {};
-    private static final Map<ApsElementType, ApsParser<?>> elementParsers = Manipulate.operation(ApricotCollectionFactor.hashMap(), map -> {
-        map.put(ApsElementType.FILE, new ApsFileParser());
-        map.put(ApsElementType.KEYWORD_CLASS, new ApsClassParser());
-        map.put(ApsElementType.MEMBER_PARAMETER, new ApsMemberParameterParser());
-        map.put(ApsElementType.METHOD, new ApsMethodParser());
-        map.put(ApsElementType.METHOD_PARAM, new ApsMethodParameterParser());
-        map.put(ApsElementType.METHOD_PARAM_DEFAULT, new ApsMethodParameterPresetValueElementParser());
-        map.put(ApsElementType.METHOD_BODY, new ApsMethodBodyParser());
-        map.put(ApsElementType.METHOD_EXTRA, new ApsMethodExtraParser());
-        map.put(ApsElementType.METHOD_EXTRA_CATCH, new ApsMethodExtraCatchParser());
-        map.put(ApsElementType.CATCH_LIST, new ApsCatchListParser());
-        map.put(ApsElementType.VARARG, new ApsVarargParser());
+    private static final Runnable DO_NOTHING = () -> {
+    };
+    private static final Map<ApsElementType, Supplier<ApsParser<?>>> elementParsers = Manipulate.operation(ApricotCollectionFactor.hashMap(), map -> {
+        map.put(ApsElementType.FILE, ApsFileParser::new);
+        map.put(ApsElementType.GLOBAL, ApsGlobalParser::new);
+        map.put(ApsElementType.KEYWORD_CLASS, ApsClassParser::new);
+        map.put(ApsElementType.MEMBER_PARAMETER, ApsMemberParameterParser::new);
+        map.put(ApsElementType.METHOD, ApsMethodParser::new);
+        map.put(ApsElementType.METHOD_PARAM, ApsMethodParameterParser::new);
+        map.put(ApsElementType.METHOD_PARAM_DEFAULT, ApsMethodParameterPresetValueElementParser::new);
+        map.put(ApsElementType.METHOD_BODY, ApsMethodBodyParser::new);
+        map.put(ApsElementType.STATEMENT, ApsStatementParser::new);
+        map.put(ApsElementType.TRY_STATEMENT, ApsTryStatementParser::new);
+        map.put(ApsElementType.METHOD_EXTRA, ApsMethodExtraParser::new);
+        map.put(ApsElementType.TRY_CATCHING, ApsMethodCatchingParser::new);
+        map.put(ApsElementType.CATCH_LIST, ApsCatchListParser::new);
+        map.put(ApsElementType.VARARG, ApsVarargParser::new);
     });
     private String codes;
     @Getter
@@ -50,7 +58,7 @@ public abstract class ApsParser<T extends ApsAst> {
     private int stripedSkip = 0;
 
     public static ApsParser<?> parser(ApsElementType type) {
-        return elementParsers.get(type);
+        return elementParsers.get(type).get();
     }
 
     public void reset(String codes) {
@@ -334,6 +342,10 @@ public abstract class ApsParser<T extends ApsAst> {
             return;
         }
         substring(length, this.codes.length());
+    }
+
+    public void skipAll() {
+        this.codes = "";
     }
 
     public void skipAndFeedback(int length) {

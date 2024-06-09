@@ -1,7 +1,7 @@
 package com.github.cao.awa.apsars.parser.method.statement;
 
 import com.github.cao.awa.apsars.parser.ApsParser;
-import com.github.cao.awa.apsars.tree.method.statement.ApsCatchListAst;
+import com.github.cao.awa.apsars.tree.statement.trys.ApsCatchListAst;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -34,7 +34,7 @@ public class ApsCatchListParser extends ApsParser<ApsCatchListAst> {
     }
 
     private void processTargets(ApsCatchListAst ast) {
-        for (String target : codes().replaceAll(" or ", "|").split("\\|")) {
+        for (String target : codes().replaceAll(" or ", "|").replaceAll(" ", "").split("\\|")) {
             ast.addCatchTarget(target);
         }
     }

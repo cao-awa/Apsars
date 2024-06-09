@@ -1,8 +1,8 @@
-package com.github.cao.awa.apsars.tree.method;
+package com.github.cao.awa.apsars.tree.statement.trys;
 
 import com.github.cao.awa.apsars.tree.ApsAst;
-import com.github.cao.awa.apsars.tree.method.statement.ApsCatchListAst;
-import com.github.cao.awa.apsars.tree.method.statement.ApsMethodBodyAst;
+import com.github.cao.awa.apsars.tree.method.ApsMethodBodyAst;
+import com.github.cao.awa.apsars.tree.statement.trys.ApsCatchListAst;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;

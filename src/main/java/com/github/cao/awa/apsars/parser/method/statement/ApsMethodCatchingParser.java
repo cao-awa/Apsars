@@ -2,16 +2,16 @@ package com.github.cao.awa.apsars.parser.method.statement;
 
 import com.github.cao.awa.apsars.element.ApsElementType;
 import com.github.cao.awa.apsars.parser.ApsParser;
-import com.github.cao.awa.apsars.tree.method.statement.ApsCatchListAst;
-import com.github.cao.awa.apsars.tree.method.statement.ApsMethodBodyAst;
-import com.github.cao.awa.apsars.tree.method.ApsMethodExtraCatchAst;
+import com.github.cao.awa.apsars.tree.statement.trys.ApsAstWithCatching;
+import com.github.cao.awa.apsars.tree.statement.trys.ApsCatchListAst;
+import com.github.cao.awa.apsars.tree.method.ApsMethodBodyAst;
 import com.github.cao.awa.catheter.pair.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.List;
 
-public class ApsMethodExtraCatchParser extends ApsParser<ApsMethodExtraCatchAst> {
+public class ApsMethodCatchingParser extends ApsParser<ApsAstWithCatching> {
     private static final Logger LOGGER = LogManager.getLogger("ApsMethodExtraCatchParser");
 
     @Override
@@ -21,7 +21,7 @@ public class ApsMethodExtraCatchParser extends ApsParser<ApsMethodExtraCatchAst>
     }
 
     @Override
-    public void parse(ApsMethodExtraCatchAst ast) {
+    public void parse(ApsAstWithCatching ast) {
         if (startWith("catch")) {
             Pair<String, Boolean> catchToken = nextToken(List.of(" ", "("), false);
             if (!catchToken.second() && catchToken.first().equals("catch")) {
@@ -39,7 +39,7 @@ public class ApsMethodExtraCatchParser extends ApsParser<ApsMethodExtraCatchAst>
                 ApsMethodBodyParser methodBodyParser = (ApsMethodBodyParser) parser(ApsElementType.METHOD_BODY);
                 methodBodyParser.parse(makeSubstring(1, handlerCodes.first()), bodyAst);
                 skipAndFeedback(handlerCodes.first() + 1);
-                ast.methodBody(bodyAst);
+                ast.catchingMethodBody(bodyAst);
             }
 
             accumulateFeedbackSkip(stripedSkip());

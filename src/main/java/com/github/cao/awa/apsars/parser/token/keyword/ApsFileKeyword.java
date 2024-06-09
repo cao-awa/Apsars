@@ -3,7 +3,8 @@ package com.github.cao.awa.apsars.parser.token.keyword;
 public enum ApsFileKeyword {
     IMPORT("import"),
 
-    CLASS("class")
+    CLASS("class"),
+    GLOBAL("global"),
     ;
 
     private final String literal;

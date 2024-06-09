@@ -2,11 +2,13 @@ package com.github.cao.awa.apsars.parser;
 
 import com.github.cao.awa.apsars.element.ApsElementType;
 import com.github.cao.awa.apsars.parser.clazz.ApsClassParser;
+import com.github.cao.awa.apsars.parser.global.ApsGlobalParser;
 import com.github.cao.awa.apsars.parser.token.ApsTokens;
 import com.github.cao.awa.apsars.parser.token.keyword.ApsFileKeyword;
 import com.github.cao.awa.apsars.tree.clazz.ApsClassAst;
 import com.github.cao.awa.apsars.tree.aps.ApsFileAst;
 import com.github.cao.awa.apsars.tree.aps.ApsImportAst;
+import com.github.cao.awa.apsars.tree.global.ApsGlobalAst;
 import com.github.cao.awa.catheter.pair.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -35,6 +37,7 @@ public class ApsFileParser extends ApsParser<ApsFileAst> {
 
                 switch (keyword) {
                     case IMPORT -> processImport(ast);
+                    case GLOBAL -> processGlobal();
                 }
             } else {
                 LOGGER.warn("Wrongly parses next token");
@@ -71,5 +74,15 @@ public class ApsFileParser extends ApsParser<ApsFileAst> {
         skip(classParser.feedbackSkip());
 
         ast.addClass(classAst);
+    }
+
+    private void processGlobal() {
+        stripCodes();
+
+        ApsGlobalParser classParser = (ApsGlobalParser) parser(ApsElementType.GLOBAL);
+
+        classParser.parse(codes(), ApsGlobalAst.global);
+
+        skip(classParser.feedbackSkip());
     }
 }

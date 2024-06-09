@@ -2,11 +2,9 @@ package com.github.cao.awa.apsars.tree.clazz;
 
 import com.github.cao.awa.apricot.util.collection.ApricotCollectionFactor;
 import com.github.cao.awa.apsars.element.clazz.ApsClassModifierType;
-import com.github.cao.awa.apsars.element.method.ApsMethodModifierType;
 import com.github.cao.awa.apsars.element.modifier.clazz.ApsClassModifier;
-import com.github.cao.awa.apsars.element.modifier.method.ApsMethodModifier;
 import com.github.cao.awa.apsars.tree.ApsAst;
-import com.github.cao.awa.apsars.tree.method.statement.ApsMethodAst;
+import com.github.cao.awa.apsars.tree.method.ApsMethodAst;
 import com.github.cao.awa.sinuatum.manipulate.Manipulate;
 import lombok.Getter;
 import lombok.Setter;

@@ -2,7 +2,7 @@ package com.github.cao.awa.apsars.tree.method.parameter;
 
 import com.github.cao.awa.apricot.util.collection.ApricotCollectionFactor;
 import com.github.cao.awa.apsars.tree.ApsAst;
-import com.github.cao.awa.apsars.tree.method.statement.ApsMethodAst;
+import com.github.cao.awa.apsars.tree.method.ApsMethodAst;
 import lombok.experimental.Accessors;
 
 import java.util.Iterator;

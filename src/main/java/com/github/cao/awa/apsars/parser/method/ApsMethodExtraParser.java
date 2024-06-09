@@ -3,7 +3,7 @@ package com.github.cao.awa.apsars.parser.method;
 import com.github.cao.awa.apsars.element.ApsElementType;
 import com.github.cao.awa.apsars.parser.ApsParser;
 import com.github.cao.awa.apsars.parser.vararg.ApsVarargParser;
-import com.github.cao.awa.apsars.tree.method.statement.ApsMethodAst;
+import com.github.cao.awa.apsars.tree.method.ApsMethodAst;
 import com.github.cao.awa.apsars.tree.vararg.producer.ApsVarargProducer;
 import com.github.cao.awa.catheter.pair.Pair;
 import org.apache.logging.log4j.LogManager;
