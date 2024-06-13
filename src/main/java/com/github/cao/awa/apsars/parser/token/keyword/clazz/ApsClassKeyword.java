@@ -1,6 +1,9 @@
-package com.github.cao.awa.apsars.parser.token.keyword;
+package com.github.cao.awa.apsars.parser.token.keyword.clazz;
 
-public enum ApsClassKeyword {
+import com.github.cao.awa.apsars.parser.token.keyword.ApsKeyword;
+
+public enum ApsClassKeyword implements ApsKeyword {
+    LET("let"),
     CLASS("class"),
 
     PUBLIC("public"),

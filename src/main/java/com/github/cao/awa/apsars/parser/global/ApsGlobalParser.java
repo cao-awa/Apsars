@@ -4,8 +4,9 @@ import com.github.cao.awa.apsars.element.ApsElementType;
 import com.github.cao.awa.apsars.element.modifier.method.ApsMethodModifier;
 import com.github.cao.awa.apsars.parser.ApsParser;
 import com.github.cao.awa.apsars.parser.method.parameter.ApsMethodParameterParser;
-import com.github.cao.awa.apsars.parser.token.keyword.ApsMethodKeyword;
-import com.github.cao.awa.apsars.tree.clazz.ApsMemberParameterAst;
+import com.github.cao.awa.apsars.parser.token.ApsTokens;
+import com.github.cao.awa.apsars.parser.token.keyword.method.ApsMethodKeyword;
+import com.github.cao.awa.apsars.parser.token.keyword.global.ApsGlobalKeyword;
 import com.github.cao.awa.apsars.tree.global.ApsGlobalAst;
 import com.github.cao.awa.apsars.tree.method.ApsMethodAst;
 import com.github.cao.awa.apsars.tree.method.ApsMethodBodyAst;
@@ -14,9 +15,6 @@ import com.github.cao.awa.apsars.tree.statement.special.literal.ApsLiteralStatem
 import com.github.cao.awa.catheter.pair.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import java.util.Collections;
-import java.util.List;
 
 public class ApsGlobalParser extends ApsParser<ApsGlobalAst> {
     private static final Logger LOGGER = LogManager.getLogger("ApsGlobalParser");
@@ -28,8 +26,6 @@ public class ApsGlobalParser extends ApsParser<ApsGlobalAst> {
 
     @Override
     public void parse(ApsGlobalAst ast) {
-        System.out.println(codes() + "???");
-
         // 读取全局定义中的内容
         Pair<Integer, Boolean> braceEndIndex = findClosureBraces(true);
         if (!braceEndIndex.second()) {
@@ -39,16 +35,15 @@ public class ApsGlobalParser extends ApsParser<ApsGlobalAst> {
             substring(1, braceEndIndex.first());
 
             while (readable()) {
-                if (startWith("alias")) {
-                    skip(6);
+                if (startWith(ApsGlobalKeyword.ALIAS)) {
+                    skip(ApsGlobalKeyword.ALIAS);
                     Pair<String, Boolean> aliasName = nextToken(" ", false);
                     skip(aliasName.first().length());
-                    skip(1);
+                    stripCodes();
 
                     // 跳过'as'
-                    skip(2);
+                    skip(ApsGlobalKeyword.AS);
                     Pair<String, Boolean> methodTarget = nextToken("(", false);
-                    System.out.println("TARGET: " + methodTarget.first());
                     skip(methodTarget.first().length());
 
                     Pair<Integer, Boolean> paramBraces = findClosureBraces(true);
@@ -56,8 +51,9 @@ public class ApsGlobalParser extends ApsParser<ApsGlobalAst> {
                     String paramCodes = makeSubstring(1, paramBraces.first());
 
                     skip(paramCodes.length());
-                    // 跳过两个括号和一个分号
-                    skip(1 + 1 + 1);
+                    skip(ApsTokens.BRACES_START);
+                    skip(ApsTokens.BRACES_END);
+                    skip(ApsTokens.SEMICOLON);
 
                     // 生成方法
                     ApsMethodAst methodAst = new ApsMethodAst(ast);
@@ -90,11 +86,7 @@ public class ApsGlobalParser extends ApsParser<ApsGlobalAst> {
 
                     String aliasFullName = aliasName.first() + "(" + methodAst.param().generateJava() + ")";
 
-                    System.out.println("ALIAS FULL: " + aliasFullName);
-
                     ast.addAliasMethod(aliasFullName, methodAst);
-
-                    System.out.println("LEAST: " + codes());
                 }
             }
 

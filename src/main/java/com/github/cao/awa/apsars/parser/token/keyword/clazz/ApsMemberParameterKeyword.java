@@ -1,6 +1,8 @@
-package com.github.cao.awa.apsars.parser.token.keyword;
+package com.github.cao.awa.apsars.parser.token.keyword.clazz;
 
-public enum ApsMemberParameterKeyword {
+import com.github.cao.awa.apsars.parser.token.keyword.ApsKeyword;
+
+public enum ApsMemberParameterKeyword implements ApsKeyword {
     PUBLIC("public"),
     PROTECTED("protected"),
     PRIVATE("private"),

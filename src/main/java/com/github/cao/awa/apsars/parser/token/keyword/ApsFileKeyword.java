@@ -1,6 +1,6 @@
 package com.github.cao.awa.apsars.parser.token.keyword;
 
-public enum ApsFileKeyword {
+public enum ApsFileKeyword implements ApsKeyword {
     IMPORT("import"),
 
     CLASS("class"),

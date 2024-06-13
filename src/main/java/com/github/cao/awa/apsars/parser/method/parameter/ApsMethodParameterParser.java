@@ -5,7 +5,7 @@ import com.github.cao.awa.apsars.element.modifier.method.parameter.ApsMethodPara
 import com.github.cao.awa.apsars.parser.ApsParser;
 import com.github.cao.awa.apsars.parser.method.parameter.element.ApsMethodParameterPresetValueElementParser;
 import com.github.cao.awa.apsars.parser.token.ApsTokens;
-import com.github.cao.awa.apsars.parser.token.keyword.ApsMethodParamKeyword;
+import com.github.cao.awa.apsars.parser.token.keyword.method.ApsMethodParamKeyword;
 import com.github.cao.awa.apsars.parser.vararg.ApsVarargParser;
 import com.github.cao.awa.apsars.tree.method.parameter.ApsMethodParameterAst;
 import com.github.cao.awa.apsars.tree.method.parameter.ApsMethodParamElementAst;
@@ -60,7 +60,7 @@ public class ApsMethodParameterParser extends ApsParser<ApsMethodParameterAst> {
 
                         paramElement.nameIdentity(nextToken.first());
                         // 跳过冒号
-                        skipAndFeedback(1);
+                        skipAndFeedback(ApsTokens.COLON);
                     } else if (type == ApsElementType.TYPE) {
                         type = ApsElementType.METHOD_PARAM_DEFAULT;
 
@@ -88,8 +88,7 @@ public class ApsMethodParameterParser extends ApsParser<ApsMethodParameterAst> {
                     if (startWith(",")) {
                         type = ApsElementType.LITERAL_IDENTITY;
                         paramElement = new ApsMethodParamElementAst(ast);
-                        // 跳过逗号
-                        skipAndFeedback(1);
+                        skipAndFeedback(ApsTokens.COMMA);
                     }
                 }
             } else {

@@ -15,6 +15,7 @@ import com.github.cao.awa.apsars.parser.method.statement.ApsMethodCatchingParser
 import com.github.cao.awa.apsars.parser.statement.ApsStatementParser;
 import com.github.cao.awa.apsars.parser.statement.trys.ApsTryStatementParser;
 import com.github.cao.awa.apsars.parser.token.ApsTokens;
+import com.github.cao.awa.apsars.parser.token.keyword.ApsKeyword;
 import com.github.cao.awa.apsars.parser.vararg.ApsVarargParser;
 import com.github.cao.awa.apsars.tree.ApsAst;
 import com.github.cao.awa.catheter.pair.Pair;
@@ -344,6 +345,14 @@ public abstract class ApsParser<T extends ApsAst> {
         substring(length, this.codes.length());
     }
 
+    public void skip(String s) {
+        skip(s.length());
+    }
+
+    public void skip(ApsKeyword keyword) {
+        skip(keyword.literal());
+    }
+
     public void skipAll() {
         this.codes = "";
     }
@@ -351,6 +360,14 @@ public abstract class ApsParser<T extends ApsAst> {
     public void skipAndFeedback(int length) {
         skip(length);
         accumulateFeedbackSkip(length);
+    }
+
+    public void skipAndFeedback(String s) {
+        skipAndFeedback(s.length());
+    }
+
+    public void skipAndFeedback(ApsKeyword keyword) {
+        skipAndFeedback(keyword.literal());
     }
 
     public String makeSubstring(int start, int end) {
@@ -373,6 +390,10 @@ public abstract class ApsParser<T extends ApsAst> {
         stripCodes();
 
         return this.codes.startsWith(target);
+    }
+
+    public boolean startWith(ApsKeyword target) {
+        return startWith(target.literal());
     }
 
     public void replaceCodes(String target, String replacement) {

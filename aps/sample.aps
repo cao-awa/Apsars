@@ -1,7 +1,5 @@
 global {
     alias println as System.out.println(x: Object);
-
-    alias printlnAwa as com.github.cao.awa.apsars.ApsGlobal.println(x: Object);
 }
 
 final class Sample2 {

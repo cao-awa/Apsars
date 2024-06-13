@@ -2,7 +2,7 @@ package com.github.cao.awa.apsars.element.modifier.method;
 
 import com.github.cao.awa.apsars.element.method.ApsMethodModifierType;
 import com.github.cao.awa.apsars.element.modifier.ApsModifier;
-import com.github.cao.awa.apsars.parser.token.keyword.ApsMethodKeyword;
+import com.github.cao.awa.apsars.parser.token.keyword.method.ApsMethodKeyword;
 
 public abstract class ApsMethodModifier extends ApsModifier<ApsMethodModifierType> {
     public static ApsMethodModifier create(ApsMethodKeyword keyword) {

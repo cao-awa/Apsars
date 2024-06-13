@@ -4,7 +4,7 @@ import com.github.cao.awa.apsars.element.clazz.ApsMemberParameterModifierType;
 import com.github.cao.awa.apsars.element.modifier.ApsModifier;
 import com.github.cao.awa.apsars.element.modifier.parameter.generator.ApsMemberParameterOverridableModifier;
 import com.github.cao.awa.apsars.element.modifier.parameter.generator.ApsMethodHolderModifier;
-import com.github.cao.awa.apsars.parser.token.keyword.ApsMemberParameterKeyword;
+import com.github.cao.awa.apsars.parser.token.keyword.clazz.ApsMemberParameterKeyword;
 
 public abstract class ApsMemberParameterModifier extends ApsModifier<ApsMemberParameterModifierType> {
     public static ApsMemberParameterModifier create(ApsMemberParameterKeyword keyword) {

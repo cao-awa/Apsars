@@ -4,7 +4,7 @@ import com.github.cao.awa.apsars.element.ApsElementType;
 import com.github.cao.awa.apsars.element.modifier.parameter.ApsMemberParameterModifier;
 import com.github.cao.awa.apsars.parser.ApsParser;
 import com.github.cao.awa.apsars.parser.token.ApsTokens;
-import com.github.cao.awa.apsars.parser.token.keyword.ApsMemberParameterKeyword;
+import com.github.cao.awa.apsars.parser.token.keyword.clazz.ApsMemberParameterKeyword;
 import com.github.cao.awa.apsars.parser.vararg.ApsVarargParser;
 import com.github.cao.awa.apsars.tree.clazz.ApsMemberParameterAst;
 import com.github.cao.awa.catheter.pair.Pair;
@@ -58,7 +58,7 @@ public class ApsMemberParameterParser extends ApsParser<ApsMemberParameterAst> {
                         type = ApsElementType.TYPE;
                         ast.nameIdentity(nextToken.first());
                         // 跳过冒号
-                        skipAndFeedback(1);
+                        skipAndFeedback(ApsTokens.COLON);
                     } else if (type == ApsElementType.TYPE) {
                         type = ApsElementType.UNEXPECTED;
                         processVararg(ast, nextToken.first());

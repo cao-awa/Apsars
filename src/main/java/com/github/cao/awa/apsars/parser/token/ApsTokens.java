@@ -2,6 +2,10 @@ package com.github.cao.awa.apsars.parser.token;
 
 import com.github.cao.awa.apricot.util.collection.ApricotCollectionFactor;
 import com.github.cao.awa.apsars.parser.token.keyword.*;
+import com.github.cao.awa.apsars.parser.token.keyword.clazz.ApsClassKeyword;
+import com.github.cao.awa.apsars.parser.token.keyword.clazz.ApsMemberParameterKeyword;
+import com.github.cao.awa.apsars.parser.token.keyword.method.ApsMethodKeyword;
+import com.github.cao.awa.apsars.parser.token.keyword.method.ApsMethodParamKeyword;
 import com.github.cao.awa.sinuatum.manipulate.Manipulate;
 
 import java.util.Map;
@@ -13,6 +17,9 @@ public class ApsTokens {
     public static final String ANGLE_BRACES_END = ">";
     public static final String BRACES_START = "(";
     public static final String BRACES_END = ")";
+    public static final String SEMICOLON = ";";
+    public static final String COMMA = ",";
+    public static final String COLON = ":";
     public static final Map<String, String> BRACES = Manipulate.operation(ApricotCollectionFactor.hashMap(), map -> {
         map.put(CURLY_BRACES_START, CURLY_BRACES_END);
         map.put(ANGLE_BRACES_START, ANGLE_BRACES_END);

@@ -1,6 +1,8 @@
-package com.github.cao.awa.apsars.parser.token.keyword;
+package com.github.cao.awa.apsars.parser.token.keyword.method;
 
-public enum ApsMethodParamKeyword {
+import com.github.cao.awa.apsars.parser.token.keyword.ApsKeyword;
+
+public enum ApsMethodParamKeyword implements ApsKeyword {
     VAL("val"),
     FINAL("final"),
     DEFAULT("default")

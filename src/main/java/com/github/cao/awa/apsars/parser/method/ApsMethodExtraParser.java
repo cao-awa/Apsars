@@ -2,6 +2,7 @@ package com.github.cao.awa.apsars.parser.method;
 
 import com.github.cao.awa.apsars.element.ApsElementType;
 import com.github.cao.awa.apsars.parser.ApsParser;
+import com.github.cao.awa.apsars.parser.token.ApsTokens;
 import com.github.cao.awa.apsars.parser.vararg.ApsVarargParser;
 import com.github.cao.awa.apsars.tree.method.ApsMethodAst;
 import com.github.cao.awa.apsars.tree.vararg.producer.ApsVarargProducer;
@@ -22,7 +23,7 @@ public class ApsMethodExtraParser extends ApsParser<ApsMethodAst> {
     @Override
     public void parse(ApsMethodAst ast) {
         if (startWith(":")) {
-            skipAndFeedback(1);
+            skipAndFeedback(ApsTokens.COLON);
             processReturnType(ast);
         }
     }

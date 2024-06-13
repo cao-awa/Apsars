@@ -57,7 +57,7 @@ public class ApsFileParser extends ApsParser<ApsFileAst> {
         classAst.fullName(nameIdentity.first());
 
         // 跳过分号的长度
-        skip(1);
+        skip(ApsTokens.SEMICOLON);
 
         ast.addImport(classAst);
     }

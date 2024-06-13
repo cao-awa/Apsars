@@ -1,6 +1,7 @@
 package com.github.cao.awa.apsars.parser.vararg;
 
 import com.github.cao.awa.apsars.parser.ApsParser;
+import com.github.cao.awa.apsars.parser.token.ApsTokens;
 import com.github.cao.awa.apsars.tree.vararg.ApsArgTypeAst;
 import com.github.cao.awa.apsars.tree.vararg.ApsAstWithVarargs;
 import com.github.cao.awa.catheter.pair.Pair;
@@ -52,7 +53,7 @@ public class ApsVarargParser extends ApsParser<ApsAstWithVarargs> {
                 argTypeAst.addArg(noVararg);
 
                 // 跳过逗号
-                skipAndFeedback(1);
+                skipAndFeedback(ApsTokens.COMMA);
             }
 
             if (codes().contains("<") && codes().contains(">")) {

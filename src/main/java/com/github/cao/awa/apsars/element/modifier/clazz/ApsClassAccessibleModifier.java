@@ -2,9 +2,7 @@ package com.github.cao.awa.apsars.element.modifier.clazz;
 
 import com.github.cao.awa.apsars.element.ApsAccessibleType;
 import com.github.cao.awa.apsars.element.clazz.ApsClassModifierType;
-import com.github.cao.awa.apsars.element.method.ApsMethodModifierType;
-import com.github.cao.awa.apsars.parser.token.keyword.ApsClassKeyword;
-import com.github.cao.awa.apsars.parser.token.keyword.ApsMethodKeyword;
+import com.github.cao.awa.apsars.parser.token.keyword.clazz.ApsClassKeyword;
 
 public class ApsClassAccessibleModifier extends ApsClassModifier {
     private final ApsAccessibleType accessibleType;

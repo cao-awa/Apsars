@@ -7,7 +7,7 @@ import com.github.cao.awa.apsars.parser.method.parameter.ApsMethodParameterParse
 import com.github.cao.awa.apsars.parser.method.statement.ApsMethodBodyParser;
 import com.github.cao.awa.apsars.parser.method.statement.ApsMethodCatchingParser;
 import com.github.cao.awa.apsars.parser.token.ApsTokens;
-import com.github.cao.awa.apsars.parser.token.keyword.ApsMethodKeyword;
+import com.github.cao.awa.apsars.parser.token.keyword.method.ApsMethodKeyword;
 import com.github.cao.awa.apsars.tree.method.ApsMethodAst;
 import com.github.cao.awa.apsars.tree.method.ApsMethodBodyAst;
 import com.github.cao.awa.apsars.tree.statement.trys.ApsMethodExtraCatchAst;
@@ -54,7 +54,7 @@ public class ApsMethodParser extends ApsParser<ApsMethodAst> {
 
                         continue;
                     } else if (type == ApsElementType.METHOD_BODY) {
-                        if (startWith("{")) {
+                        if (startWith(ApsTokens.CURLY_BRACES_START)) {
                             type = ApsElementType.TRY_CATCHING;
 
                             Pair<Integer, Boolean> body = findClosureBraces(true);

@@ -8,9 +8,9 @@ import com.github.cao.awa.apsars.element.modifier.parameter.ApsMemberParameterMo
 import com.github.cao.awa.apsars.parser.ApsParser;
 import com.github.cao.awa.apsars.parser.method.ApsMethodParser;
 import com.github.cao.awa.apsars.parser.token.ApsTokens;
-import com.github.cao.awa.apsars.parser.token.keyword.ApsClassKeyword;
-import com.github.cao.awa.apsars.parser.token.keyword.ApsMemberParameterKeyword;
-import com.github.cao.awa.apsars.parser.token.keyword.ApsMethodKeyword;
+import com.github.cao.awa.apsars.parser.token.keyword.clazz.ApsClassKeyword;
+import com.github.cao.awa.apsars.parser.token.keyword.clazz.ApsMemberParameterKeyword;
+import com.github.cao.awa.apsars.parser.token.keyword.method.ApsMethodKeyword;
 import com.github.cao.awa.apsars.tree.clazz.ApsClassAst;
 import com.github.cao.awa.apsars.tree.clazz.ApsMemberParameterAst;
 import com.github.cao.awa.apsars.tree.method.ApsMethodAst;
@@ -88,7 +88,7 @@ public class ApsClassParser extends ApsParser<ApsClassAst> {
             skip(lets.first().length());
         }
 
-        letApplies.remove("let");
+        letApplies.remove(ApsClassKeyword.LET.literal());
 
         List<ApsMemberParameterModifier> applyMemberParameterModifiers = ApricotCollectionFactor.arrayList();
         List<ApsMethodModifier> applyMethodModifiers = ApricotCollectionFactor.arrayList();
@@ -166,7 +166,7 @@ public class ApsClassParser extends ApsParser<ApsClassAst> {
 
         skip(param.first().length());
         // 跳过分号的长度
-        skip(1);
+        skip(ApsTokens.SEMICOLON);
     }
 
     private void processMethod(ApsClassAst ast, List<ApsMethodModifier> applyMethodModifiers) {

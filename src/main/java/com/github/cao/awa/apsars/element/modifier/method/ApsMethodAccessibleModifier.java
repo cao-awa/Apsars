@@ -2,7 +2,7 @@ package com.github.cao.awa.apsars.element.modifier.method;
 
 import com.github.cao.awa.apsars.element.ApsAccessibleType;
 import com.github.cao.awa.apsars.element.method.ApsMethodModifierType;
-import com.github.cao.awa.apsars.parser.token.keyword.ApsMethodKeyword;
+import com.github.cao.awa.apsars.parser.token.keyword.method.ApsMethodKeyword;
 
 public class ApsMethodAccessibleModifier extends ApsMethodModifier {
     private final ApsAccessibleType accessibleType;

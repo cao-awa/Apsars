@@ -2,7 +2,7 @@ package com.github.cao.awa.apsars.element.modifier.parameter;
 
 import com.github.cao.awa.apsars.element.ApsAccessibleType;
 import com.github.cao.awa.apsars.element.clazz.ApsMemberParameterModifierType;
-import com.github.cao.awa.apsars.parser.token.keyword.ApsMemberParameterKeyword;
+import com.github.cao.awa.apsars.parser.token.keyword.clazz.ApsMemberParameterKeyword;
 
 public class ApsMemberParameterAccessibleModifier extends ApsMemberParameterModifier {
     private final ApsAccessibleType accessibleType;
