@@ -12,4 +12,6 @@ public enum ApsMethodModifierType implements ApsModifierType {
     SYNCHRONIZED,
 
     SAFEPOINT,
+
+    NULLSAFE,
 }

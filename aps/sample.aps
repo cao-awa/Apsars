@@ -3,7 +3,7 @@ global {
 }
 
 final class Sample2 {
-    public static xxx() {
+    public nullsafe static xxx() {
         int x = 0;
         int y = 100;
         int z = 123;

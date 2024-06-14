@@ -14,7 +14,9 @@ public enum ApsMethodKeyword implements ApsKeyword {
     SYNC("sync"),
     SYNCHRONIZED("synchronized"),
 
-    SAFEPOINT("safepoint")
+    SAFEPOINT("safepoint"),
+
+    NULLSAFE("nullsafe")
     ;
 
     private final String literal;

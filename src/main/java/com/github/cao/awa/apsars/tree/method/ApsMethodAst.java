@@ -231,6 +231,10 @@ public class ApsMethodAst extends ApsAst {
             extraCatch(null);
         }
 
+        if (this.modifiers.get(ApsMethodModifierType.NULLSAFE) != null) {
+            addCompilerFlag("null-safe");
+        }
+
         Manipulate.notNull(this.param, ApsMethodParameterAst::preprocess);
         Manipulate.notNull(this.methodBody, ApsMethodBodyAst::preprocess);
         Manipulate.notNull(this.extraCatch, ApsMethodExtraCatchAst::preprocess);
