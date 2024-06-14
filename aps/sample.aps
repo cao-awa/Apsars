@@ -16,6 +16,25 @@ final class Sample2 {
         } catch (ex: IllegalArgumentException or IllegalStateException or IllformedLocaleException) {
             println("Hello exception");
         }
-        int n = 111;
+        int w1 = 123;
+        try {
+            println("Hello world");
+        } catch (ex: IllegalArgumentException or IllegalStateException or IllformedLocaleException) {
+            println("Hello exception");
+        }
+        int w2 = 123;
+        try {
+            println("Hello world");
+        } catch (ex: IllegalArgumentException or IllegalStateException or IllformedLocaleException) {
+            println("Hello exception");
+        }
+        int w3 = 123;
+        try {
+            println("Hello world");
+            int w411 = 123;
+        } catch (ex: IllegalArgumentException or IllegalStateException or IllformedLocaleException) {
+            println("Hello exception");
+        }
+        int w4 = 123;
     }
 }

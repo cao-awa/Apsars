@@ -4,7 +4,6 @@ import com.github.cao.awa.apsars.element.ApsElementType;
 import com.github.cao.awa.apsars.parser.ApsParser;
 import com.github.cao.awa.apsars.parser.statement.trys.ApsTryStatementParser;
 import com.github.cao.awa.apsars.tree.method.ApsMethodBodyAst;
-import com.github.cao.awa.apsars.tree.statement.ApsStatementAst;
 import com.github.cao.awa.apsars.tree.statement.special.literal.ApsLiteralStatementAst;
 import com.github.cao.awa.apsars.tree.statement.trys.ApsTryCatchAst;
 import com.github.cao.awa.catheter.pair.Pair;
@@ -27,6 +26,7 @@ public class ApsStatementParser extends ApsParser<ApsMethodBodyAst> {
                 parser.parse(codes(), tryCatchAst);
                 ast.addStatement(tryCatchAst);
                 skipAndFeedback(parser.feedbackSkip());
+                continue;
             }
             Pair<String, Boolean> nextStatement = nextToken(";", false);
             if (nextStatement.second()) {
