@@ -16,7 +16,7 @@ public abstract class ApsAstWithVarargs extends ApsAst {
     }
 
     @Override
-    public String generateJava() {
-        return this.argType.generateJava();
+    public void generateJava(StringBuilder builder) {
+        this.argType.generateJava(builder);
     }
 }

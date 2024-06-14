@@ -7,9 +7,9 @@ import com.github.cao.awa.apsars.parser.token.keyword.clazz.ApsClassKeyword;
 public abstract class ApsClassModifier extends ApsModifier<ApsClassModifierType> {
     public static ApsClassModifier create(ApsClassKeyword keyword) {
         return switch (keyword) {
-            case PUBLIC, PROTECTED, PRIVATE -> new ApsClassAccessibleModifier(keyword);
+            case PUBLIC, OPEN, PUB, PROTECTED, PRIVATE, PVT -> new ApsClassAccessibleModifier(keyword);
             case FINAL -> new ApsClassFinalModifier();
-            case STATIC -> new ApsClassStaticModifier();
+            case STATIC, RIGID -> new ApsClassStaticModifier();
             default -> null;
         };
     }

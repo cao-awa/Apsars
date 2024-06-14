@@ -13,9 +13,9 @@ public class ApsClassAccessibleModifier extends ApsClassModifier {
 
     public ApsClassAccessibleModifier(ApsClassKeyword keyword) {
         this.accessibleType = switch (keyword) {
-            case PUBLIC -> ApsAccessibleType.PUBLIC;
+            case PUBLIC, OPEN, PUB -> ApsAccessibleType.PUBLIC;
             case PROTECTED ->  ApsAccessibleType.PROTECTED;
-            case PRIVATE -> ApsAccessibleType.PRIVATE;
+            case PRIVATE, PVT -> ApsAccessibleType.PRIVATE;
             default -> throw new IllegalArgumentException("Unable to find accessible keyword: " + keyword.literal());
         };
     }

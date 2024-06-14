@@ -1,14 +1,8 @@
 package com.github.cao.awa.apsars.tree.annotation;
 
-import com.github.cao.awa.apricot.util.collection.ApricotCollectionFactor;
 import com.github.cao.awa.apsars.tree.ApsAst;
-import com.github.cao.awa.apsars.tree.aps.ApsImportAst;
-import com.github.cao.awa.apsars.tree.clazz.ApsClassAst;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.experimental.Accessors;
-
-import java.util.List;
 
 @Accessors(fluent = true)
 public class ApsAnnotationAst extends ApsAst {
@@ -25,11 +19,9 @@ public class ApsAnnotationAst extends ApsAst {
     }
 
     @Override
-    public String generateJava() {
-        StringBuilder builder = new StringBuilder();
+    public void generateJava(StringBuilder builder) {
         builder.append("@");
         builder.append(this.nameIdentity);
-        return builder.toString();
     }
 
     @Override

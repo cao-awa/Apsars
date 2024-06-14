@@ -2,7 +2,6 @@ package com.github.cao.awa.apsars.tree.method.parameter.preset.string;
 
 import com.github.cao.awa.apsars.tree.ApsAst;
 import com.github.cao.awa.apsars.tree.method.parameter.preset.ApsPresetValueAst;
-import com.github.cao.awa.apsars.tree.method.parameter.preset.ApsPresetValueElementAst;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -23,8 +22,10 @@ public class ApsStringPresetValueAst extends ApsPresetValueAst {
     }
 
     @Override
-    public String generateJava() {
-        return "\"" + this.value + "\"";
+    public void generateJava(StringBuilder builder) {
+        builder.append("\"")
+                .append(this.value)
+                .append("\"");
     }
 
     @Override

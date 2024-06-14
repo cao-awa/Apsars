@@ -7,7 +7,7 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 
 import java.util.List;
-import java.util.function.Supplier;
+import java.util.Objects;
 
 @Accessors(fluent = true)
 public class ApsCatchListAst extends ApsAst {
@@ -33,8 +33,7 @@ public class ApsCatchListAst extends ApsAst {
     }
 
     @Override
-    public String generateJava() {
-        StringBuilder builder = new StringBuilder();
+    public void generateJava(StringBuilder builder) {
         List<String> catchTargets = this.catchTargets;
         int targetsSize = catchTargets.size();
         int edge = targetsSize - 1;
@@ -46,12 +45,7 @@ public class ApsCatchListAst extends ApsAst {
             }
         }
         builder.append(" ");
-        if (this.catchName != null) {
-            builder.append(this.catchName);
-        } else {
-            builder.append("ignored");
-        }
-        return builder.toString();
+        builder.append(Objects.requireNonNullElse(this.catchName, "ignored"));
     }
 
     @Override

@@ -1,7 +1,7 @@
 package com.github.cao.awa.apsars.parser.token;
 
 import com.github.cao.awa.apricot.util.collection.ApricotCollectionFactor;
-import com.github.cao.awa.apsars.parser.token.keyword.*;
+import com.github.cao.awa.apsars.parser.token.keyword.ApsFileKeyword;
 import com.github.cao.awa.apsars.parser.token.keyword.clazz.ApsClassKeyword;
 import com.github.cao.awa.apsars.parser.token.keyword.clazz.ApsMemberParameterKeyword;
 import com.github.cao.awa.apsars.parser.token.keyword.method.ApsMethodKeyword;
@@ -20,6 +20,10 @@ public class ApsTokens {
     public static final String SEMICOLON = ";";
     public static final String COMMA = ",";
     public static final String COLON = ":";
+    public static final String EQUAL = "=";
+    public static final String LEFT_ASSIGNMENT = "<-";
+    public static final String HYPHEN = "-";
+    public static final String UNDERSCORE = "_";
     public static final Map<String, String> BRACES = Manipulate.operation(ApricotCollectionFactor.hashMap(), map -> {
         map.put(CURLY_BRACES_START, CURLY_BRACES_END);
         map.put(ANGLE_BRACES_START, ANGLE_BRACES_END);

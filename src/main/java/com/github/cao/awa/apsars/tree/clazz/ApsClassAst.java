@@ -67,9 +67,7 @@ public class ApsClassAst extends ApsAst {
     }
 
     @Override
-    public String generateJava() {
-        StringBuilder builder = new StringBuilder();
-
+    public void generateJava(StringBuilder builder) {
         // 设置修饰符
         for (ApsClassModifierType modifierType : ApsClassModifierType.values()) {
             Manipulate.notNull(this.modifiers.get(modifierType), modifier -> {
@@ -85,15 +83,14 @@ public class ApsClassAst extends ApsAst {
         builder.append("{");
 
         for (ApsMemberParameterAst parameterAst : this.parameters) {
-            builder.append(parameterAst.generateJava());
+            parameterAst.generateJava(builder);
         }
 
         for (ApsMethodAst methodAst : this.methods) {
-            builder.append(methodAst.generateJava());
+            methodAst.generateJava(builder);
         }
 
         builder.append("}");
-        return builder.toString();
     }
 
     @Override

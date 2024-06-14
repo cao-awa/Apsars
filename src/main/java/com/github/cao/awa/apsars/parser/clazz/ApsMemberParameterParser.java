@@ -23,7 +23,9 @@ public class ApsMemberParameterParser extends ApsParser<ApsMemberParameterAst> {
 
     @Override
     public void parse(ApsMemberParameterAst ast) {
-        String[] strings = codes().split("=");
+        replaceCodes(ApsTokens.LEFT_ASSIGNMENT, ApsTokens.EQUAL);
+        replaceCodes(ApsMemberParameterKeyword.AS, ApsTokens.EQUAL, true);
+        String[] strings = codes().split(ApsTokens.EQUAL);
 
         reset(strings[0]);
         processDefine(ast);

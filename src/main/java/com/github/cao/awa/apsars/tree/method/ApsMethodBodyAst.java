@@ -33,14 +33,10 @@ public class ApsMethodBodyAst extends ApsAst {
     }
 
     @Override
-    public String generateJava() {
-        StringBuilder builder = new StringBuilder();
-
+    public void generateJava(StringBuilder builder) {
         for (ApsStatementAst statement : this.statements) {
-            builder.append(statement.generateJava());
+            statement.generateJava(builder);
         }
-
-        return builder.toString();
     }
 
     @Override

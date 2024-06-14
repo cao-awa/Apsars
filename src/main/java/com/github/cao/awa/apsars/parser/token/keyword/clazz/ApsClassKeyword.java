@@ -6,10 +6,14 @@ public enum ApsClassKeyword implements ApsKeyword {
     LET("let"),
     CLASS("class"),
 
+    OPEN("public"),
+    PUB("pub"),
     PUBLIC("public"),
     PROTECTED("protected"),
+    PVT("pvt"),
     PRIVATE("private"),
 
+    RIGID("rigid"),
     STATIC("static"),
 
     FINAL("final"),

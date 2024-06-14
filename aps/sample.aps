@@ -3,7 +3,11 @@ global {
 }
 
 final class Sample2 {
-    public nullsafe static xxx() {
+    pub name1: int as 123;
+    pub name2: int = 123;
+    name3: int <- 123;
+
+    pvt s-nil safepoint rigid xxx() {
         int x = 0;
         int y = 100;
         int z = 123;

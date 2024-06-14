@@ -3,10 +3,7 @@ package com.github.cao.awa.apsars.tree.global;
 import com.github.cao.awa.apricot.util.collection.ApricotCollectionFactor;
 import com.github.cao.awa.apsars.tree.ApsAst;
 import com.github.cao.awa.apsars.tree.method.ApsMethodAst;
-import com.github.cao.awa.apsars.tree.vararg.ApsArgTypeAst;
 
-import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
@@ -35,14 +32,12 @@ public class ApsGlobalAst extends ApsAst {
     }
 
     @Override
-    public String generateJava() {
-        StringBuilder builder = new StringBuilder();
+    public void generateJava(StringBuilder builder) {
         builder.append("public final class ApsGlobal {");
         this.aliasMethods.forEach((name, method) -> {
-            builder.append(method.generateJava());
+            method.generateJava(builder);
         });
         builder.append("}");
-        return builder.toString();
     }
 
     @Override

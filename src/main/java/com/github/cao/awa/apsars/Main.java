@@ -1,9 +1,9 @@
 package com.github.cao.awa.apsars;
 
 import com.github.cao.awa.apricot.util.io.IOUtil;
+import com.github.cao.awa.apsars.element.ApsElementType;
 import com.github.cao.awa.apsars.parser.ApsFileParser;
 import com.github.cao.awa.apsars.parser.ApsParser;
-import com.github.cao.awa.apsars.element.ApsElementType;
 import com.github.cao.awa.apsars.tree.aps.ApsFileAst;
 import com.github.cao.awa.apsars.tree.global.ApsGlobalAst;
 
@@ -25,10 +25,15 @@ public class Main {
 
             ast.print();
 
-            System.out.println(ast.generateJava());
+            System.out.println("-- Global build");
+            StringBuilder builder = new StringBuilder();
+            ApsGlobalAst.global.generateJava(builder);
+            System.out.println(builder);
 
-            System.out.println("--Global");
-            System.out.println(ApsGlobalAst.global.generateJava());
+            System.out.println("-- File build");
+            builder.setLength(0);
+            ast.generateJava(builder);
+            System.out.println(builder);
         } catch (Exception e) {
             e.printStackTrace();
         }

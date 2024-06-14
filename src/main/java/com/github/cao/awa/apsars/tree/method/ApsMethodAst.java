@@ -7,9 +7,10 @@ import com.github.cao.awa.apsars.tree.ApsAst;
 import com.github.cao.awa.apsars.tree.annotation.ApsAnnotationAst;
 import com.github.cao.awa.apsars.tree.clazz.ApsClassAst;
 import com.github.cao.awa.apsars.tree.method.parameter.ApsMethodParameterAst;
-import com.github.cao.awa.apsars.tree.statement.ApsStatementAst;
 import com.github.cao.awa.apsars.tree.statement.special.literal.ApsLiteralStatementAst;
+import com.github.cao.awa.apsars.tree.statement.trys.ApsCatchListAst;
 import com.github.cao.awa.apsars.tree.statement.trys.ApsMethodExtraCatchAst;
+import com.github.cao.awa.apsars.tree.statement.trys.ApsTryCatchAst;
 import com.github.cao.awa.apsars.tree.vararg.ApsArgTypeAst;
 import com.github.cao.awa.sinuatum.manipulate.Manipulate;
 import lombok.Getter;
@@ -110,12 +111,10 @@ public class ApsMethodAst extends ApsAst {
     }
 
     @Override
-    public String generateJava() {
-        StringBuilder builder = new StringBuilder();
-
+    public void generateJava(StringBuilder builder) {
         if (!this.annotations.isEmpty()) {
             for (ApsAnnotationAst annotationAst : this.annotations.values()) {
-                builder.append(annotationAst.generateJava());
+                annotationAst.generateJava(builder);
                 builder.append(" ");
             }
         }
@@ -133,14 +132,14 @@ public class ApsMethodAst extends ApsAst {
         if (this.returnType == null) {
             builder.append("void");
         } else {
-            builder.append(this.returnType.generateJava());
+            this.returnType.generateJava(builder);
         }
         builder.append(" ");
 
         builder.append(this.nameIdentity);
         builder.append("(");
         if (this.param != null) {
-            builder.append(this.param.generateJava());
+            this.param.generateJava(builder);
         }
         builder.append(")");
 
@@ -149,20 +148,16 @@ public class ApsMethodAst extends ApsAst {
                 builder.append("{}");
             } else {
                 builder.append("{");
-                builder.append(this.methodBody.generateJava());
+                this.methodBody.generateJava(builder);
                 builder.append("}");
             }
         } else {
-            builder.append(this.extraCatch.generateJava(() -> {
-                if (this.methodBody == null) {
-                    return "";
-                } else {
-                    return this.methodBody.generateJava();
+            this.extraCatch.generateJava(builder, (innerBuilder) -> {
+                if (this.methodBody != null) {
+                    this.methodBody.generateJava(innerBuilder);
                 }
-            }));
+            });
         }
-
-        return builder.toString();
     }
 
     @Override
@@ -194,7 +189,14 @@ public class ApsMethodAst extends ApsAst {
             findAst(ApsClassAst.class).addMethod(newMethod);
 
             ApsMethodBodyAst selfMethodBody = new ApsMethodBodyAst(this);
-            ApsLiteralStatementAst safepointStatementAst = new ApsLiteralStatementAst(selfMethodBody, "try{Thread.sleep(0);}catch (InterruptedException ignored){}");
+            ApsTryCatchAst safepointStatementAst = new ApsTryCatchAst(selfMethodBody);
+            ApsMethodBodyAst safepointStatementMethodBody = new ApsMethodBodyAst(safepointStatementAst);
+            ApsLiteralStatementAst threadSleepStatement = new ApsLiteralStatementAst(safepointStatementMethodBody, "Thread.sleep(0)");
+            safepointStatementMethodBody.addStatement(threadSleepStatement);
+            safepointStatementAst.methodBody(safepointStatementMethodBody);
+            ApsCatchListAst catchListAst = new ApsCatchListAst(safepointStatementAst);
+            catchListAst.addCatchTarget("InterruptedException");
+            safepointStatementAst.catchList(catchListAst);
 
             StringBuilder paramBuilder = new StringBuilder();
             int index = 0;

@@ -35,15 +35,13 @@ public class ApsFileAst extends ApsAst {
     }
 
     @Override
-    public String generateJava() {
-        StringBuilder builder = new StringBuilder();
+    public void generateJava(StringBuilder builder) {
         for (ApsImportAst importAst : this.imports) {
-            builder.append(importAst.generateJava());
+            importAst.generateJava(builder);
         }
         for (ApsClassAst classAst : this.classes) {
-            builder.append(classAst.generateJava());
+            classAst.generateJava(builder);
         }
-        return builder.toString();
     }
 
     @Override

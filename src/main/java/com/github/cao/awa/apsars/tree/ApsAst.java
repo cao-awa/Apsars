@@ -1,12 +1,11 @@
 package com.github.cao.awa.apsars.tree;
 
+import com.github.cao.awa.apsars.tree.generator.ApsJavaGenerator;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 
-import java.util.function.Supplier;
-
 @Accessors(fluent = true)
-public abstract class ApsAst {
+public abstract class ApsAst implements ApsJavaGenerator {
     @Getter
     private final ApsAst parent;
 
@@ -19,11 +18,6 @@ public abstract class ApsAst {
     }
 
     public abstract void print(String ident);
-
-    public abstract String generateJava();
-    public String generateJava(Supplier<String> outer) {
-        return outer.get();
-    }
 
     public abstract void preprocess();
 
@@ -47,4 +41,6 @@ public abstract class ApsAst {
             }
         }
     }
+
+
 }

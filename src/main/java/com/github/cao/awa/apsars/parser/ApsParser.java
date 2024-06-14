@@ -6,8 +6,8 @@ import com.github.cao.awa.apsars.parser.clazz.ApsClassParser;
 import com.github.cao.awa.apsars.parser.clazz.ApsMemberParameterParser;
 import com.github.cao.awa.apsars.parser.global.ApsGlobalParser;
 import com.github.cao.awa.apsars.parser.method.ApsMethodExtraParser;
-import com.github.cao.awa.apsars.parser.method.parameter.ApsMethodParameterParser;
 import com.github.cao.awa.apsars.parser.method.ApsMethodParser;
+import com.github.cao.awa.apsars.parser.method.parameter.ApsMethodParameterParser;
 import com.github.cao.awa.apsars.parser.method.parameter.element.ApsMethodParameterPresetValueElementParser;
 import com.github.cao.awa.apsars.parser.method.statement.ApsCatchListParser;
 import com.github.cao.awa.apsars.parser.method.statement.ApsMethodBodyParser;
@@ -26,7 +26,10 @@ import lombok.experimental.Accessors;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Stack;
 import java.util.function.Supplier;
 
 @Accessors(fluent = true)
@@ -119,6 +122,8 @@ public abstract class ApsParser<T extends ApsAst> {
         Stack<String> stacking = ApricotCollectionFactor.stack();
         stacking.push(starter);
 
+        boolean lastIsAssigmentStart = false;
+
         int codesLength = this.codes.length();
         while (curIndex < codesLength) {
             String curToken = this.codes.substring(curIndex, curIndex + 1);
@@ -128,12 +133,17 @@ public abstract class ApsParser<T extends ApsAst> {
             }
 
             String reverseBrace = ApsTokens.REVERSE_BRACES.get(curToken);
-            if (reverseBrace != null && reverseBrace.equals(stacking.peek())) {
+            if (lastIsAssigmentStart && ApsTokens.HYPHEN.equals(curToken)) {
                 stacking.pop();
-            } else if (reverseBrace != null) {
-                LOGGER.warn("Error brace happened");
-                return new Pair<>(curIndex, true);
+            } else {
+                if (reverseBrace != null && reverseBrace.equals(stacking.peek())) {
+                    stacking.pop();
+                } else if (reverseBrace != null) {
+                    LOGGER.warn("Error brace happened");
+                    return new Pair<>(curIndex, true);
+                }
             }
+            lastIsAssigmentStart = ApsTokens.ANGLE_BRACES_START.equals(curToken);
 
             curIndex++;
 
@@ -396,7 +406,36 @@ public abstract class ApsParser<T extends ApsAst> {
         return startWith(target.literal());
     }
 
-    public void replaceCodes(String target, String replacement) {
+    public void replaceCodes(String target, String replacement, boolean spacing) {
+        target = spacing ? " " + target + " " : target;
         this.codes = this.codes.replaceAll(target, replacement);
+    }
+
+    public void replaceCodes(ApsKeyword target, String replacement, boolean spacing) {
+        replaceCodes(target.literal(), replacement, spacing);
+    }
+
+    public void replaceCodes(String target, ApsKeyword replacement, boolean spacing) {
+        replaceCodes(target, replacement.literal(), spacing);
+    }
+
+    public void replaceCodes(ApsKeyword target, ApsKeyword replacement, boolean spacing) {
+        replaceCodes(target.literal(), replacement.literal(), spacing);
+    }
+
+    public void replaceCodes(String target, String replacement) {
+        replaceCodes(target, replacement, false);
+    }
+
+    public void replaceCodes(ApsKeyword target, String replacement) {
+        replaceCodes(target.literal(), replacement, false);
+    }
+
+    public void replaceCodes(String target, ApsKeyword replacement) {
+        replaceCodes(target, replacement.literal(), false);
+    }
+
+    public void replaceCodes(ApsKeyword target, ApsKeyword replacement) {
+        replaceCodes(target.literal(), replacement.literal(), false);
     }
 }

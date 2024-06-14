@@ -19,8 +19,8 @@ public class ApsLiteralStatementAst extends ApsStatementAst {
     }
 
     @Override
-    public String generateJava() {
-        return this.statement + ";";
+    public void generateJava(StringBuilder builder) {
+        builder.append(this.statement).append(";");
     }
 
     @Override

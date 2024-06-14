@@ -10,7 +10,7 @@ import java.util.LinkedList;
 
 @Accessors(fluent = true)
 public class ApsArgTypeAst extends ApsAst {
-    private LinkedList<ApsArgTypeAst> args = ApricotCollectionFactor.linkedList();
+    private final LinkedList<ApsArgTypeAst> args = ApricotCollectionFactor.linkedList();
     @Getter
     @Setter
     private String nameIdentity;
@@ -39,8 +39,7 @@ public class ApsArgTypeAst extends ApsAst {
     }
 
     @Override
-    public String generateJava() {
-        StringBuilder builder = new StringBuilder();
+    public void generateJava(StringBuilder builder) {
         builder.append(this.nameIdentity);
         if (!this.args.isEmpty()) {
             builder.append("<");
@@ -49,14 +48,13 @@ public class ApsArgTypeAst extends ApsAst {
             int edge = size - 1;
             for (int i = 0; i < size; i++) {
                 ApsArgTypeAst arg = args.get(i);
-                builder.append(arg.generateJava());
+                arg.generateJava(builder);
                 if (i != edge) {
                     builder.append(",");
                 }
             }
             builder.append(">");
         }
-        return builder.toString();
     }
 
     @Override

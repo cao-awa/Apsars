@@ -22,8 +22,8 @@ public class ApsLongPresetValueAst extends ApsPresetValueAst {
     }
 
     @Override
-    public String generateJava() {
-        return this.value + "L";
+    public void generateJava(StringBuilder builder) {
+        builder.append(this.value).append("L");
     }
 
     @Override

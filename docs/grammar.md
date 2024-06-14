@@ -68,3 +68,27 @@ class TheName {
     }
 }
 ```
+
+## 域（成员）
+
+成员的定义有两种方式，第一种是apsars的写法 ```<名称>: <类型> = <值>```，第二种是原生java的写法 ```<类型> <名称> = <值>```
+
+```apsars
+class TheName {
+    // 定义时可以赋值
+    apsarsName: int = 123;
+    int javaNamer = 456;
+    
+    // 也可以不赋值
+    xxx: long;
+    long yyy;
+
+    public static main(args: String[]) {
+    }
+}
+```
+
+# 扩展语法
+
+[safepoint](extra/safepoint.md)
+

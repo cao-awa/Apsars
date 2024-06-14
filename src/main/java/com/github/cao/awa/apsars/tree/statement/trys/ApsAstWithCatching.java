@@ -20,7 +20,7 @@ public abstract class ApsAstWithCatching extends ApsAst {
     }
 
     @Override
-    public String generateJava() {
-        return this.catchList.generateJava();
+    public void generateJava(StringBuilder builder) {
+        this.catchList.generateJava(builder);
     }
 }

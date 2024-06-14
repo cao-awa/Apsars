@@ -5,8 +5,8 @@ import com.github.cao.awa.apsars.element.method.parameter.ApsMethodParamModifier
 import com.github.cao.awa.apsars.element.modifier.method.parameter.ApsMethodParamDefaultValueModifier;
 import com.github.cao.awa.apsars.element.modifier.method.parameter.ApsMethodParamModifier;
 import com.github.cao.awa.apsars.tree.ApsAst;
-import com.github.cao.awa.apsars.tree.method.parameter.preset.ApsPresetValueElementAst;
 import com.github.cao.awa.apsars.tree.method.ApsMethodAst;
+import com.github.cao.awa.apsars.tree.method.parameter.preset.ApsPresetValueElementAst;
 import com.github.cao.awa.apsars.tree.vararg.ApsArgTypeAst;
 import com.github.cao.awa.sinuatum.manipulate.Manipulate;
 import lombok.Getter;
@@ -52,9 +52,7 @@ public class ApsMethodParamElementAst extends ApsAst {
     }
 
     @Override
-    public String generateJava() {
-        StringBuilder builder = new StringBuilder();
-
+    public void generateJava(StringBuilder builder) {
         // 设置修饰符
         for (ApsMethodParamModifierType modifierType : ApsMethodParamModifierType.values()) {
             Manipulate.notNull(this.modifiers.get(modifierType), modifier -> {
@@ -66,11 +64,10 @@ public class ApsMethodParamElementAst extends ApsAst {
         }
 
         if (this.argType != null && this.nameIdentity != null) {
-            builder.append(this.argType.generateJava());
+            this.argType.generateJava(builder);
             builder.append(" ");
             builder.append(this.nameIdentity);
         }
-        return builder.toString();
     }
 
     public ApsPresetValueElementAst defaultValue() {

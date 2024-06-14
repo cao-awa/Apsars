@@ -34,6 +34,7 @@ public class ApsClassParser extends ApsParser<ApsClassAst> {
         while (true) {
             Pair<String, Boolean> modifierToken = nextToken(" ", false, true);
             ApsClassKeyword keyword = ApsTokens.CLASS_KEYWORDS.get(modifierToken.first());
+            System.out.println("WWW: " + modifierToken.first());
             if (keyword != ApsClassKeyword.CLASS) {
                 ast.addModifier(ApsClassModifier.create(keyword));
             } else {

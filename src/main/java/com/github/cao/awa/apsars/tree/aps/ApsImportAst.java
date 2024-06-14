@@ -27,8 +27,7 @@ public class ApsImportAst extends ApsAst {
     }
 
     @Override
-    public String generateJava() {
-        StringBuilder builder = new StringBuilder();
+    public void generateJava(StringBuilder builder) {
         builder.append("import ");
         if (this.importStatic) {
             builder.append("static ");
@@ -38,7 +37,6 @@ public class ApsImportAst extends ApsAst {
             builder.append(".*");
         }
         builder.append(";");
-        return builder.toString();
     }
 
     @Override

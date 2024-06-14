@@ -22,8 +22,8 @@ public class ApsIntegerPresetValueAst extends ApsPresetValueAst {
     }
 
     @Override
-    public String generateJava() {
-        return String.valueOf(this.value);
+    public void generateJava(StringBuilder builder) {
+        builder.append(this.value);
     }
 
     @Override

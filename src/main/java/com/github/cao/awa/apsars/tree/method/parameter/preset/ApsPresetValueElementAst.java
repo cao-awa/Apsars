@@ -25,8 +25,12 @@ public class ApsPresetValueElementAst extends ApsAst {
     }
 
     @Override
-    public String generateJava() {
-        return this.value == null ? "null" : this.value.generateJava();
+    public void generateJava(StringBuilder builder) {
+        if (this.value == null) {
+            builder.append("null");
+        } else {
+            this.value.generateJava(builder);
+        }
     }
 
     @Override

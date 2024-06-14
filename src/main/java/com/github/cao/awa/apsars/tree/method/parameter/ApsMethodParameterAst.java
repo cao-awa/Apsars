@@ -29,18 +29,14 @@ public class ApsMethodParameterAst extends ApsAst {
     }
 
     @Override
-    public String generateJava() {
-        StringBuilder builder = new StringBuilder();
-
+    public void generateJava(StringBuilder builder) {
         Iterator<ApsMethodParamElementAst> params = this.params.values().iterator();
         while (params.hasNext()) {
-            builder.append(params.next().generateJava());
+            params.next().generateJava(builder);
             if (params.hasNext()) {
                 builder.append(",");
             }
         }
-
-        return builder.toString();
     }
 
     public Set<String> names() {

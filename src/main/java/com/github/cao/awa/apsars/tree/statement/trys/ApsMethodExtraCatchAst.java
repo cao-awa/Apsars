@@ -2,12 +2,11 @@ package com.github.cao.awa.apsars.tree.statement.trys;
 
 import com.github.cao.awa.apsars.tree.ApsAst;
 import com.github.cao.awa.apsars.tree.method.ApsMethodBodyAst;
-import com.github.cao.awa.apsars.tree.statement.trys.ApsCatchListAst;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
-import java.util.function.Supplier;
+import java.util.function.Consumer;
 
 @Accessors(fluent = true)
 public class ApsMethodExtraCatchAst extends ApsAst {
@@ -33,27 +32,25 @@ public class ApsMethodExtraCatchAst extends ApsAst {
     }
 
     @Override
-    public String generateJava() {
-        return null;
+    public void generateJava(StringBuilder builder) {
+
     }
 
     @Override
-    public String generateJava(Supplier<String> outer) {
-        StringBuilder builder = new StringBuilder();
+    public void generateJava(StringBuilder builder, Consumer<StringBuilder> outer) {
         builder.append("{");
 
         builder.append("try{");
-        builder.append(outer.get());
+        outer.accept(builder);
         builder.append("}catch(");
-        builder.append(this.catchList.generateJava());
+        this.catchList.generateJava(builder);
         builder.append("){");
         if (this.methodBody != null) {
-            builder.append(this.methodBody.generateJava());
+            this.methodBody.generateJava(builder);
         }
         builder.append("}");
 
         builder.append("}");
-        return builder.toString();
     }
 
     @Override

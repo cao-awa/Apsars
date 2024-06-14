@@ -7,8 +7,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
-import java.util.function.Supplier;
-
 @Accessors(fluent = true)
 public class ApsTryCatchAst extends ApsStatementAst {
     @Getter
@@ -41,26 +39,24 @@ public class ApsTryCatchAst extends ApsStatementAst {
     }
 
     @Override
-    public String generateJava() {
-        StringBuilder builder = new StringBuilder();
+    public void generateJava(StringBuilder builder) {
         if (this.catchList != null) {
             builder.append("try{");
             if (this.methodBody != null) {
-                builder.append(this.methodBody.generateJava());
+                this.methodBody.generateJava(builder);
             }
             builder.append("}catch(");
-            builder.append(this.catchList.generateJava());
+            this.catchList.generateJava(builder);
             builder.append("){");
-            if (this.methodBody != null) {
-                builder.append(this.catchingMethodBody.generateJava());
+            if (this.catchingMethodBody != null) {
+                this.catchingMethodBody.generateJava(builder);
             }
             builder.append("}");
         } else {
             if (this.methodBody != null) {
-                builder.append(this.methodBody.generateJava());
+                this.methodBody.generateJava(builder);
             }
         }
-        return builder.toString();
     }
 
     @Override
