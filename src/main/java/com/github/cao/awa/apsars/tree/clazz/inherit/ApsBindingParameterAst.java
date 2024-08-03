@@ -1,12 +1,11 @@
-package com.github.cao.awa.apsars.tree.clazz;
+package com.github.cao.awa.apsars.tree.clazz.inherit;
 
 import com.github.cao.awa.apricot.util.collection.ApricotCollectionFactor;
 import com.github.cao.awa.apsars.element.clazz.ApsMemberParameterModifierType;
-import com.github.cao.awa.apsars.element.modifier.method.ApsMethodModifier;
 import com.github.cao.awa.apsars.element.modifier.parameter.ApsMemberParameterModifier;
 import com.github.cao.awa.apsars.parser.token.keyword.clazz.ApsMemberParameterKeyword;
-import com.github.cao.awa.apsars.parser.token.keyword.method.ApsMethodKeyword;
-import com.github.cao.awa.apsars.tree.method.ApsMethodAst;
+import com.github.cao.awa.apsars.tree.clazz.ApsClassAst;
+import com.github.cao.awa.apsars.tree.clazz.ApsMemberParameterAst;
 import com.github.cao.awa.apsars.tree.statement.ApsStatementAst;
 import com.github.cao.awa.apsars.tree.vararg.ApsAstWithVarargs;
 import com.github.cao.awa.sinuatum.manipulate.Manipulate;
@@ -16,11 +15,10 @@ import lombok.experimental.Accessors;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.List;
 import java.util.Map;
 
 @Accessors(fluent = true)
-public class ApsMemberParameterAst extends ApsAstWithVarargs {
+public class ApsBindingParameterAst extends ApsAstWithVarargs {
     private static final Logger LOGGER = LogManager.getLogger("ApsMemberParameterAst");
 
     @Setter
@@ -31,7 +29,7 @@ public class ApsMemberParameterAst extends ApsAstWithVarargs {
     private ApsStatementAst value;
     private final Map<ApsMemberParameterModifierType, ApsMemberParameterModifier> modifiers = ApricotCollectionFactor.hashMap();
 
-    public ApsMemberParameterAst(ApsClassAst parent) {
+    public ApsBindingParameterAst(ApsBinderAst parent) {
         super(parent);
     }
 
@@ -86,59 +84,7 @@ public class ApsMemberParameterAst extends ApsAstWithVarargs {
 
     @Override
     public void preprocess() {
-        if (this.modifiers.get(ApsMemberParameterModifierType.ACCESSIBLE) == null) {
-            this.modifiers.put(ApsMemberParameterModifierType.ACCESSIBLE, ApsMemberParameterModifier.create(ApsMemberParameterKeyword.PRIVATE));
-        }
-
-        if (this.modifiers.get(ApsMemberParameterModifierType.HOLDER) != null) {
-            this.modifiers.remove(ApsMemberParameterModifierType.HOLDER_GET);
-            this.modifiers.remove(ApsMemberParameterModifierType.HOLDER_SET);
-        }
-
-        for (ApsMemberParameterModifierType modifierType : List.of(ApsMemberParameterModifierType.HOLDER, ApsMemberParameterModifierType.HOLDER_GET, ApsMemberParameterModifierType.HOLDER_SET)) {
-            Manipulate.notNull(this.modifiers.get(modifierType), modifier -> {
-                switch (modifierType) {
-                    case HOLDER -> {
-                        appendGetHolder();
-                        appendSetHolder();
-                    }
-                    case HOLDER_GET -> appendGetHolder();
-                    case HOLDER_SET -> appendSetHolder();
-                }
-            });
-        }
-    }
-
-    private void appendGetHolder() {
-        if (findAst(ApsClassAst.class) instanceof ApsClassAst classAst) {
-            ApsMethodAst methodAst = ApsMethodAst.accessor(nameIdentity(), argType(), true, isStatic(), true, classAst);
-            methodAst.addCompilerFlag("holder-set", "generated");
-            if (isPublic()) {
-                methodAst.addCompilerFlag("try-inline");
-            }
-            if (!isHolderOverridable()) {
-                methodAst.addModifier(ApsMethodModifier.create(ApsMethodKeyword.FINAL));
-            }
-            classAst.addMethod(methodAst);
-        }
-    }
-
-    private void appendSetHolder() {
-        if (isFinal()) {
-            LOGGER.warn("The member parameter '{}' is final, cannot generate the setter", this.nameIdentity);
-            return;
-        }
-        if (findAst(ApsClassAst.class) instanceof ApsClassAst classAst) {
-            ApsMethodAst methodAst = ApsMethodAst.accessor(nameIdentity(), argType(), false, isStatic(), true, classAst);
-            methodAst.addCompilerFlag("holder-get", "generated");
-            if (isPublic()) {
-                methodAst.addCompilerFlag("try-inline");
-            }
-            if (!isHolderOverridable()) {
-                methodAst.addModifier(ApsMethodModifier.create(ApsMethodKeyword.FINAL));
-            }
-            classAst.addMethod(methodAst);
-        }
+        this.modifiers.put(ApsMemberParameterModifierType.ACCESSIBLE, ApsMemberParameterModifier.create(ApsMemberParameterKeyword.PUBLIC));
     }
 
     public boolean isStatic() {
@@ -149,16 +95,19 @@ public class ApsMemberParameterAst extends ApsAstWithVarargs {
         return this.modifiers.get(ApsMemberParameterModifierType.IS_FINAL) != null;
     }
 
-    public boolean isPublic() {
-        return this.modifiers.get(ApsMemberParameterModifierType.ACCESSIBLE).literal().equals("public");
-    }
+    public ApsMemberParameterAst toActual(ApsClassAst classAst) {
+        ApsMemberParameterAst memberParameterAst = new ApsMemberParameterAst(
+                classAst
+        );
+        for (ApsMemberParameterModifier modifier : this.modifiers.values()) {
+            memberParameterAst.addModifier(modifier);
+        }
 
-    public boolean isPrivate() {
-        return this.modifiers.get(ApsMemberParameterModifierType.ACCESSIBLE).literal().equals("private");
-    }
+        memberParameterAst.nameIdentity(this.nameIdentity);
+        memberParameterAst.argType(argType());
+        memberParameterAst.value(this.value);
 
-    public boolean isHolderOverridable() {
-        return this.modifiers.get(ApsMemberParameterModifierType.OVERRIDABLE) != null;
+        return memberParameterAst;
     }
 
     private void processConflictModifiers() {

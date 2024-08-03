@@ -65,8 +65,11 @@ public class ApsMethodParser extends ApsParser<ApsMethodAst> {
                             ast.methodBody(bodyAst);
 
                             continue;
+                        } else if (startWith(ApsTokens.SEMICOLON)) {
+                            type = ApsElementType.UNEXPECTED;
+                            ast.addCompilerFlag("virtual-method");
                         } else {
-                            // 若不是方法体，则此时预期的应该是返回值和异常
+                            // 若不是方法体或结束，则此时预期的应该是返回值和异常
                             nextToken = nextToken("{", false);
                             ApsMethodExtraParser parser = (ApsMethodExtraParser) parser(ApsElementType.METHOD_EXTRA);
                             parser.parse(nextToken.first(), ast);

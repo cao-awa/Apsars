@@ -5,6 +5,7 @@ import com.github.cao.awa.apsars.parser.ApsParser;
 import com.github.cao.awa.apsars.parser.statement.trys.ApsTryStatementParser;
 import com.github.cao.awa.apsars.parser.statement.variable.ApsLocalVariableParser;
 import com.github.cao.awa.apsars.tree.method.ApsMethodBodyAst;
+import com.github.cao.awa.apsars.tree.statement.special.literal.ApsLiteralStatementAst;
 import com.github.cao.awa.apsars.tree.statement.trys.ApsTryCatchAst;
 import com.github.cao.awa.apsars.tree.statement.variable.ApsVariableAst;
 import com.github.cao.awa.catheter.pair.Pair;
@@ -41,6 +42,10 @@ public class ApsStatementParser extends ApsParser<ApsMethodBodyAst> {
                 variableParser.parse(nextStatement.first(), variableAst);
                 ast.addStatement(variableAst);
                 ast.addFieldVariable(variableAst);
+            } else {
+                ApsLiteralStatementAst literal = new ApsLiteralStatementAst(ast, nextStatement.first());
+                literal.withEnd(true);
+                ast.addStatement(literal);
             }
         }
     }

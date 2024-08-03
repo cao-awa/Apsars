@@ -5,6 +5,8 @@ public enum ApsFileKeyword implements ApsKeyword {
 
     CLASS("class"),
     GLOBAL("global"),
+
+    BIND("bind")
     ;
 
     private final String literal;

@@ -4,6 +4,9 @@ import com.github.cao.awa.apricot.util.collection.ApricotCollectionFactor;
 import com.github.cao.awa.apsars.element.clazz.ApsClassModifierType;
 import com.github.cao.awa.apsars.element.modifier.clazz.ApsClassModifier;
 import com.github.cao.awa.apsars.tree.ApsAst;
+import com.github.cao.awa.apsars.tree.aps.ApsFileAst;
+import com.github.cao.awa.apsars.tree.clazz.inherit.ApsBinderAst;
+import com.github.cao.awa.apsars.tree.clazz.inherit.ApsBindingParameterAst;
 import com.github.cao.awa.apsars.tree.method.ApsMethodAst;
 import com.github.cao.awa.sinuatum.manipulate.Manipulate;
 import lombok.Getter;
@@ -12,6 +15,7 @@ import lombok.experimental.Accessors;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @Accessors(fluent = true)
 public class ApsClassAst extends ApsAst {
@@ -21,6 +25,7 @@ public class ApsClassAst extends ApsAst {
     private final Map<ApsClassModifierType, ApsClassModifier> modifiers = ApricotCollectionFactor.hashMap();
     private final List<ApsMemberParameterAst> parameters = ApricotCollectionFactor.arrayList();
     private final List<ApsMethodAst> methods = ApricotCollectionFactor.arrayList();
+    private final Set<String> binders = ApricotCollectionFactor.hashSet();
 
     public ApsClassAst(ApsAst parent) {
         super(parent);
@@ -32,6 +37,10 @@ public class ApsClassAst extends ApsAst {
 
     public void addMethod(ApsMethodAst methodAst) {
         this.methods.add(methodAst);
+    }
+
+    public void addBinder(String binderName) {
+        this.binders.add(binderName);
     }
 
     public void addModifier(ApsClassModifier modifier) {
@@ -60,6 +69,7 @@ public class ApsClassAst extends ApsAst {
         for (ApsMemberParameterAst parameter : this.parameters) {
             parameter.print(ident + "        ");
         }
+        System.out.println(ident + "    |_ binders: " + this.binders);
         System.out.println(ident + "    |_ methods: ");
         for (ApsMethodAst method : this.methods) {
             method.print(ident + "        ");
@@ -80,6 +90,18 @@ public class ApsClassAst extends ApsAst {
 
         builder.append("class ");
         builder.append(this.nameIdentity);
+        if (!this.binders.isEmpty()) {
+            builder.append(" implements ");
+            int edge = this.binders.size() - 1;
+            int index = 0;
+            for (String binder : this.binders) {
+                builder.append(binder);
+                if (index != edge) {
+                    builder.append(",");
+                }
+                index++;
+            }
+        }
         builder.append("{");
 
         for (ApsMemberParameterAst parameterAst : this.parameters) {
@@ -101,6 +123,21 @@ public class ApsClassAst extends ApsAst {
 
         for (ApsMethodAst methodAst : this.methods) {
             methodAst.preprocess();
+        }
+
+        if (!this.binders.isEmpty()) {
+            for (ApsBinderAst binder : findAst(ApsFileAst.class).binders()) {
+                for (ApsBindingParameterAst parameter : binder.parameters()) {
+                    parameter.preprocess();
+
+                    addMemberParameter(parameter.toActual(this));
+
+                    addMethod(ApsMethodAst.accessor(parameter.nameIdentity(), parameter.argType(), true, false, true, null));
+                    if (!parameter.isFinal()) {
+                        addMethod(ApsMethodAst.accessor(parameter.nameIdentity(), parameter.argType(), false, false, true, null));
+                    }
+                }
+            }
         }
     }
 }

@@ -1,4 +1,4 @@
-package com.github.cao.awa.apsars.parser.clazz;
+package com.github.cao.awa.apsars.parser.clazz.inherit;
 
 import com.github.cao.awa.apsars.element.ApsElementType;
 import com.github.cao.awa.apsars.element.modifier.parameter.ApsMemberParameterModifier;
@@ -6,7 +6,7 @@ import com.github.cao.awa.apsars.parser.ApsParser;
 import com.github.cao.awa.apsars.parser.token.ApsTokens;
 import com.github.cao.awa.apsars.parser.token.keyword.clazz.ApsMemberParameterKeyword;
 import com.github.cao.awa.apsars.parser.vararg.ApsVarargParser;
-import com.github.cao.awa.apsars.tree.clazz.ApsMemberParameterAst;
+import com.github.cao.awa.apsars.tree.clazz.inherit.ApsBindingParameterAst;
 import com.github.cao.awa.apsars.tree.statement.special.literal.ApsLiteralStatementAst;
 import com.github.cao.awa.catheter.pair.Pair;
 import org.apache.logging.log4j.LogManager;
@@ -14,7 +14,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.List;
 
-public class ApsMemberParameterParser extends ApsParser<ApsMemberParameterAst> {
+public class ApsBindingParameterParser extends ApsParser<ApsBindingParameterAst> {
     private static final Logger LOGGER = LogManager.getLogger("ApsMemberParameterParser");
 
     @Override
@@ -23,7 +23,7 @@ public class ApsMemberParameterParser extends ApsParser<ApsMemberParameterAst> {
     }
 
     @Override
-    public void parse(ApsMemberParameterAst ast) {
+    public void parse(ApsBindingParameterAst ast) {
         String withoutAssignmentReplace = makeLeast();
         replaceCodes(ApsTokens.LEFT_ASSIGNMENT, ApsTokens.EQUAL);
         replaceCodes(ApsMemberParameterKeyword.AS, ApsTokens.EQUAL, true);
@@ -49,7 +49,7 @@ public class ApsMemberParameterParser extends ApsParser<ApsMemberParameterAst> {
         }
     }
 
-    private void processDefine(ApsMemberParameterAst ast) {
+    private void processDefine(ApsBindingParameterAst ast) {
         if (codes().contains(":")) {
             processApsarsDefine(ast);
         } else {
@@ -57,7 +57,7 @@ public class ApsMemberParameterParser extends ApsParser<ApsMemberParameterAst> {
         }
     }
 
-    private void processApsarsDefine(ApsMemberParameterAst ast) {
+    private void processApsarsDefine(ApsBindingParameterAst ast) {
         ApsElementType type = ApsElementType.LITERAL_IDENTITY;
 
         while (readable()) {
@@ -92,7 +92,7 @@ public class ApsMemberParameterParser extends ApsParser<ApsMemberParameterAst> {
         }
     }
 
-    private void processJavaDefine(ApsMemberParameterAst ast) {
+    private void processJavaDefine(ApsBindingParameterAst ast) {
         ApsElementType type = ApsElementType.TYPE;
 
         while (readable()) {
@@ -125,15 +125,13 @@ public class ApsMemberParameterParser extends ApsParser<ApsMemberParameterAst> {
         }
     }
 
-    private void processVararg(ApsMemberParameterAst ast, String token) {
+    private void processVararg(ApsBindingParameterAst ast, String token) {
         ApsVarargParser parser = (ApsVarargParser) parser(ApsElementType.VARARG);
         parser.parse(token, ast);
     }
 
-    private void processAssignment(ApsMemberParameterAst ast) {
+    private void processAssignment(ApsBindingParameterAst ast) {
         stripCodes();
-        ApsLiteralStatementAst literal = new ApsLiteralStatementAst(ast, codes());
-        literal.withEnd(true);
-        ast.value(literal);
+        ast.value(new ApsLiteralStatementAst(ast, codes()));
     }
 }

@@ -26,11 +26,14 @@ public enum ApsElementType {
     LITERAL_IDENTITY,
 
     MEMBER_PARAMETER,
+    BINDING_PARAMETER,
 
     STRING,
 
     KEYWORD_IMPORT,
     KEYWORD_CLASS,
+
+    KEYWORD_BIND,
 
     BRACES
 }

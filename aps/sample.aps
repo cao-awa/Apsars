@@ -2,26 +2,25 @@ global {
     alias println as System.out.println(x: Object);
 }
 
-final class Sample2 {
-    pub name1: int as 123;
-    pub name2: int = 123;
-    name3: int <- 123;
+bind TestBinder {
+    virtual int a;
 
-    private static xxx() {
-        int x as 0;
-        int y = 100;
-        int z <- 123;
+    xxx();
+    yyy() {
+        println(321);
+    }
+}
 
-        try {
-            int www = 111;
-        } catch (ex: Exception) {
-            int zzz = 987;
-        }
+bind TestBinder2 {
+    virtual int b;
 
-        try  {
-            int anotherXxx = 345;
-        } catch (ex: Exception) {
+    www() {
+        println(987);
+    }
+}
 
-        }
+public class Sample2: TestBinder and TestBinder2 {
+    public xxx() {
+        println(123);
     }
 }

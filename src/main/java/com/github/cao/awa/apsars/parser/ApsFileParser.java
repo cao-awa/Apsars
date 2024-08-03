@@ -2,12 +2,14 @@ package com.github.cao.awa.apsars.parser;
 
 import com.github.cao.awa.apsars.element.ApsElementType;
 import com.github.cao.awa.apsars.parser.clazz.ApsClassParser;
+import com.github.cao.awa.apsars.parser.clazz.inherit.ApsBinderParser;
 import com.github.cao.awa.apsars.parser.global.ApsGlobalParser;
 import com.github.cao.awa.apsars.parser.token.ApsTokens;
 import com.github.cao.awa.apsars.parser.token.keyword.ApsFileKeyword;
-import com.github.cao.awa.apsars.tree.clazz.ApsClassAst;
 import com.github.cao.awa.apsars.tree.aps.ApsFileAst;
 import com.github.cao.awa.apsars.tree.aps.ApsImportAst;
+import com.github.cao.awa.apsars.tree.clazz.ApsClassAst;
+import com.github.cao.awa.apsars.tree.clazz.inherit.ApsBinderAst;
 import com.github.cao.awa.apsars.tree.global.ApsGlobalAst;
 import com.github.cao.awa.catheter.pair.Pair;
 import org.apache.logging.log4j.LogManager;
@@ -28,16 +30,23 @@ public class ApsFileParser extends ApsParser<ApsFileAst> {
             if (!nextToken.second()) {
                 ApsFileKeyword keyword = ApsTokens.FILE_KEYWORDS.get(nextToken.first());
 
-                if (keyword == null) {
+                System.out.println(nextToken.first());
+
+                if (keyword == ApsFileKeyword.CLASS) {
                     processClass(ast);
                     continue;
                 } else {
                     skipAndFeedback(nextToken.first().length());
                 }
 
+                if (keyword == null) {
+                    continue;
+                }
+
                 switch (keyword) {
                     case IMPORT -> processImport(ast);
                     case GLOBAL -> processGlobal();
+                    case BIND -> processBind(ast);
                 }
             } else {
                 LOGGER.warn("Wrongly parses next token");
@@ -74,6 +83,20 @@ public class ApsFileParser extends ApsParser<ApsFileAst> {
         skip(classParser.feedbackSkip());
 
         ast.addClass(classAst);
+    }
+
+    private void processBind(ApsFileAst ast) {
+        stripCodes();
+
+        ApsBinderAst classAst = new ApsBinderAst(ast);
+
+        ApsBinderParser binderParser = (ApsBinderParser) parser(ApsElementType.KEYWORD_BIND);
+
+        binderParser.parse(codes(), classAst);
+
+        skip(binderParser.feedbackSkip());
+
+        ast.addBinder(classAst);
     }
 
     private void processGlobal() {

@@ -1,8 +1,7 @@
-package com.github.cao.awa.apsars.parser.clazz;
+package com.github.cao.awa.apsars.parser.clazz.inherit;
 
 import com.github.cao.awa.apricot.util.collection.ApricotCollectionFactor;
 import com.github.cao.awa.apsars.element.ApsElementType;
-import com.github.cao.awa.apsars.element.modifier.clazz.ApsClassModifier;
 import com.github.cao.awa.apsars.element.modifier.method.ApsMethodModifier;
 import com.github.cao.awa.apsars.element.modifier.parameter.ApsMemberParameterModifier;
 import com.github.cao.awa.apsars.parser.ApsParser;
@@ -10,9 +9,10 @@ import com.github.cao.awa.apsars.parser.method.ApsMethodParser;
 import com.github.cao.awa.apsars.parser.token.ApsTokens;
 import com.github.cao.awa.apsars.parser.token.keyword.clazz.ApsClassKeyword;
 import com.github.cao.awa.apsars.parser.token.keyword.clazz.ApsMemberParameterKeyword;
+import com.github.cao.awa.apsars.parser.token.keyword.clazz.inherit.ApsBinderKeyword;
 import com.github.cao.awa.apsars.parser.token.keyword.method.ApsMethodKeyword;
-import com.github.cao.awa.apsars.tree.clazz.ApsClassAst;
-import com.github.cao.awa.apsars.tree.clazz.ApsMemberParameterAst;
+import com.github.cao.awa.apsars.tree.clazz.inherit.ApsBinderAst;
+import com.github.cao.awa.apsars.tree.clazz.inherit.ApsBindingParameterAst;
 import com.github.cao.awa.apsars.tree.method.ApsMethodAst;
 import com.github.cao.awa.catheter.pair.Pair;
 import org.apache.logging.log4j.LogManager;
@@ -21,8 +21,8 @@ import org.apache.logging.log4j.Logger;
 import java.util.Collections;
 import java.util.List;
 
-public class ApsClassParser extends ApsParser<ApsClassAst> {
-    private static final Logger LOGGER = LogManager.getLogger("ApsClassParser");
+public class ApsBinderParser extends ApsParser<ApsBinderAst> {
+    private static final Logger LOGGER = LogManager.getLogger("ApsBinderParser");
 
     @Override
     public boolean canTryProcess(String codes) {
@@ -30,26 +30,22 @@ public class ApsClassParser extends ApsParser<ApsClassAst> {
     }
 
     @Override
-    public void parse(ApsClassAst ast) {
-        while (true) {
-            Pair<String, Boolean> modifierToken = nextToken(List.of(ApsTokens.SPACE, ApsTokens.COLON), false, true);
-            ApsClassKeyword keyword = ApsTokens.CLASS_KEYWORDS.get(modifierToken.first());
-            if (keyword != ApsClassKeyword.CLASS) {
-                ast.addModifier(ApsClassModifier.create(keyword));
-            } else {
-                break;
-            }
-        }
+    public void parse(ApsBinderAst ast) {
+//        while (true) {
+//            Pair<String, Boolean> modifierToken = nextToken(" ", false, true);
+//            ApsBinderKeyword keyword = ApsTokens.BINDER_KEYWORDS.get(modifierToken.first());
+//            if (keyword != ApsBinderKeyword.BINDER) {
+//                ast.addModifier(ApsBinderModifier.create(keyword));
+//            } else {
+//                break;
+//            }
+//        }
 
         Pair<String, Boolean> nameIdentity = nextToken(List.of(" ", "{", ":"), false);
 
         ast.nameIdentity(nameIdentity.first());
 
         skipAndFeedback(nameIdentity.first().length());
-
-        if (startWith(":")) {
-            processBinders(ast);
-        }
 
         // 读取类中的内容
         Pair<Integer, Boolean> braceEndIndex = findClosureBraces(true);
@@ -77,21 +73,7 @@ public class ApsClassParser extends ApsParser<ApsClassAst> {
         }
     }
 
-    private void processBinders(ApsClassAst ast) {
-        skipAndFeedback(ApsTokens.SEMICOLON);
-        String binders = nextToken("{", true).first();
-        skipAndFeedback(binders);
-        binders = binders.replace(" and ", ",")
-                .replace("&", ",")
-                .replace("|", ",")
-                .replace(" ", "");
-
-        for (String binder : binders.split(",")) {
-            ast.addBinder(binder);
-        }
-    }
-
-    private boolean processLet(ApsClassAst ast) {
+    private boolean processLet(ApsBinderAst ast) {
         List<String> letApplies = ApricotCollectionFactor.arrayList();
 
         while (true) {
@@ -145,21 +127,18 @@ public class ApsClassParser extends ApsParser<ApsClassAst> {
         return true;
     }
 
-    private boolean processBrace(ApsClassAst ast, List<ApsMemberParameterModifier> applyMemberParameterModifiers, List<ApsMethodModifier> applyMethodModifiers) {
-        Pair<Integer, Boolean> memberParamEnd = findNext(";", false);
+    private boolean processBrace(ApsBinderAst ast, List<ApsMemberParameterModifier> applyMemberParameterModifiers, List<ApsMethodModifier> applyMethodModifiers) {
+        Pair<Integer, Boolean> endDefine = findNext(";", false);
         Pair<Integer, Boolean> methodStart = findNext("{", false);
 
-        if (memberParamEnd.first() == -1 && methodStart.first() == -1) {
+        if (endDefine.first() == -1 && methodStart.first() == -1) {
             return true;
         }
 
-        if (!memberParamEnd.second() && !methodStart.second()) {
-            if (memberParamEnd.first() < methodStart.first()) {
-                processMemberParameter(ast, applyMemberParameterModifiers);
-            } else {
-                processMethod(ast, applyMethodModifiers);
-            }
-        } else if (!memberParamEnd.second()) {
+        Pair<Integer, Boolean> virtualMember = findNext(ApsBinderKeyword.VIRTUAL.literal(), false);
+
+        if (virtualMember.first() != -1) {
+            skip(ApsBinderKeyword.VIRTUAL);
             processMemberParameter(ast, applyMemberParameterModifiers);
         } else {
             processMethod(ast, applyMethodModifiers);
@@ -167,12 +146,14 @@ public class ApsClassParser extends ApsParser<ApsClassAst> {
         return false;
     }
 
-    private void processMemberParameter(ApsClassAst ast, List<ApsMemberParameterModifier> applyMemberParameterModifiers) {
-        ApsMemberParameterAst parameterAst = new ApsMemberParameterAst(ast);
+    private void processMemberParameter(ApsBinderAst ast, List<ApsMemberParameterModifier> applyMemberParameterModifiers) {
+        ApsBindingParameterAst parameterAst = new ApsBindingParameterAst(ast);
 
         Pair<String, Boolean> param = nextToken(";", false);
 
-        ApsMemberParameterParser parameterParser = (ApsMemberParameterParser) parser(ApsElementType.MEMBER_PARAMETER);
+        System.out.println(param.first() + "???");
+
+        ApsBindingParameterParser parameterParser = (ApsBindingParameterParser) parser(ApsElementType.BINDING_PARAMETER);
         parameterParser.parse(param.first(), parameterAst);
 
         for (ApsMemberParameterModifier applyModifier : applyMemberParameterModifiers) {
@@ -187,7 +168,7 @@ public class ApsClassParser extends ApsParser<ApsClassAst> {
         skip(ApsTokens.SEMICOLON);
     }
 
-    private void processMethod(ApsClassAst ast, List<ApsMethodModifier> applyMethodModifiers) {
+    private void processMethod(ApsBinderAst ast, List<ApsMethodModifier> applyMethodModifiers) {
         ApsMethodAst methodAst = new ApsMethodAst(ast);
 
         ApsMethodParser methodParser = (ApsMethodParser) parser(ApsElementType.METHOD);

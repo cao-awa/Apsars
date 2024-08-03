@@ -3,9 +3,13 @@ package com.github.cao.awa.apsars.tree.method;
 import com.github.cao.awa.apricot.util.collection.ApricotCollectionFactor;
 import com.github.cao.awa.apsars.element.method.ApsMethodModifierType;
 import com.github.cao.awa.apsars.element.modifier.method.ApsMethodModifier;
+import com.github.cao.awa.apsars.element.modifier.method.parameter.ApsMethodParamModifier;
+import com.github.cao.awa.apsars.parser.token.keyword.method.ApsMethodKeyword;
+import com.github.cao.awa.apsars.parser.token.keyword.method.ApsMethodParamKeyword;
 import com.github.cao.awa.apsars.tree.ApsAst;
 import com.github.cao.awa.apsars.tree.annotation.ApsAnnotationAst;
 import com.github.cao.awa.apsars.tree.clazz.ApsClassAst;
+import com.github.cao.awa.apsars.tree.method.parameter.ApsMethodParamElementAst;
 import com.github.cao.awa.apsars.tree.method.parameter.ApsMethodParameterAst;
 import com.github.cao.awa.apsars.tree.statement.special.literal.ApsLiteralStatementAst;
 import com.github.cao.awa.apsars.tree.statement.trys.ApsCatchListAst;
@@ -20,6 +24,7 @@ import lombok.experimental.Accessors;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 
 @Accessors(fluent = true)
 public class ApsMethodAst extends ApsAst {
@@ -38,6 +43,12 @@ public class ApsMethodAst extends ApsAst {
     @Getter
     @Setter
     private ApsMethodExtraCatchAst extraCatch;
+    @Getter
+    @Setter
+    private boolean isBinder;
+    @Getter
+    @Setter
+    private boolean isVirtual;
     private final Map<ApsMethodModifierType, ApsMethodModifier> modifiers = ApricotCollectionFactor.hashMap();
     private final Map<String, ApsAnnotationAst> annotations = ApricotCollectionFactor.hashMap();
     private final Set<String> compilerFlags = ApricotCollectionFactor.hashSet();
@@ -92,7 +103,9 @@ public class ApsMethodAst extends ApsAst {
             System.out.println(ident + "|_ params: ");
             this.param.print(ident);
         }
-        this.methodBody.print(ident);
+        if (this.methodBody != null) {
+            this.methodBody.print(ident);
+        }
         if (this.extraCatch != null) {
             this.extraCatch.print(ident);
         }
@@ -119,14 +132,20 @@ public class ApsMethodAst extends ApsAst {
             }
         }
 
-        // 设置修饰符
-        for (ApsMethodModifierType modifierType : ApsMethodModifierType.values()) {
-            Manipulate.notNull(this.modifiers.get(modifierType), modifier -> {
-                if (modifier.isLiteral()) {
-                    builder.append(modifier.literal());
-                    builder.append(" ");
-                }
-            });
+        if (!this.isBinder) {
+            // 设置修饰符
+            for (ApsMethodModifierType modifierType : ApsMethodModifierType.values()) {
+                Manipulate.notNull(this.modifiers.get(modifierType), modifier -> {
+                    if (modifier.isLiteral()) {
+                        builder.append(modifier.literal());
+                        builder.append(" ");
+                    }
+                });
+            }
+        }
+
+        if (this.isBinder && !this.isVirtual) {
+            builder.append("default ");
         }
 
         if (this.returnType == null) {
@@ -143,25 +162,33 @@ public class ApsMethodAst extends ApsAst {
         }
         builder.append(")");
 
-        if (this.extraCatch == null) {
-            if (this.methodBody == null) {
-                builder.append("{}");
+        if (!this.isVirtual) {
+            if (this.extraCatch == null) {
+                if (this.methodBody == null) {
+                    builder.append("{}");
+                } else {
+                    builder.append("{");
+                    this.methodBody.generateJava(builder);
+                    builder.append("}");
+                }
             } else {
-                builder.append("{");
-                this.methodBody.generateJava(builder);
-                builder.append("}");
+                this.extraCatch.generateJava(builder, (innerBuilder) -> {
+                    if (this.methodBody != null) {
+                        this.methodBody.generateJava(innerBuilder);
+                    }
+                });
             }
         } else {
-            this.extraCatch.generateJava(builder, (innerBuilder) -> {
-                if (this.methodBody != null) {
-                    this.methodBody.generateJava(innerBuilder);
-                }
-            });
+            builder.append(";");
         }
     }
 
     @Override
     public void preprocess() {
+        if (this.compilerFlags.contains("virtual-method")) {
+            this.isVirtual = true;
+        }
+
         if (this.modifiers.get(ApsMethodModifierType.IS_FINAL) != null) {
             if (findAst(ApsClassAst.class).isFinal()) {
                 // 让生成的代码更简洁，class是final时方法设置final是多余的
@@ -240,5 +267,60 @@ public class ApsMethodAst extends ApsAst {
         Manipulate.notNull(this.param, ApsMethodParameterAst::preprocess);
         Manipulate.notNull(this.methodBody, ApsMethodBodyAst::preprocess);
         Manipulate.notNull(this.extraCatch, ApsMethodExtraCatchAst::preprocess);
+    }
+
+    public static ApsMethodAst virtual(String nameIdentity, ApsArgTypeAst rType, Function<ApsMethodAst, ApsMethodParameterAst> param, ApsAst parentAst) {
+        ApsMethodAst methodAst = new ApsMethodAst(
+                parentAst
+        );
+        methodAst.nameIdentity(nameIdentity);
+        methodAst.returnType(rType);
+        methodAst.param(param.apply(methodAst));
+        methodAst.isVirtual(true);
+        methodAst.isBinder(true);
+
+        return methodAst;
+    }
+
+    public static ApsMethodAst accessor(String nameIdentity, ApsArgTypeAst type, boolean isGetter, boolean isStatic, boolean isPublic, ApsAst parentAst) {
+        if (isGetter) {
+            ApsMethodAst methodAst = new ApsMethodAst(
+                    parentAst
+            );
+            methodAst.returnType(type);
+            methodAst.nameIdentity(nameIdentity);
+            methodAst.addModifier(ApsMethodModifier.create(isPublic ? ApsMethodKeyword.PUBLIC : ApsMethodKeyword.PRIVATE));
+            ApsMethodBodyAst methodBodyAst = new ApsMethodBodyAst(methodAst, null);
+            ApsLiteralStatementAst statementAst = new ApsLiteralStatementAst(
+                    methodBodyAst,
+                    "return " + (isStatic ? "" : "this.") + nameIdentity
+            );
+            statementAst.withEnd(true);
+            methodBodyAst.addStatement(statementAst);
+            methodAst.methodBody(methodBodyAst);
+            return methodAst;
+        } else {
+            ApsMethodAst methodAst = new ApsMethodAst(
+                    parentAst
+            );
+            methodAst.nameIdentity(nameIdentity);
+            methodAst.addModifier(ApsMethodModifier.create(isPublic ? ApsMethodKeyword.PUBLIC : ApsMethodKeyword.PRIVATE));
+            ApsMethodBodyAst methodBodyAst = new ApsMethodBodyAst(methodAst, null);
+            ApsLiteralStatementAst statementAst = new ApsLiteralStatementAst(
+                    methodBodyAst,
+                    (isStatic ? "" : "this.") + nameIdentity + "=" + nameIdentity + "_"
+            );
+            statementAst.withEnd(true);
+            ApsMethodParameterAst methodParamAst = new ApsMethodParameterAst(methodAst);
+            ApsMethodParamElementAst methodParamElementAst = new ApsMethodParamElementAst(methodParamAst);
+            methodParamElementAst.addModifier(ApsMethodParamModifier.create(ApsMethodParamKeyword.VAL));
+            methodParamElementAst.argType(type);
+            methodParamElementAst.nameIdentity(nameIdentity + "_");
+            methodParamAst.addParam(methodParamElementAst);
+            methodAst.param(methodParamAst);
+            methodBodyAst.addStatement(statementAst);
+            methodAst.methodBody(methodBodyAst);
+            return methodAst;
+        }
     }
 }

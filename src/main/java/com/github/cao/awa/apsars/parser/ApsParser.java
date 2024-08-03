@@ -4,6 +4,8 @@ import com.github.cao.awa.apricot.util.collection.ApricotCollectionFactor;
 import com.github.cao.awa.apsars.element.ApsElementType;
 import com.github.cao.awa.apsars.parser.clazz.ApsClassParser;
 import com.github.cao.awa.apsars.parser.clazz.ApsMemberParameterParser;
+import com.github.cao.awa.apsars.parser.clazz.inherit.ApsBinderParser;
+import com.github.cao.awa.apsars.parser.clazz.inherit.ApsBindingParameterParser;
 import com.github.cao.awa.apsars.parser.global.ApsGlobalParser;
 import com.github.cao.awa.apsars.parser.method.ApsMethodExtraParser;
 import com.github.cao.awa.apsars.parser.method.ApsMethodParser;
@@ -41,7 +43,9 @@ public abstract class ApsParser<T extends ApsAst> {
         map.put(ApsElementType.FILE, ApsFileParser::new);
         map.put(ApsElementType.GLOBAL, ApsGlobalParser::new);
         map.put(ApsElementType.KEYWORD_CLASS, ApsClassParser::new);
+        map.put(ApsElementType.KEYWORD_BIND, ApsBinderParser::new);
         map.put(ApsElementType.MEMBER_PARAMETER, ApsMemberParameterParser::new);
+        map.put(ApsElementType.BINDING_PARAMETER, ApsBindingParameterParser::new);
         map.put(ApsElementType.METHOD, ApsMethodParser::new);
         map.put(ApsElementType.METHOD_PARAM, ApsMethodParameterParser::new);
         map.put(ApsElementType.METHOD_PARAM_DEFAULT, ApsMethodParameterPresetValueElementParser::new);
