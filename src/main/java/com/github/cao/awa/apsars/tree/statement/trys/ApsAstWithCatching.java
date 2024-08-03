@@ -14,9 +14,12 @@ public abstract class ApsAstWithCatching extends ApsAst {
     @Getter
     @Setter
     private ApsMethodBodyAst catchingMethodBody;
+    @Getter
+    private final ApsMethodBodyAst parentBody;
 
-    public ApsAstWithCatching(ApsAst parent) {
+    public ApsAstWithCatching(ApsAst parent, ApsMethodBodyAst parentBody) {
         super(parent);
+        this.parentBody = parentBody;
     }
 
     @Override

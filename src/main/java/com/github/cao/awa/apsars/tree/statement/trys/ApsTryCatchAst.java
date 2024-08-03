@@ -18,9 +18,12 @@ public class ApsTryCatchAst extends ApsStatementAst {
     @Getter
     @Setter
     private ApsCatchListAst catchList;
+    @Getter
+    private final ApsMethodBodyAst parentBody;
 
-    public ApsTryCatchAst(ApsAst parent) {
+    public ApsTryCatchAst(ApsAst parent, ApsMethodBodyAst parentBody) {
         super(parent);
+        this.parentBody = parentBody;
     }
 
     @Override

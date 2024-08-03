@@ -7,34 +7,21 @@ final class Sample2 {
     pub name2: int = 123;
     name3: int <- 123;
 
-    pvt s-nil safepoint rigid xxx() {
-        int x = 0;
+    private static xxx() {
+        int x as 0;
         int y = 100;
-        int z = 123;
+        int z <- 123;
+
         try {
-            println("Hello world");
-        } catch (ex: IllegalArgumentException or IllegalStateException or IllformedLocaleException) {
-            println("Hello exception");
+            int www = 111;
+        } catch (ex: Exception) {
+            int zzz = 987;
         }
-        int w1 = 123;
-        try {
-            println("Hello world");
-        } catch (ex: IllegalArgumentException or IllegalStateException or IllformedLocaleException) {
-            println("Hello exception");
+
+        try  {
+            int anotherXxx = 345;
+        } catch (ex: Exception) {
+
         }
-        int w2 = 123;
-        try {
-            println("Hello world");
-        } catch (ex: IllegalArgumentException or IllegalStateException or IllformedLocaleException) {
-            println("Hello exception");
-        }
-        int w3 = 123;
-        try {
-            println("Hello world");
-            int w411 = 123;
-        } catch (ex: IllegalArgumentException or IllegalStateException or IllformedLocaleException) {
-            println("Hello exception");
-        }
-        int w4 = 123;
     }
 }

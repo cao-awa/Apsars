@@ -6,11 +6,13 @@ import com.github.cao.awa.apsars.parser.token.keyword.clazz.ApsClassKeyword;
 import com.github.cao.awa.apsars.parser.token.keyword.clazz.ApsMemberParameterKeyword;
 import com.github.cao.awa.apsars.parser.token.keyword.method.ApsMethodKeyword;
 import com.github.cao.awa.apsars.parser.token.keyword.method.ApsMethodParamKeyword;
+import com.github.cao.awa.apsars.parser.token.keyword.method.statement.ApsLocalVariableKeyword;
 import com.github.cao.awa.sinuatum.manipulate.Manipulate;
 
 import java.util.Map;
 
 public class ApsTokens {
+    public static final String SPACE = " ";
     public static final String CURLY_BRACES_START = "{";
     public static final String CURLY_BRACES_END = "}";
     public static final String ANGLE_BRACES_START = "<";
@@ -43,6 +45,12 @@ public class ApsTokens {
 
     public static final Map<String, ApsMemberParameterKeyword> MEMBER_PARAMETER_KEYWORDS = Manipulate.operation(ApricotCollectionFactor.hashMap(), map -> {
         for (ApsMemberParameterKeyword value : ApsMemberParameterKeyword.values()) {
+            map.put(value.literal(), value);
+        }
+    });
+
+    public static final Map<String, ApsLocalVariableKeyword> LOCAL_VARIABLE_KEYWORDS = Manipulate.operation(ApricotCollectionFactor.hashMap(), map -> {
+        for (ApsLocalVariableKeyword value : ApsLocalVariableKeyword.values()) {
             map.put(value.literal(), value);
         }
     });

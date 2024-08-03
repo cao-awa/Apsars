@@ -10,8 +10,8 @@ import com.github.cao.awa.apsars.parser.token.ApsTokens;
 import com.github.cao.awa.apsars.parser.token.keyword.method.ApsMethodKeyword;
 import com.github.cao.awa.apsars.tree.method.ApsMethodAst;
 import com.github.cao.awa.apsars.tree.method.ApsMethodBodyAst;
-import com.github.cao.awa.apsars.tree.statement.trys.ApsMethodExtraCatchAst;
 import com.github.cao.awa.apsars.tree.method.parameter.ApsMethodParameterAst;
+import com.github.cao.awa.apsars.tree.statement.trys.ApsMethodExtraCatchAst;
 import com.github.cao.awa.apsars.tree.statement.trys.producer.ApsCatchingProducer;
 import com.github.cao.awa.catheter.pair.Pair;
 import org.apache.logging.log4j.LogManager;
@@ -58,7 +58,7 @@ public class ApsMethodParser extends ApsParser<ApsMethodAst> {
                             type = ApsElementType.TRY_CATCHING;
 
                             Pair<Integer, Boolean> body = findClosureBraces(true);
-                            ApsMethodBodyAst bodyAst = new ApsMethodBodyAst(ast);
+                            ApsMethodBodyAst bodyAst = new ApsMethodBodyAst(ast, null);
                             ApsMethodBodyParser parser = (ApsMethodBodyParser) parser(ApsElementType.METHOD_BODY);
                             parser.parse(makeSubstring(1, body.first()), bodyAst);
                             skipAndFeedback(body.first() + 1);
@@ -74,7 +74,7 @@ public class ApsMethodParser extends ApsParser<ApsMethodAst> {
                     } else if (type == ApsElementType.TRY_CATCHING) {
                         type = ApsElementType.UNEXPECTED;
 
-                        ApsCatchingProducer extraCatchAstProducer = new ApsCatchingProducer(ast);
+                        ApsCatchingProducer extraCatchAstProducer = new ApsCatchingProducer(ast, null);
                         ApsMethodCatchingParser parser = (ApsMethodCatchingParser) parser(ApsElementType.TRY_CATCHING);
                         parser.parse(codes(), extraCatchAstProducer, () -> {
                             skipAndFeedback(parser.feedbackSkip());

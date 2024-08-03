@@ -2,9 +2,9 @@ package com.github.cao.awa.apsars.parser.method.statement;
 
 import com.github.cao.awa.apsars.element.ApsElementType;
 import com.github.cao.awa.apsars.parser.ApsParser;
+import com.github.cao.awa.apsars.tree.method.ApsMethodBodyAst;
 import com.github.cao.awa.apsars.tree.statement.trys.ApsAstWithCatching;
 import com.github.cao.awa.apsars.tree.statement.trys.ApsCatchListAst;
-import com.github.cao.awa.apsars.tree.method.ApsMethodBodyAst;
 import com.github.cao.awa.catheter.pair.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -35,7 +35,7 @@ public class ApsMethodCatchingParser extends ApsParser<ApsAstWithCatching> {
                 ast.catchList(catchListAst);
 
                 Pair<Integer, Boolean> handlerCodes = findClosureBraces(true);
-                ApsMethodBodyAst bodyAst = new ApsMethodBodyAst(ast);
+                ApsMethodBodyAst bodyAst = new ApsMethodBodyAst(ast, ast.parentBody());
                 ApsMethodBodyParser methodBodyParser = (ApsMethodBodyParser) parser(ApsElementType.METHOD_BODY);
                 methodBodyParser.parse(makeSubstring(1, handlerCodes.first()), bodyAst);
                 skipAndFeedback(handlerCodes.first() + 1);

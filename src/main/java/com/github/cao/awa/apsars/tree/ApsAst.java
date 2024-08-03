@@ -41,6 +41,4 @@ public abstract class ApsAst implements ApsJavaGenerator {
             }
         }
     }
-
-
 }

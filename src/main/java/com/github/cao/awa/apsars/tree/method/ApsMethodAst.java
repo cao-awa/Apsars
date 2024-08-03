@@ -188,9 +188,9 @@ public class ApsMethodAst extends ApsAst {
             }
             findAst(ApsClassAst.class).addMethod(newMethod);
 
-            ApsMethodBodyAst selfMethodBody = new ApsMethodBodyAst(this);
-            ApsTryCatchAst safepointStatementAst = new ApsTryCatchAst(selfMethodBody);
-            ApsMethodBodyAst safepointStatementMethodBody = new ApsMethodBodyAst(safepointStatementAst);
+            ApsMethodBodyAst selfMethodBody = new ApsMethodBodyAst(this, null);
+            ApsTryCatchAst safepointStatementAst = new ApsTryCatchAst(selfMethodBody, selfMethodBody);
+            ApsMethodBodyAst safepointStatementMethodBody = new ApsMethodBodyAst(safepointStatementAst, null);
             ApsLiteralStatementAst threadSleepStatement = new ApsLiteralStatementAst(safepointStatementMethodBody, "Thread.sleep(0)");
             safepointStatementMethodBody.addStatement(threadSleepStatement);
             safepointStatementAst.methodBody(safepointStatementMethodBody);

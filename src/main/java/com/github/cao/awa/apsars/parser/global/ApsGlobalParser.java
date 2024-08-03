@@ -5,8 +5,8 @@ import com.github.cao.awa.apsars.element.modifier.method.ApsMethodModifier;
 import com.github.cao.awa.apsars.parser.ApsParser;
 import com.github.cao.awa.apsars.parser.method.parameter.ApsMethodParameterParser;
 import com.github.cao.awa.apsars.parser.token.ApsTokens;
-import com.github.cao.awa.apsars.parser.token.keyword.method.ApsMethodKeyword;
 import com.github.cao.awa.apsars.parser.token.keyword.global.ApsGlobalKeyword;
+import com.github.cao.awa.apsars.parser.token.keyword.method.ApsMethodKeyword;
 import com.github.cao.awa.apsars.tree.global.ApsGlobalAst;
 import com.github.cao.awa.apsars.tree.method.ApsMethodAst;
 import com.github.cao.awa.apsars.tree.method.ApsMethodBodyAst;
@@ -65,7 +65,7 @@ public class ApsGlobalParser extends ApsParser<ApsGlobalAst> {
                     methodAst.addModifier(ApsMethodModifier.create(ApsMethodKeyword.STATIC));
                     methodAst.addModifier(ApsMethodModifier.create(ApsMethodKeyword.PUBLIC));
 
-                    ApsMethodBodyAst bodyAst = new ApsMethodBodyAst(methodAst);
+                    ApsMethodBodyAst bodyAst = new ApsMethodBodyAst(methodAst, null);
 
                     StringBuilder aliasInvokes = new StringBuilder();
                     aliasInvokes.append(methodTarget.first());

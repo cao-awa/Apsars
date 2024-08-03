@@ -20,7 +20,7 @@ public class ApsLiteralStatementAst extends ApsStatementAst {
 
     @Override
     public void generateJava(StringBuilder builder) {
-        builder.append(this.statement).append(";");
+        builder.append(this.statement);
     }
 
     @Override

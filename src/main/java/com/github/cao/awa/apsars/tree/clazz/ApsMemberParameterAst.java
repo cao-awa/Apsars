@@ -129,7 +129,7 @@ public class ApsMemberParameterAst extends ApsAstWithVarargs {
             if (!isHolderOverridable()) {
                 methodAst.addModifier(ApsMethodModifier.create(ApsMethodKeyword.FINAL));
             }
-            ApsMethodBodyAst methodBodyAst = new ApsMethodBodyAst(methodAst);
+            ApsMethodBodyAst methodBodyAst = new ApsMethodBodyAst(methodAst, null);
             ApsLiteralStatementAst statementAst = new ApsLiteralStatementAst(
                     methodBodyAst,
                     "return " + (isStatic() ? "" : "this.") + this.nameIdentity
@@ -158,7 +158,7 @@ public class ApsMemberParameterAst extends ApsAstWithVarargs {
             if (!isHolderOverridable()) {
                 methodAst.addModifier(ApsMethodModifier.create(ApsMethodKeyword.FINAL));
             }
-            ApsMethodBodyAst methodBodyAst = new ApsMethodBodyAst(methodAst);
+            ApsMethodBodyAst methodBodyAst = new ApsMethodBodyAst(methodAst, null);
             ApsLiteralStatementAst statementAst = new ApsLiteralStatementAst(
                     methodBodyAst,
                     (isStatic() ? "" : "this.") + this.nameIdentity + "=" + this.nameIdentity + "_"

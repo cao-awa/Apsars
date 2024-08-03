@@ -7,7 +7,6 @@ import com.github.cao.awa.apsars.parser.statement.ApsStatementParser;
 import com.github.cao.awa.apsars.parser.token.ApsTokens;
 import com.github.cao.awa.apsars.parser.token.keyword.method.statement.ApsStatementKeyword;
 import com.github.cao.awa.apsars.tree.method.ApsMethodBodyAst;
-import com.github.cao.awa.apsars.tree.statement.trys.ApsMethodExtraCatchAst;
 import com.github.cao.awa.apsars.tree.statement.trys.ApsTryCatchAst;
 import com.github.cao.awa.apsars.tree.statement.trys.producer.ApsCatchingProducer;
 import com.github.cao.awa.catheter.pair.Pair;
@@ -27,7 +26,7 @@ public class ApsTryStatementParser extends ApsParser<ApsTryCatchAst> {
         Pair<Integer, Boolean> tryBraces = findClosureBraces(true);
         if (!tryBraces.second()) {
             String trysCodes = makeSubstring(1, tryBraces.first());
-            ApsMethodBodyAst methodBodyAst = new ApsMethodBodyAst(ast);
+            ApsMethodBodyAst methodBodyAst = new ApsMethodBodyAst(ast, ast.parentBody());
             ApsStatementParser statementParser = (ApsStatementParser) parser(ApsElementType.STATEMENT);
             statementParser.parse(trysCodes, methodBodyAst);
             ast.methodBody(methodBodyAst);
@@ -37,7 +36,7 @@ public class ApsTryStatementParser extends ApsParser<ApsTryCatchAst> {
 
             Pair<String, Boolean> nextCatch = nextToken(List.of(" ", "("), false);
             if (!nextCatch.second() && nextCatch.first().equals(ApsStatementKeyword.CATCH.literal())) {
-                ApsCatchingProducer extraCatchAstProducer = new ApsCatchingProducer(ast);
+                ApsCatchingProducer extraCatchAstProducer = new ApsCatchingProducer(ast, ast.parentBody());
                 ApsMethodCatchingParser parser = (ApsMethodCatchingParser) parser(ApsElementType.TRY_CATCHING);
                 parser.parse(codes(), extraCatchAstProducer, () -> {
                     skipAndFeedback(parser.feedbackSkip());
