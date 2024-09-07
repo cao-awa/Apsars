@@ -5,12 +5,16 @@ import com.github.cao.awa.apsars.tree.ApsAst;
 import com.github.cao.awa.apsars.tree.clazz.ApsClassAst;
 import com.github.cao.awa.apsars.tree.clazz.inherit.ApsBinderAst;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.Accessors;
 
 import java.util.List;
 
 @Accessors(fluent = true)
 public class ApsFileAst extends ApsAst {
+    @Getter
+    @Setter
+    private String packageAt;
     @Getter
     private final List<ApsImportAst> imports = ApricotCollectionFactor.arrayList();
     @Getter
@@ -36,6 +40,7 @@ public class ApsFileAst extends ApsAst {
 
     public void print(String ident) {
         System.out.println("--Aps file");
+        System.out.println("    |_ package at: " + this.packageAt);
         for (ApsImportAst importAst : this.imports) {
             importAst.print(ident + "    ");
         }

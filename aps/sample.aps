@@ -1,26 +1,10 @@
-global {
-    alias println as System.out.println(x: Object);
-}
+package example;
 
-bind TestBinder {
-    virtual int a;
-
-    xxx();
-    yyy() {
-        println(321);
+public unique class Name {
+    let {
     }
-}
 
-bind TestBinder2 {
-    virtual int b;
+    main(args: String[], arg2: int): Test[] {
 
-    www() {
-        println(987);
-    }
-}
-
-public class Sample2: TestBinder and TestBinder2 {
-    public xxx() {
-        println(123);
     }
 }

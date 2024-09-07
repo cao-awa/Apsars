@@ -18,6 +18,8 @@ public enum ApsElementType {
     TRY_CATCHING,
     METHOD_BODY,
     STATEMENT,
+    LOCAL_VARIABLE,
+    INVOKE,
     TRY_STATEMENT,
 
     CATCH_LIST,

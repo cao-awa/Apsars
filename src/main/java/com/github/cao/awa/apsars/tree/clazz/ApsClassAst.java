@@ -1,7 +1,10 @@
 package com.github.cao.awa.apsars.tree.clazz;
 
 import com.github.cao.awa.apricot.util.collection.ApricotCollectionFactor;
+import com.github.cao.awa.apsars.element.ApsAccessibleType;
 import com.github.cao.awa.apsars.element.clazz.ApsClassModifierType;
+import com.github.cao.awa.apsars.element.modifier.ApsAccessibleModifier;
+import com.github.cao.awa.apsars.element.modifier.ApsModifierRequiredAst;
 import com.github.cao.awa.apsars.element.modifier.clazz.ApsClassModifier;
 import com.github.cao.awa.apsars.tree.ApsAst;
 import com.github.cao.awa.apsars.tree.aps.ApsFileAst;
@@ -18,14 +21,20 @@ import java.util.Map;
 import java.util.Set;
 
 @Accessors(fluent = true)
-public class ApsClassAst extends ApsAst {
+public class ApsClassAst extends ApsAst implements ApsModifierRequiredAst<ApsClassModifier> {
     @Setter
     @Getter
     private String nameIdentity;
+    @Getter
+    @Setter
+    private ApsAccessibleModifier accessible = ApsAccessibleType.PRIVATE.generic();
     private final Map<ApsClassModifierType, ApsClassModifier> modifiers = ApricotCollectionFactor.hashMap();
+    @Getter
     private final List<ApsMemberParameterAst> parameters = ApricotCollectionFactor.arrayList();
+    @Getter
     private final List<ApsMethodAst> methods = ApricotCollectionFactor.arrayList();
     private final Set<String> binders = ApricotCollectionFactor.hashSet();
+    private final List<ApsLetAst> lets = ApricotCollectionFactor.arrayList();
 
     public ApsClassAst(ApsAst parent) {
         super(parent);
@@ -43,12 +52,21 @@ public class ApsClassAst extends ApsAst {
         this.binders.add(binderName);
     }
 
+    public void addLet(ApsLetAst letAst) {
+        this.lets.add(letAst);
+    }
+
     public void addModifier(ApsClassModifier modifier) {
         ApsClassModifier definedModifier = this.modifiers.get(modifier.type());
         if (definedModifier != null) {
             throw new IllegalArgumentException("The modifier type '" + definedModifier.type() + "' already defined as '" + definedModifier.literal() + "'");
         }
         this.modifiers.put(modifier.type(), modifier);
+    }
+
+    @Override
+    public void addAccessible(ApsAccessibleModifier modifier) {
+        this.accessible = modifier;
     }
 
     public boolean isFinal() {
@@ -59,8 +77,8 @@ public class ApsClassAst extends ApsAst {
     public void print(String ident) {
         System.out.println(ident + "|_ Aps class: " + this.nameIdentity);
         if (!this.modifiers.isEmpty()) {
-            System.out.println(ident + "|_ Aps method modifier: ");
-            String modifierIdent = ident + "    ";
+            System.out.println(ident + "    |_ Aps class modifier: ");
+            String modifierIdent = ident + "        ";
             this.modifiers.forEach((type, modifier) -> {
                 System.out.println(modifierIdent + "|_ " + modifier.type() + ": " + modifier.literal());
             });

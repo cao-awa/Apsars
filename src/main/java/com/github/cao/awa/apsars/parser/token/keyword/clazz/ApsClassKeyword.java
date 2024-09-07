@@ -17,6 +17,7 @@ public enum ApsClassKeyword implements ApsKeyword {
     STATIC("static"),
 
     FINAL("final"),
+    UNIQUE("unique"),
     ;
 
     private final String literal;
@@ -27,5 +28,15 @@ public enum ApsClassKeyword implements ApsKeyword {
 
     public String literal() {
         return this.literal;
+    }
+
+    public static ApsClassKeyword of(String literal) {
+        for (ApsClassKeyword keyword : values()) {
+            if (keyword.literal().equals(literal)) {
+                return keyword;
+            }
+        }
+
+        return ApsClassKeyword.valueOf(literal);
     }
 }

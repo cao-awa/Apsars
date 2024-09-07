@@ -3,6 +3,8 @@ package com.github.cao.awa.apsars.tree.method;
 import com.github.cao.awa.apricot.util.collection.ApricotCollectionFactor;
 import com.github.cao.awa.apsars.tree.ApsAst;
 import com.github.cao.awa.apsars.tree.statement.ApsStatementAst;
+import com.github.cao.awa.apsars.tree.statement.invoke.ApsInvokeAst;
+import com.github.cao.awa.apsars.tree.statement.special.literal.ApsLiteralStatementAst;
 import com.github.cao.awa.apsars.tree.statement.variable.ApsVariableAst;
 import lombok.Getter;
 import lombok.experimental.Accessors;
@@ -28,6 +30,30 @@ public class ApsMethodBodyAst extends ApsAst {
 
     public void addFieldVariable(ApsVariableAst variableAst) {
         this.fieldVariables.add(variableAst);
+    }
+
+    public ApsStatementAst searchLastStatement() {
+        if (this.statements.isEmpty()) {
+            return null;
+        }
+
+        return this.statements.getLast();
+    }
+
+    public ApsInvokeAst searchLastInvoke() {
+        if (searchLastStatement() instanceof ApsInvokeAst invokeAst) {
+            return invokeAst;
+        }
+
+        return null;
+    }
+
+    public ApsLiteralStatementAst searchLastLiteralIdentity() {
+        if (searchLastStatement() instanceof ApsLiteralStatementAst literalStatementAst) {
+            return literalStatementAst;
+        }
+
+        return null;
     }
 
     @Override

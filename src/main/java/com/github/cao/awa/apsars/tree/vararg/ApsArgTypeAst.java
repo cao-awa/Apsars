@@ -14,6 +14,15 @@ public class ApsArgTypeAst extends ApsAst {
     @Getter
     @Setter
     private String nameIdentity;
+    @Getter
+    @Setter
+    private boolean arrayArgType = false;
+    @Getter
+    @Setter
+    private int arraySize = -1;
+    @Getter
+    @Setter
+    private int arrayDepth = 1;
 
     public ApsArgTypeAst(ApsAst parent) {
         super(parent);
@@ -32,7 +41,7 @@ public class ApsArgTypeAst extends ApsAst {
             varargCountBuilder.delete(varargCountBuilder.length() - 2, varargCountBuilder.length());
             varargCountBuilder.append(">");
         }
-        System.out.println(ident + "|_ " + this.nameIdentity + varargCountBuilder);
+        System.out.println(ident + "|_ " + this.nameIdentity + varargCountBuilder + (this.arrayArgType ? "[?]".repeat(this.arrayDepth) : ""));
         for (ApsArgTypeAst argType : this.args) {
             argType.print(ident + "    ");
         }
@@ -54,6 +63,16 @@ public class ApsArgTypeAst extends ApsAst {
                 }
             }
             builder.append(">");
+        }
+        if (this.arrayArgType) {
+            int depth = this.arrayDepth;
+            while (depth-- > 0) {
+                builder.append("[");
+                if (this.arraySize == 1) {
+                    builder.append(this.arraySize);
+                }
+                builder.append("]");
+            }
         }
     }
 

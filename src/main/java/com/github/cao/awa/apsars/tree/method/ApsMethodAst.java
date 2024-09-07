@@ -1,7 +1,10 @@
 package com.github.cao.awa.apsars.tree.method;
 
 import com.github.cao.awa.apricot.util.collection.ApricotCollectionFactor;
+import com.github.cao.awa.apsars.element.ApsAccessibleType;
 import com.github.cao.awa.apsars.element.method.ApsMethodModifierType;
+import com.github.cao.awa.apsars.element.modifier.ApsAccessibleModifier;
+import com.github.cao.awa.apsars.element.modifier.ApsModifierRequiredAst;
 import com.github.cao.awa.apsars.element.modifier.method.ApsMethodModifier;
 import com.github.cao.awa.apsars.element.modifier.method.parameter.ApsMethodParamModifier;
 import com.github.cao.awa.apsars.parser.token.keyword.method.ApsMethodKeyword;
@@ -27,7 +30,7 @@ import java.util.Set;
 import java.util.function.Function;
 
 @Accessors(fluent = true)
-public class ApsMethodAst extends ApsAst {
+public class ApsMethodAst extends ApsAst implements ApsModifierRequiredAst<ApsMethodModifier> {
     @Setter
     @Getter
     private String nameIdentity;
@@ -50,6 +53,9 @@ public class ApsMethodAst extends ApsAst {
     @Setter
     private boolean isVirtual;
     private final Map<ApsMethodModifierType, ApsMethodModifier> modifiers = ApricotCollectionFactor.hashMap();
+    @Getter
+    @Setter
+    private ApsAccessibleModifier accessible = ApsAccessibleType.PRIVATE.generic();
     private final Map<String, ApsAnnotationAst> annotations = ApricotCollectionFactor.hashMap();
     private final Set<String> compilerFlags = ApricotCollectionFactor.hashSet();
 
@@ -62,6 +68,15 @@ public class ApsMethodAst extends ApsAst {
         if (definedModifier != null) {
             throw new IllegalArgumentException("The modifier type '" + definedModifier.type() + "' already defined as '" + definedModifier.literal() + "'");
         }
+        this.modifiers.put(modifier.type(), modifier);
+    }
+
+    @Override
+    public void addAccessible(ApsAccessibleModifier modifier) {
+        this.accessible = modifier;
+    }
+
+    public void addModifierIgnoredPresent(ApsMethodModifier modifier) {
         this.modifiers.put(modifier.type(), modifier);
     }
 
@@ -96,7 +111,7 @@ public class ApsMethodAst extends ApsAst {
             System.out.println(ident + "|_ return type: void");
         } else {
             System.out.println(ident + "|_ return type: ");
-            this.returnType.print(ident);
+            this.returnType.print(ident + "    ");
         }
 
         if (this.param != null && !this.param.names().isEmpty()) {
@@ -133,6 +148,9 @@ public class ApsMethodAst extends ApsAst {
         }
 
         if (!this.isBinder) {
+            builder.append(this.accessible.getAccessibleType().literal());
+            builder.append(" ");
+
             // 设置修饰符
             for (ApsMethodModifierType modifierType : ApsMethodModifierType.values()) {
                 Manipulate.notNull(this.modifiers.get(modifierType), modifier -> {
@@ -304,7 +322,7 @@ public class ApsMethodAst extends ApsAst {
                     parentAst
             );
             methodAst.nameIdentity(nameIdentity);
-            methodAst.addModifier(ApsMethodModifier.create(isPublic ? ApsMethodKeyword.PUBLIC : ApsMethodKeyword.PRIVATE));
+            methodAst.addAccessible(isPublic ? ApsAccessibleType.PUBLIC : ApsAccessibleType.PRIVATE);
             ApsMethodBodyAst methodBodyAst = new ApsMethodBodyAst(methodAst, null);
             ApsLiteralStatementAst statementAst = new ApsLiteralStatementAst(
                     methodBodyAst,

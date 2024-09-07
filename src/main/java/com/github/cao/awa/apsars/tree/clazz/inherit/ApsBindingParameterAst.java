@@ -1,9 +1,9 @@
 package com.github.cao.awa.apsars.tree.clazz.inherit;
 
 import com.github.cao.awa.apricot.util.collection.ApricotCollectionFactor;
+import com.github.cao.awa.apsars.element.ApsAccessibleType;
 import com.github.cao.awa.apsars.element.clazz.ApsMemberParameterModifierType;
 import com.github.cao.awa.apsars.element.modifier.parameter.ApsMemberParameterModifier;
-import com.github.cao.awa.apsars.parser.token.keyword.clazz.ApsMemberParameterKeyword;
 import com.github.cao.awa.apsars.tree.clazz.ApsClassAst;
 import com.github.cao.awa.apsars.tree.clazz.ApsMemberParameterAst;
 import com.github.cao.awa.apsars.tree.statement.ApsStatementAst;
@@ -62,6 +62,8 @@ public class ApsBindingParameterAst extends ApsAstWithVarargs {
     public void generateJava(StringBuilder builder) {
         processConflictModifiers();
 
+        builder.append(ApsAccessibleType.PUBLIC.literal());
+
         // 设置修饰符
         for (ApsMemberParameterModifierType modifierType : ApsMemberParameterModifierType.values()) {
             Manipulate.notNull(this.modifiers.get(modifierType), modifier -> {
@@ -84,7 +86,7 @@ public class ApsBindingParameterAst extends ApsAstWithVarargs {
 
     @Override
     public void preprocess() {
-        this.modifiers.put(ApsMemberParameterModifierType.ACCESSIBLE, ApsMemberParameterModifier.create(ApsMemberParameterKeyword.PUBLIC));
+
     }
 
     public boolean isStatic() {

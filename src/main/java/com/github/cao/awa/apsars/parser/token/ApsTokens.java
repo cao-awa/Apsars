@@ -27,6 +27,12 @@ public class ApsTokens {
     public static final String LEFT_ASSIGNMENT = "<-";
     public static final String HYPHEN = "-";
     public static final String UNDERSCORE = "_";
+    public static final String PUBLIC = "public";
+    public static final String PUBLIC_OPEN = "open";
+    public static final String PUBLIC_PUB = "pub";
+    public static final String PRIVATE = "private";
+    public static final String PRIVATE_PVT = "pvt";
+    public static final String PROTECTED = "protected";
     public static final Map<String, String> BRACES = Manipulate.operation(ApricotCollectionFactor.hashMap(), map -> {
         map.put(CURLY_BRACES_START, CURLY_BRACES_END);
         map.put(ANGLE_BRACES_START, ANGLE_BRACES_END);

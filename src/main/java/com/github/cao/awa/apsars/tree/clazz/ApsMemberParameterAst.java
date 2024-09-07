@@ -1,10 +1,12 @@
 package com.github.cao.awa.apsars.tree.clazz;
 
 import com.github.cao.awa.apricot.util.collection.ApricotCollectionFactor;
+import com.github.cao.awa.apsars.element.ApsAccessibleType;
 import com.github.cao.awa.apsars.element.clazz.ApsMemberParameterModifierType;
+import com.github.cao.awa.apsars.element.modifier.ApsAccessibleModifier;
+import com.github.cao.awa.apsars.element.modifier.ApsModifierRequiredAst;
 import com.github.cao.awa.apsars.element.modifier.method.ApsMethodModifier;
 import com.github.cao.awa.apsars.element.modifier.parameter.ApsMemberParameterModifier;
-import com.github.cao.awa.apsars.parser.token.keyword.clazz.ApsMemberParameterKeyword;
 import com.github.cao.awa.apsars.parser.token.keyword.method.ApsMethodKeyword;
 import com.github.cao.awa.apsars.tree.method.ApsMethodAst;
 import com.github.cao.awa.apsars.tree.statement.ApsStatementAst;
@@ -20,7 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 @Accessors(fluent = true)
-public class ApsMemberParameterAst extends ApsAstWithVarargs {
+public class ApsMemberParameterAst extends ApsAstWithVarargs implements ApsModifierRequiredAst<ApsMemberParameterModifier> {
     private static final Logger LOGGER = LogManager.getLogger("ApsMemberParameterAst");
 
     @Setter
@@ -29,6 +31,9 @@ public class ApsMemberParameterAst extends ApsAstWithVarargs {
     @Setter
     @Getter
     private ApsStatementAst value;
+    @Getter
+    @Setter
+    private ApsAccessibleModifier accessible = ApsAccessibleType.PRIVATE.generic();
     private final Map<ApsMemberParameterModifierType, ApsMemberParameterModifier> modifiers = ApricotCollectionFactor.hashMap();
 
     public ApsMemberParameterAst(ApsClassAst parent) {
@@ -40,6 +45,15 @@ public class ApsMemberParameterAst extends ApsAstWithVarargs {
         if (definedModifier != null) {
             throw new IllegalArgumentException("The modifier type '" + definedModifier.type() + "' already defined as '" + definedModifier.literal() + "'");
         }
+        this.modifiers.put(modifier.type(), modifier);
+    }
+
+    @Override
+    public void addAccessible(ApsAccessibleModifier modifier) {
+        this.accessible = modifier;
+    }
+
+    public void addModifierIgnoredPresent(ApsMemberParameterModifier modifier) {
         this.modifiers.put(modifier.type(), modifier);
     }
 
@@ -64,6 +78,9 @@ public class ApsMemberParameterAst extends ApsAstWithVarargs {
     public void generateJava(StringBuilder builder) {
         processConflictModifiers();
 
+        builder.append(this.accessible.getAccessibleType().literal());
+        builder.append(" ");
+
         // 设置修饰符
         for (ApsMemberParameterModifierType modifierType : ApsMemberParameterModifierType.values()) {
             Manipulate.notNull(this.modifiers.get(modifierType), modifier -> {
@@ -86,10 +103,6 @@ public class ApsMemberParameterAst extends ApsAstWithVarargs {
 
     @Override
     public void preprocess() {
-        if (this.modifiers.get(ApsMemberParameterModifierType.ACCESSIBLE) == null) {
-            this.modifiers.put(ApsMemberParameterModifierType.ACCESSIBLE, ApsMemberParameterModifier.create(ApsMemberParameterKeyword.PRIVATE));
-        }
-
         if (this.modifiers.get(ApsMemberParameterModifierType.HOLDER) != null) {
             this.modifiers.remove(ApsMemberParameterModifierType.HOLDER_GET);
             this.modifiers.remove(ApsMemberParameterModifierType.HOLDER_SET);
@@ -150,11 +163,11 @@ public class ApsMemberParameterAst extends ApsAstWithVarargs {
     }
 
     public boolean isPublic() {
-        return this.modifiers.get(ApsMemberParameterModifierType.ACCESSIBLE).literal().equals("public");
+        return this.accessible.getAccessibleType() == ApsAccessibleType.PUBLIC;
     }
 
     public boolean isPrivate() {
-        return this.modifiers.get(ApsMemberParameterModifierType.ACCESSIBLE).literal().equals("private");
+        return this.accessible.getAccessibleType() == ApsAccessibleType.PRIVATE;
     }
 
     public boolean isHolderOverridable() {

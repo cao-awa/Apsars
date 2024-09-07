@@ -24,6 +24,9 @@ public class ApsVariableAst extends ApsStatementAst {
     @Getter
     @Setter
     private ApsStatementAst assignment;
+    @Getter
+    @Setter
+    private boolean defining = true;
     private final Map<ApsLocalVariableModifierType, ApsLocalVariableModifier> modifiers = ApricotCollectionFactor.hashMap();
 
     public ApsVariableAst(ApsAst ast) {
@@ -44,7 +47,11 @@ public class ApsVariableAst extends ApsStatementAst {
 
     @Override
     public void print(String ident) {
-        System.out.println("Local variable ‘" + this.nameIdentity + "’ = " + this.assignment.generateJava());
+        if (this.defining) {
+            System.out.println("Local variable (" + this.type.generateJava() + ") ‘" + this.nameIdentity + "’ = " + this.assignment.generateJava());
+        } else {
+            System.out.println("Local variable ‘" + this.nameIdentity + "’ = " + this.assignment.generateJava());
+        }
     }
 
     @Override
@@ -54,15 +61,24 @@ public class ApsVariableAst extends ApsStatementAst {
 
     @Override
     public void generateJava(StringBuilder builder) {
-        if (this.type != null && this.nameIdentity != null) {
-            this.type.generateJava(builder);
-            builder.append(ApsTokens.SPACE);
-            builder.append(this.nameIdentity);
-
-            if (this.assignment != null) {
-                builder.append(ApsTokens.EQUAL);
-                this.assignment.generateJava(builder);
+        if (this.defining) {
+            if (this.type != null && this.nameIdentity != null) {
+                this.type.generateJava(builder);
+                builder.append(ApsTokens.SPACE);
+                builder.append(this.nameIdentity);
             }
+        } else {
+            if (this.nameIdentity != null) {
+                builder.append(this.nameIdentity);
+            }
+        }
+
+        if (this.assignment != null) {
+            builder.append(ApsTokens.EQUAL);
+            this.assignment.generateJava(builder);
+        }
+
+        if (withEnd()) {
             builder.append(ApsTokens.SEMICOLON);
         }
     }

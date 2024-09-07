@@ -34,4 +34,24 @@ public enum ApsMethodKeyword implements ApsKeyword {
     public String literal() {
         return this.literal;
     }
+
+    public static ApsMethodKeyword of(String literal) {
+        for (ApsMethodKeyword value : values()) {
+            if (value.literal.equals(literal)) {
+                return value;
+            }
+        }
+
+        return ApsMethodKeyword.valueOf(literal);
+    }
+
+    public static ApsMethodKeyword ofNullable(String literal) {
+        for (ApsMethodKeyword value : values()) {
+            if (value.literal.equals(literal)) {
+                return value;
+            }
+        }
+
+        return null;
+    }
 }

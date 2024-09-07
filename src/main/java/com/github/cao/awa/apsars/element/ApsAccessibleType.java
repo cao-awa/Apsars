@@ -1,5 +1,7 @@
 package com.github.cao.awa.apsars.element;
 
+import com.github.cao.awa.apsars.element.modifier.accessible.GenericAccessibleModifier;
+
 public enum ApsAccessibleType {
     PUBLIC("public"),
     PROTECTED("protected"),
@@ -13,5 +15,9 @@ public enum ApsAccessibleType {
 
     public String literal() {
         return this.literal;
+    }
+
+    public GenericAccessibleModifier generic() {
+        return new GenericAccessibleModifier(this);
     }
 }
