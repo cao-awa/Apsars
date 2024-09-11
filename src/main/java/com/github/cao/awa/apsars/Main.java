@@ -40,9 +40,15 @@ public class Main {
             ApsarsTreeVisitor visitor = new ApsarsTreeVisitor();
             ApsAst ast = visitor.visit(programContext);
 
+            ast.prepares();
+            
             ast.print();
 
             System.out.println(ast);
+
+            System.out.println("-- Generate java");
+
+            System.out.println(ast.generateJava());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -51,7 +57,6 @@ public class Main {
     public static void printTree(String ident, ParseTree tree) {
         if (tree instanceof TerminalNode) {
             if (tree instanceof ErrorNode error) {
-                System.out.println(error.getSymbol().getTokenSource());
                 System.out.println(ident + "Token: " + tree.getText() + " (" + tree.getClass().getSimpleName() + ")");
             } else {
                 System.out.println(ident + "Token: " + tree.getText());

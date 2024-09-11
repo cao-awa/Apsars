@@ -3,8 +3,10 @@ package com.github.cao.awa.apsars.tree.statement.invoke;
 import com.github.cao.awa.apricot.util.collection.ApricotCollectionFactor;
 import com.github.cao.awa.apsars.parser.token.ApsTokens;
 import com.github.cao.awa.apsars.tree.ApsAst;
-import com.github.cao.awa.apsars.tree.method.ApsMethodBodyAst;
+import com.github.cao.awa.apsars.tree.statement.ApsResultPresentingAst;
+import com.github.cao.awa.apsars.tree.statement.ApsResultingStatementAst;
 import com.github.cao.awa.apsars.tree.statement.ApsStatementAst;
+import com.github.cao.awa.apsars.tree.vararg.ApsArgTypeAst;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -12,22 +14,27 @@ import lombok.experimental.Accessors;
 import java.util.List;
 
 @Accessors(fluent = true)
-public class ApsInvokeAst extends ApsStatementAst {
+public class ApsInvokeAst extends ApsResultingStatementAst {
     @Getter
     @Setter
     private String nameIdentity;
     @Getter
-    private final List<ApsMethodBodyAst> params = ApricotCollectionFactor.arrayList();
+    private final List<ApsResultPresentingAst> params = ApricotCollectionFactor.arrayList();
     @Getter
     @Setter
     private ApsStatementAst fluentInvoke;
 
-    public void addParam(ApsMethodBodyAst param) {
+    public void addParam(ApsResultPresentingAst param) {
         this.params.add(param);
     }
 
     public ApsInvokeAst(ApsAst ast) {
         super(ast);
+    }
+
+    @Override
+    public ApsArgTypeAst resultingType() {
+        return ApsArgTypeAst.UNKNOWN;
     }
 
     @Override
@@ -37,11 +44,10 @@ public class ApsInvokeAst extends ApsStatementAst {
             System.out.println(ident + "    |_ invoke parent: " + this.fluentInvoke.generateJava());
         }
         System.out.println(ident + "    |_ params: ");
-        for (ApsMethodBodyAst param : this.params) {
-//            if (param instanceof ApsLiteralStatementAst) {
-//                System.out.print(ident + "        ");
-//            }
-            param.print(ident + "    ");
+        int i = 0;
+        for (ApsResultPresentingAst param : this.params) {
+            System.out.print(ident + "        " + i++ + ": ");
+            param.print("");
         }
     }
 
@@ -61,7 +67,7 @@ public class ApsInvokeAst extends ApsStatementAst {
 
         int edge = this.params.size() - 1;
         int index = 0;
-        for (ApsMethodBodyAst param : this.params) {
+        for (ApsResultPresentingAst param : this.params) {
             param.generateJava(builder);
             if (index != edge) {
                 builder.append(",");

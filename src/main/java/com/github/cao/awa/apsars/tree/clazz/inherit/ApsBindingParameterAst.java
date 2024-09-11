@@ -6,7 +6,8 @@ import com.github.cao.awa.apsars.element.clazz.ApsMemberParameterModifierType;
 import com.github.cao.awa.apsars.element.modifier.parameter.ApsMemberParameterModifier;
 import com.github.cao.awa.apsars.tree.clazz.ApsClassAst;
 import com.github.cao.awa.apsars.tree.clazz.ApsMemberParameterAst;
-import com.github.cao.awa.apsars.tree.statement.ApsStatementAst;
+import com.github.cao.awa.apsars.tree.statement.ApsResultPresentingAst;
+import com.github.cao.awa.apsars.tree.statement.ApsResultingStatementAst;
 import com.github.cao.awa.apsars.tree.vararg.ApsAstWithVarargs;
 import com.github.cao.awa.sinuatum.manipulate.Manipulate;
 import lombok.Getter;
@@ -26,7 +27,7 @@ public class ApsBindingParameterAst extends ApsAstWithVarargs {
     private String nameIdentity;
     @Setter
     @Getter
-    private ApsStatementAst value;
+    private ApsResultingStatementAst value;
     private final Map<ApsMemberParameterModifierType, ApsMemberParameterModifier> modifiers = ApricotCollectionFactor.hashMap();
 
     public ApsBindingParameterAst(ApsBinderAst parent) {
@@ -107,7 +108,7 @@ public class ApsBindingParameterAst extends ApsAstWithVarargs {
 
         memberParameterAst.nameIdentity(this.nameIdentity);
         memberParameterAst.argType(argType());
-        memberParameterAst.value(this.value);
+        memberParameterAst.value(new ApsResultPresentingAst(memberParameterAst).resultingStatement(this.value));
 
         return memberParameterAst;
     }

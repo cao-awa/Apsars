@@ -9,7 +9,7 @@ import com.github.cao.awa.apsars.element.modifier.method.ApsMethodModifier;
 import com.github.cao.awa.apsars.element.modifier.parameter.ApsMemberParameterModifier;
 import com.github.cao.awa.apsars.parser.token.keyword.method.ApsMethodKeyword;
 import com.github.cao.awa.apsars.tree.method.ApsMethodAst;
-import com.github.cao.awa.apsars.tree.statement.ApsStatementAst;
+import com.github.cao.awa.apsars.tree.statement.ApsResultPresentingAst;
 import com.github.cao.awa.apsars.tree.vararg.ApsAstWithVarargs;
 import com.github.cao.awa.sinuatum.manipulate.Manipulate;
 import lombok.Getter;
@@ -30,7 +30,7 @@ public class ApsMemberParameterAst extends ApsAstWithVarargs implements ApsModif
     private String nameIdentity;
     @Setter
     @Getter
-    private ApsStatementAst value;
+    private ApsResultPresentingAst value;
     @Getter
     @Setter
     private ApsAccessibleModifier accessible = ApsAccessibleType.PRIVATE.generic();
@@ -66,7 +66,12 @@ public class ApsMemberParameterAst extends ApsAstWithVarargs implements ApsModif
         System.out.println(ident + "|_ Aps member parameter: " + this.nameIdentity);
         System.out.println(ident + "    |_ type: ");
         argType().print(ident + "        ");
-        System.out.println(ident + "    |_ value: " + (this.value == null ? "<UNSETTED>" : this.value));
+        if (this.value == null) {
+            System.out.println(ident + "    |_ value: " + "<UNSETTED>");
+        } else {
+            System.out.print(ident + "    |_ value: ");
+            this.value.print("");
+        }
         System.out.println(ident + "    |_ Aps member parameter modifier: ");
         ident += "        ";
         for (ApsMemberParameterModifier apsMemberParameterModifier : this.modifiers.values()) {
@@ -96,7 +101,7 @@ public class ApsMemberParameterAst extends ApsAstWithVarargs implements ApsModif
         builder.append(this.nameIdentity);
         if (this.value != null) {
             builder.append("=");
-            builder.append(this.value);
+            this.value.generateJava(builder);
         }
         builder.append(";");
     }

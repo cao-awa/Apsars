@@ -5,6 +5,7 @@ import com.github.cao.awa.apsars.element.modifier.statement.ApsLocalVariableModi
 import com.github.cao.awa.apsars.element.statement.ApsLocalVariableModifierType;
 import com.github.cao.awa.apsars.parser.token.ApsTokens;
 import com.github.cao.awa.apsars.tree.ApsAst;
+import com.github.cao.awa.apsars.tree.statement.ApsResultPresentingAst;
 import com.github.cao.awa.apsars.tree.statement.ApsStatementAst;
 import com.github.cao.awa.apsars.tree.vararg.ApsArgTypeAst;
 import lombok.Getter;
@@ -23,7 +24,7 @@ public class ApsVariableAst extends ApsStatementAst {
     private String nameIdentity;
     @Getter
     @Setter
-    private ApsStatementAst assignment;
+    private ApsResultPresentingAst assignment;
     @Getter
     @Setter
     private boolean defining = true;
@@ -81,5 +82,11 @@ public class ApsVariableAst extends ApsStatementAst {
         if (withEnd()) {
             builder.append(ApsTokens.SEMICOLON);
         }
+    }
+
+    @Override
+    public ApsVariableAst withEnd(boolean withEnd) {
+        super.withEnd(withEnd);
+        return this;
     }
 }

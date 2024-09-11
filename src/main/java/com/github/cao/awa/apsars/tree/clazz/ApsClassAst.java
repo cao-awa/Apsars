@@ -11,6 +11,7 @@ import com.github.cao.awa.apsars.tree.aps.ApsFileAst;
 import com.github.cao.awa.apsars.tree.clazz.inherit.ApsBinderAst;
 import com.github.cao.awa.apsars.tree.clazz.inherit.ApsBindingParameterAst;
 import com.github.cao.awa.apsars.tree.method.ApsMethodAst;
+import com.github.cao.awa.apsars.tree.method.ApsMethodBodyAst;
 import com.github.cao.awa.sinuatum.manipulate.Manipulate;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,6 +20,7 @@ import lombok.experimental.Accessors;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 
 @Accessors(fluent = true)
 public class ApsClassAst extends ApsAst implements ApsModifierRequiredAst<ApsClassModifier> {
@@ -46,6 +48,10 @@ public class ApsClassAst extends ApsAst implements ApsModifierRequiredAst<ApsCla
 
     public void addMethod(ApsMethodAst methodAst) {
         this.methods.add(methodAst);
+    }
+
+    public void addMethodByTemplate(String name, Function<ApsMethodAst, ApsMethodBodyAst> bodyGenerator) {
+        addMethod(ApsMethodAst.createByTemplate(name, bodyGenerator, this));
     }
 
     public void addBinder(String binderName) {
@@ -135,6 +141,10 @@ public class ApsClassAst extends ApsAst implements ApsModifierRequiredAst<ApsCla
 
     @Override
     public void preprocess() {
+        for (ApsLetAst let : this.lets) {
+            let.preprocess();
+        }
+
         for (ApsMemberParameterAst parameterAst : this.parameters) {
             parameterAst.preprocess();
         }

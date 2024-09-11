@@ -1,6 +1,5 @@
 // Generated from D:/Codes/Java/Apsars/grammar/Apsars.g4 by ANTLR 4.13.1
 package com.github.cao.awa.apsars.antlr;
-
 import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
 
 /**
@@ -9,7 +8,7 @@ import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
  * of the available methods.
  *
  * @param <T> The return type of the visit operation. Use {@link Void} for
- *            operations with no return type.
+ * operations with no return type.
  */
 @SuppressWarnings("CheckReturnValue")
 public class ApsarsBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements ApsarsVisitor<T> {
@@ -251,6 +250,28 @@ public class ApsarsBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
+    public T visitCatching(ApsarsParser.CatchingContext ctx) {
+        return visitChildren(ctx);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation returns the result of calling
+     * {@link #visitChildren} on {@code ctx}.</p>
+     */
+    @Override
+    public T visitIgnored(ApsarsParser.IgnoredContext ctx) {
+        return visitChildren(ctx);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation returns the result of calling
+     * {@link #visitChildren} on {@code ctx}.</p>
+     */
+    @Override
     public T visitIsSync(ApsarsParser.IsSyncContext ctx) {
         return visitChildren(ctx);
     }
@@ -284,6 +305,17 @@ public class ApsarsBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
+    public T visitFullNameOrIdentifier(ApsarsParser.FullNameOrIdentifierContext ctx) {
+        return visitChildren(ctx);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation returns the result of calling
+     * {@link #visitChildren} on {@code ctx}.</p>
+     */
+    @Override
     public T visitIdentifier(ApsarsParser.IdentifierContext ctx) {
         return visitChildren(ctx);
     }
@@ -307,6 +339,17 @@ public class ApsarsBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements
      */
     @Override
     public T visitNumber(ApsarsParser.NumberContext ctx) {
+        return visitChildren(ctx);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation returns the result of calling
+     * {@link #visitChildren} on {@code ctx}.</p>
+     */
+    @Override
+    public T visitTemplate(ApsarsParser.TemplateContext ctx) {
         return visitChildren(ctx);
     }
 
@@ -702,7 +745,29 @@ public class ApsarsBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
+    public T visitDefineMethodUsingTemplate(ApsarsParser.DefineMethodUsingTemplateContext ctx) {
+        return visitChildren(ctx);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation returns the result of calling
+     * {@link #visitChildren} on {@code ctx}.</p>
+     */
+    @Override
     public T visitDefineMethod(ApsarsParser.DefineMethodContext ctx) {
+        return visitChildren(ctx);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation returns the result of calling
+     * {@link #visitChildren} on {@code ctx}.</p>
+     */
+    @Override
+    public T visitDefineLetMethod(ApsarsParser.DefineLetMethodContext ctx) {
         return visitChildren(ctx);
     }
 
@@ -736,17 +801,6 @@ public class ApsarsBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements
      */
     @Override
     public T visitDefineMethodBody(ApsarsParser.DefineMethodBodyContext ctx) {
-        return visitChildren(ctx);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation returns the result of calling
-     * {@link #visitChildren} on {@code ctx}.</p>
-     */
-    @Override
-    public T visitDefineStatement(ApsarsParser.DefineStatementContext ctx) {
         return visitChildren(ctx);
     }
 
@@ -834,6 +888,237 @@ public class ApsarsBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
+    public T visitTokenList(ApsarsParser.TokenListContext ctx) {
+        return visitChildren(ctx);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation returns the result of calling
+     * {@link #visitChildren} on {@code ctx}.</p>
+     */
+    @Override
+    public T visitValidToken(ApsarsParser.ValidTokenContext ctx) {
+        return visitChildren(ctx);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation returns the result of calling
+     * {@link #visitChildren} on {@code ctx}.</p>
+     */
+    @Override
+    public T visitExtraToken(ApsarsParser.ExtraTokenContext ctx) {
+        return visitChildren(ctx);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation returns the result of calling
+     * {@link #visitChildren} on {@code ctx}.</p>
+     */
+    @Override
+    public T visitConstant(ApsarsParser.ConstantContext ctx) {
+        return visitChildren(ctx);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation returns the result of calling
+     * {@link #visitChildren} on {@code ctx}.</p>
+     */
+    @Override
+    public T visitString(ApsarsParser.StringContext ctx) {
+        return visitChildren(ctx);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation returns the result of calling
+     * {@link #visitChildren} on {@code ctx}.</p>
+     */
+    @Override
+    public T visitIdentifierOrSpace(ApsarsParser.IdentifierOrSpaceContext ctx) {
+        return visitChildren(ctx);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation returns the result of calling
+     * {@link #visitChildren} on {@code ctx}.</p>
+     */
+    @Override
+    public T visitSpacing(ApsarsParser.SpacingContext ctx) {
+        return visitChildren(ctx);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation returns the result of calling
+     * {@link #visitChildren} on {@code ctx}.</p>
+     */
+    @Override
+    public T visitDefineStatement(ApsarsParser.DefineStatementContext ctx) {
+        return visitChildren(ctx);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation returns the result of calling
+     * {@link #visitChildren} on {@code ctx}.</p>
+     */
+    @Override
+    public T visitTheStatement(ApsarsParser.TheStatementContext ctx) {
+        return visitChildren(ctx);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation returns the result of calling
+     * {@link #visitChildren} on {@code ctx}.</p>
+     */
+    @Override
+    public T visitResultingStatement(ApsarsParser.ResultingStatementContext ctx) {
+        return visitChildren(ctx);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation returns the result of calling
+     * {@link #visitChildren} on {@code ctx}.</p>
+     */
+    @Override
+    public T visitInvokeStatement(ApsarsParser.InvokeStatementContext ctx) {
+        return visitChildren(ctx);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation returns the result of calling
+     * {@link #visitChildren} on {@code ctx}.</p>
+     */
+    @Override
+    public T visitTryStatement(ApsarsParser.TryStatementContext ctx) {
+        return visitChildren(ctx);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation returns the result of calling
+     * {@link #visitChildren} on {@code ctx}.</p>
+     */
+    @Override
+    public T visitTryStatementBody(ApsarsParser.TryStatementBodyContext ctx) {
+        return visitChildren(ctx);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation returns the result of calling
+     * {@link #visitChildren} on {@code ctx}.</p>
+     */
+    @Override
+    public T visitCatchingStatementBody(ApsarsParser.CatchingStatementBodyContext ctx) {
+        return visitChildren(ctx);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation returns the result of calling
+     * {@link #visitChildren} on {@code ctx}.</p>
+     */
+    @Override
+    public T visitTryCatchList(ApsarsParser.TryCatchListContext ctx) {
+        return visitChildren(ctx);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation returns the result of calling
+     * {@link #visitChildren} on {@code ctx}.</p>
+     */
+    @Override
+    public T visitTryCatchListExtraType(ApsarsParser.TryCatchListExtraTypeContext ctx) {
+        return visitChildren(ctx);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation returns the result of calling
+     * {@link #visitChildren} on {@code ctx}.</p>
+     */
+    @Override
+    public T visitInvokeParamList(ApsarsParser.InvokeParamListContext ctx) {
+        return visitChildren(ctx);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation returns the result of calling
+     * {@link #visitChildren} on {@code ctx}.</p>
+     */
+    @Override
+    public T visitValidInvokeParam(ApsarsParser.ValidInvokeParamContext ctx) {
+        return visitChildren(ctx);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation returns the result of calling
+     * {@link #visitChildren} on {@code ctx}.</p>
+     */
+    @Override
+    public T visitValidExtraInvokeParam(ApsarsParser.ValidExtraInvokeParamContext ctx) {
+        return visitChildren(ctx);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation returns the result of calling
+     * {@link #visitChildren} on {@code ctx}.</p>
+     */
+    @Override
+    public T visitResultPresenting(ApsarsParser.ResultPresentingContext ctx) {
+        return visitChildren(ctx);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation returns the result of calling
+     * {@link #visitChildren} on {@code ctx}.</p>
+     */
+    @Override
+    public T visitDefineVariableStatement(ApsarsParser.DefineVariableStatementContext ctx) {
+        return visitChildren(ctx);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation returns the result of calling
+     * {@link #visitChildren} on {@code ctx}.</p>
+     */
+    @Override
     public T visitDefineClass(ApsarsParser.DefineClassContext ctx) {
         return visitChildren(ctx);
     }
@@ -867,6 +1152,17 @@ public class ApsarsBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
+    public T visitDefineLetClassContent(ApsarsParser.DefineLetClassContentContext ctx) {
+        return visitChildren(ctx);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation returns the result of calling
+     * {@link #visitChildren} on {@code ctx}.</p>
+     */
+    @Override
     public T visitDefineLet(ApsarsParser.DefineLetContext ctx) {
         return visitChildren(ctx);
     }
@@ -879,6 +1175,17 @@ public class ApsarsBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements
      */
     @Override
     public T visitDefineMemberField(ApsarsParser.DefineMemberFieldContext ctx) {
+        return visitChildren(ctx);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation returns the result of calling
+     * {@link #visitChildren} on {@code ctx}.</p>
+     */
+    @Override
+    public T visitDefineLetMemberField(ApsarsParser.DefineLetMemberFieldContext ctx) {
         return visitChildren(ctx);
     }
 }

@@ -37,4 +37,14 @@ public enum ApsMemberParameterKeyword implements ApsKeyword {
     public String literal() {
         return this.literal;
     }
+
+    public static ApsMemberParameterKeyword ofNullable(String literal) {
+        for (ApsMemberParameterKeyword keyword : values()) {
+            if (keyword.literal().equals(literal)) {
+                return keyword;
+            }
+        }
+
+        return null;
+    }
 }

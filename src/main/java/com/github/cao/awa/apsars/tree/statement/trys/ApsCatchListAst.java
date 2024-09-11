@@ -2,6 +2,7 @@ package com.github.cao.awa.apsars.tree.statement.trys;
 
 import com.github.cao.awa.apricot.util.collection.ApricotCollectionFactor;
 import com.github.cao.awa.apsars.tree.ApsAst;
+import com.github.cao.awa.apsars.tree.vararg.ApsArgTypeAst;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -11,7 +12,7 @@ import java.util.Objects;
 
 @Accessors(fluent = true)
 public class ApsCatchListAst extends ApsAst {
-    private final List<String> catchTargets = ApricotCollectionFactor.arrayList();
+    private final List<ApsArgTypeAst> catchTargets = ApricotCollectionFactor.arrayList();
     @Getter
     @Setter
     private String catchName;
@@ -20,8 +21,15 @@ public class ApsCatchListAst extends ApsAst {
         super(parent);
     }
 
-    public void addCatchTarget(String target) {
+    public void addCatchTarget(ApsArgTypeAst target) {
+        target.parent(this);
         this.catchTargets.add(target);
+    }
+
+    public ApsCatchListAst targetAll() {
+        this.catchTargets.clear();
+        addCatchTarget(new ApsArgTypeAst(this).nameIdentity("Throwable"));
+        return this;
     }
 
     @Override
@@ -34,12 +42,12 @@ public class ApsCatchListAst extends ApsAst {
 
     @Override
     public void generateJava(StringBuilder builder) {
-        List<String> catchTargets = this.catchTargets;
+        List<ApsArgTypeAst> catchTargets = this.catchTargets;
         int targetsSize = catchTargets.size();
         int edge = targetsSize - 1;
         for (int i = 0; i < targetsSize; i++) {
-            String target = catchTargets.get(i);
-            builder.append(target);
+            ApsArgTypeAst target = catchTargets.get(i);
+            target.generateJava(builder);
             if (i != edge) {
                 builder.append("|");
             }

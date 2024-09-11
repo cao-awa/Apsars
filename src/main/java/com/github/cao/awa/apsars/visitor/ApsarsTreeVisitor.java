@@ -5,16 +5,26 @@ import com.github.cao.awa.apsars.antlr.ApsarsParser;
 import com.github.cao.awa.apsars.element.modifier.accessible.GenericAccessibleModifier;
 import com.github.cao.awa.apsars.element.modifier.clazz.ApsClassModifier;
 import com.github.cao.awa.apsars.element.modifier.method.ApsMethodModifier;
+import com.github.cao.awa.apsars.element.modifier.parameter.ApsMemberParameterModifier;
 import com.github.cao.awa.apsars.parser.token.keyword.clazz.ApsClassKeyword;
+import com.github.cao.awa.apsars.parser.token.keyword.clazz.ApsMemberParameterKeyword;
 import com.github.cao.awa.apsars.parser.token.keyword.method.ApsMethodKeyword;
 import com.github.cao.awa.apsars.tree.ApsAst;
 import com.github.cao.awa.apsars.tree.aps.ApsFileAst;
 import com.github.cao.awa.apsars.tree.aps.ApsImportAst;
 import com.github.cao.awa.apsars.tree.clazz.ApsClassAst;
 import com.github.cao.awa.apsars.tree.clazz.ApsLetAst;
+import com.github.cao.awa.apsars.tree.clazz.ApsMemberParameterAst;
 import com.github.cao.awa.apsars.tree.method.ApsMethodAst;
+import com.github.cao.awa.apsars.tree.method.ApsMethodBodyAst;
 import com.github.cao.awa.apsars.tree.method.parameter.ApsMethodParamElementAst;
 import com.github.cao.awa.apsars.tree.method.parameter.ApsMethodParameterAst;
+import com.github.cao.awa.apsars.tree.statement.ApsResultPresentingAst;
+import com.github.cao.awa.apsars.tree.statement.ApsResultingStatementAst;
+import com.github.cao.awa.apsars.tree.statement.invoke.ApsInvokeAst;
+import com.github.cao.awa.apsars.tree.statement.trys.ApsCatchListAst;
+import com.github.cao.awa.apsars.tree.statement.trys.ApsTryCatchAst;
+import com.github.cao.awa.apsars.tree.statement.variable.ApsVariableAst;
 import com.github.cao.awa.apsars.tree.vararg.ApsArgTypeAst;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.RuleNode;
@@ -102,46 +112,229 @@ public class ApsarsTreeVisitor extends ApsarsBaseVisitor<ApsAst> {
 
     @Override
     public ApsMethodAst visitDefineMethod(ApsarsParser.DefineMethodContext ctx) {
-        if (this.current instanceof ApsClassAst classAst) {
-            ApsMethodAst ast = new ApsMethodAst(classAst);
-            this.current = ast;
-            if (ctx.permissionModifiers() != null) {
-                ast.addAccessible(new GenericAccessibleModifier(ctx.permissionModifiers().getText()));
-            }
-            ApsarsParser.AlternateStaticAndFinalAndSyncContext treeParamAlternate = ctx.alternateStaticAndFinalAndSync();
-            if (treeParamAlternate != null) {
-                ApsarsParser.OptionalStaticAndFinalContext staticAndFinal = treeParamAlternate.optionalStaticAndFinal();
-                if (!(staticAndFinal == null)) {
-                    if (!staticAndFinal.isFinal().isEmpty()) {
-                        ast.addModifier(ApsMethodModifier.create(ApsMethodKeyword.FINAL));
-                    }
-                    if (!staticAndFinal.isStatic().isEmpty()) {
-                        ast.addModifier(ApsMethodModifier.create(ApsMethodKeyword.STATIC));
-                    }
+        ApsMethodAst ast = new ApsMethodAst(this.current);
+        this.current = ast;
+        if (ctx.permissionModifiers() != null) {
+            ast.addAccessible(new GenericAccessibleModifier(ctx.permissionModifiers().getText()));
+        }
+        ApsarsParser.AlternateStaticAndFinalAndSyncContext treeParamAlternate = ctx.alternateStaticAndFinalAndSync();
+        if (treeParamAlternate != null) {
+            ApsarsParser.OptionalStaticAndFinalContext staticAndFinal = treeParamAlternate.optionalStaticAndFinal();
+            if (!(staticAndFinal == null)) {
+                if (!staticAndFinal.isFinal().isEmpty()) {
+                    ast.addModifier(ApsMethodModifier.create(ApsMethodKeyword.FINAL));
+                }
+                if (!staticAndFinal.isStatic().isEmpty()) {
+                    ast.addModifier(ApsMethodModifier.create(ApsMethodKeyword.STATIC));
+                }
 
-                    if (treeParamAlternate.sync() != null) {
-                        ast.addModifier(ApsMethodModifier.create(ApsMethodKeyword.of(treeParamAlternate.sync().getText())));
-                    }
+                if (treeParamAlternate.sync() != null) {
+                    ast.addModifier(ApsMethodModifier.create(ApsMethodKeyword.of(treeParamAlternate.sync().getText())));
                 }
             }
+        }
+        this.current = ast;
+
+        ast.param(visitMethodParamListDefinition(ctx.methodParamListDefinition()));
+        ast.nameIdentity(ctx.identifier().getText());
+        this.current = ast;
+
+        if (ctx.methodReturnType() != null) {
+            ast.returnType(visitArgType(ctx.methodReturnType().argType()));
+        }
+
+        this.current = ast;
+        ast.methodBody(visitDefineMethodBody(ctx.defineMethodBody()));
+
+        return ast;
+    }
+
+    @Override
+    public ApsMethodAst visitDefineLetMethod(ApsarsParser.DefineLetMethodContext ctx) {
+        ApsMethodAst ast = new ApsMethodAst(this.current);
+        this.current = ast;
+
+        ast.param(visitMethodParamListDefinition(ctx.methodParamListDefinition()));
+        ast.nameIdentity(ctx.identifier().getText());
+        this.current = ast;
+
+        if (ctx.methodReturnType() != null) {
+            ast.returnType(visitArgType(ctx.methodReturnType().argType()));
+        }
+
+        this.current = ast;
+        ast.methodBody(visitDefineMethodBody(ctx.defineMethodBody()));
+
+        return ast;
+    }
+
+    @Override
+    public ApsMethodBodyAst visitDefineMethodBody(ApsarsParser.DefineMethodBodyContext ctx) {
+        ApsMethodBodyAst ast = new ApsMethodBodyAst(this.current, this.current.findAst(ApsMethodBodyAst.class));
+        for (ApsarsParser.DefineStatementContext defineStatementContext : ctx.defineStatement()) {
             this.current = ast;
 
-            ast.param(visitMethodParamListDefinition(ctx.methodParamListDefinition()));
-            ast.nameIdentity(ctx.identifier().getText());
-            this.current = ast;
+            for (ApsarsParser.TheStatementContext theStatementContext : defineStatementContext.theStatement()) {
+                this.current = ast;
 
-            if (ctx.methodReturnType() != null) {
-                ast.returnType(visitArgType(ctx.methodReturnType().argType()));
+                boolean withEnd = theStatementContext.semicolon() != null;
+
+                if (theStatementContext.tryStatement() != null) {
+                    ast.addStatement(visitTryStatement(theStatementContext.tryStatement()));
+                    continue;
+                }
+
+                if (theStatementContext.defineVariableStatement() != null) {
+                    ast.addFieldVariable(visitDefineVariableStatement(theStatementContext.defineVariableStatement()).withEnd(withEnd));
+                    continue;
+                }
+
+                if (theStatementContext.resultingStatement() != null) {
+                    ast.addStatement(visitResultingStatement(theStatementContext.resultingStatement()).withEnd(withEnd));
+                }
             }
-            visitChildren(ctx);
+        }
+        return ast;
+    }
+
+    @Override
+    public ApsTryCatchAst visitTryStatement(ApsarsParser.TryStatementContext ctx) {
+        if (this.current instanceof ApsMethodBodyAst bodyAst) {
+            ApsTryCatchAst ast = new ApsTryCatchAst(bodyAst, bodyAst);
+            this.current = ast;
+
+            if (ctx.tryCatchList() != null) {
+                ast.catchList(visitTryCatchList(ctx.tryCatchList()));
+            } else if (ctx.ignored() != null) {
+                ast.catchList(new ApsCatchListAst(ast).catchName("ignored").targetAll());
+            }
+
+            if (ctx.tryStatementBody() != null) {
+                ast.methodBody(visitDefineMethodBody(ctx.tryStatementBody().defineMethodBody()));
+            }
+
+            if (ctx.catchingStatementBody() != null) {
+                ast.catchingMethodBody(visitDefineMethodBody(ctx.catchingStatementBody().defineMethodBody()));
+            }
             return ast;
         }
         return null;
     }
 
     @Override
-    public ApsAst visitDefineMethodBody(ApsarsParser.DefineMethodBodyContext ctx) {
-        return visitChildren(ctx);
+    public ApsCatchListAst visitTryCatchList(ApsarsParser.TryCatchListContext ctx) {
+        ApsCatchListAst ast = new ApsCatchListAst(this.current);
+        ast.catchName(ctx.identifier().getText());
+        ast.addCatchTarget(visitArgType(ctx.argType()));
+        for (ApsarsParser.TryCatchListExtraTypeContext extraCatch : ctx.tryCatchListExtraType()) {
+            ast.addCatchTarget(visitArgType(extraCatch.argType()));
+        }
+        return ast;
+    }
+
+    @Override
+    public ApsResultingStatementAst visitResultingStatement(ApsarsParser.ResultingStatementContext ctx) {
+        if (ctx.invokeStatement() != null) {
+            return visitInvokeStatement(ctx.invokeStatement());
+        }
+
+        return null;
+    }
+
+    @Override
+    public ApsInvokeAst visitInvokeStatement(ApsarsParser.InvokeStatementContext ctx) {
+        ApsInvokeAst ast = new ApsInvokeAst(this.current);
+        ast.nameIdentity(ctx.fullNameOrIdentifier().getText());
+        ApsarsParser.InvokeParamListContext paramList = ctx.invokeParamList();
+        if (paramList != null && paramList.validInvokeParam() != null) {
+            this.current = ast;
+
+            ast.addParam(visitValidInvokeParam(paramList.validInvokeParam()));
+
+            if (ctx.invokeParamList().validExtraInvokeParam() != null) {
+                for (ApsarsParser.ValidExtraInvokeParamContext validExtraInvokeParamContext : ctx.invokeParamList().validExtraInvokeParam()) {
+                    this.current = ast;
+
+                    ast.addParam(visitValidInvokeParam(validExtraInvokeParamContext.validInvokeParam()));
+                }
+            }
+        }
+        return ast;
+    }
+
+    @Override
+    public ApsResultPresentingAst visitValidInvokeParam(ApsarsParser.ValidInvokeParamContext ctx) {
+        ApsResultPresentingAst ast = new ApsResultPresentingAst(this.current);
+
+        if (ctx.validToken() != null) {
+            ast.constantLiteral(null);
+            ast.resultingStatement(null);
+            ast.refToken(ctx.validToken().getText());
+        } else {
+            ast = visitResultPresenting(ctx.resultPresenting());
+        }
+
+        return ast;
+    }
+
+    @Override
+    public ApsResultPresentingAst visitResultPresenting(ApsarsParser.ResultPresentingContext ctx) {
+        ApsResultPresentingAst ast = this.current instanceof ApsResultPresentingAst presentingAst ? presentingAst : new ApsResultPresentingAst(this.current);
+        if (ctx.resultingStatement() != null) {
+            ast.resultingStatement(visitResultingStatement(ctx.resultingStatement()));
+        } else if (ctx.constant() != null) {
+            if (ctx.constant().string() != null) {
+                StringBuilder builder = new StringBuilder();
+                builder.append("\"");
+                for (ApsarsParser.IdentifierOrSpaceContext identifierOrSpaceContext : ctx.constant().string().identifierOrSpace()) {
+                    if (identifierOrSpaceContext.identifier() != null) {
+                        builder.append(identifierOrSpaceContext.identifier().getText());
+                    } else if (identifierOrSpaceContext.spacing() != null) {
+                        if (identifierOrSpaceContext.spacing().number() != null) {
+                            int repeat = Integer.parseInt(identifierOrSpaceContext.spacing().number().getText());
+                            if (repeat > 0) {
+                                builder.append(" ".repeat(repeat));
+                            } else {
+                                builder.append(" ");
+                            }
+                        } else {
+                            builder.append(" ");
+                        }
+                    }
+                }
+                builder.append("\"");
+                ast.constantLiteral(builder.toString());
+            } else {
+                ast.constantLiteral(ctx.constant().getText());
+            }
+        }
+        return ast;
+    }
+
+    @Override
+    public ApsVariableAst visitDefineVariableStatement(ApsarsParser.DefineVariableStatementContext ctx) {
+        ApsVariableAst ast = new ApsVariableAst(this.current);
+        ast.type(visitArgType(ctx.argType()));
+        ast.nameIdentity(ctx.identifier().getText());
+        if (ctx.assignment() != null) {
+            ast.assignment(visitResultPresenting(ctx.resultPresenting()));
+        }
+        return ast;
+    }
+
+    @Override
+    public ApsAst visitTokenList(ApsarsParser.TokenListContext ctx) {
+        return super.visitTokenList(ctx);
+    }
+
+    @Override
+    public ApsAst visitValidToken(ApsarsParser.ValidTokenContext ctx) {
+        return super.visitValidToken(ctx);
+    }
+
+    @Override
+    public ApsAst visitExtraToken(ApsarsParser.ExtraTokenContext ctx) {
+        return super.visitExtraToken(ctx);
     }
 
     @Override
@@ -197,10 +390,12 @@ public class ApsarsTreeVisitor extends ApsarsBaseVisitor<ApsAst> {
     public ApsMethodParameterAst visitMethodParamListDefinition(ApsarsParser.MethodParamListDefinitionContext ctx) {
         if (this.current instanceof ApsMethodAst methodAst) {
             ApsMethodParameterAst parameterAst = new ApsMethodParameterAst(methodAst);
-            for (ApsarsParser.ParamTypeContext definiteParam : ctx.paramType()) {
-                this.current = parameterAst;
+            if (ctx != null) {
+                for (ApsarsParser.ParamTypeContext definiteParam : ctx.paramType()) {
+                    this.current = parameterAst;
 
-                parameterAst.addParam(visitParamType(definiteParam));
+                    parameterAst.addParam(visitParamType(definiteParam));
+                }
             }
 
             return parameterAst;
@@ -222,18 +417,26 @@ public class ApsarsTreeVisitor extends ApsarsBaseVisitor<ApsAst> {
                 ast.addModifier(ApsClassModifier.create(ApsClassKeyword.of(ctx.classFinal().getText())));
             }
             if (ctx.makeAlternateLetAndContent() != null) {
-                for (ApsarsParser.DefineLetContext defineLet : ctx.makeAlternateLetAndContent().defineLet()) {
-                    this.current = ast;
+                if (ctx.makeAlternateLetAndContent().defineLet() != null) {
+                    for (ApsarsParser.DefineLetContext defineLet : ctx.makeAlternateLetAndContent().defineLet()) {
+                        this.current = ast;
 
-                    ast.addLet(visitDefineLet(defineLet));
+                        ast.addLet(visitDefineLet(defineLet));
+                    }
+                }
+
+                if (ctx.makeAlternateLetAndContent().defineClassContent() != null) {
+                    for (ApsarsParser.DefineClassContentContext defineClassContent : ctx.makeAlternateLetAndContent().defineClassContent()) {
+                        this.current = ast;
+
+                        visitDefineClassContent(defineClassContent);
+                    }
                 }
             }
             ast.nameIdentity(ctx.identifier().getText());
 
             fileAst.addClass(ast);
             this.current = ast;
-
-            visitChildren(ctx);
         }
         return this.current;
     }
@@ -246,10 +449,28 @@ public class ApsarsTreeVisitor extends ApsarsBaseVisitor<ApsAst> {
     @Override
     public ApsAst visitDefineClassContent(ApsarsParser.DefineClassContentContext ctx) {
         if (this.current instanceof ApsClassAst classAst) {
+            for (ApsarsParser.DefineMethodUsingTemplateContext defineMethod : ctx.defineMethodUsingTemplate()) {
+                this.current = classAst;
+
+                classAst.addMethodByTemplate(
+                        defineMethod.identifier().getText(),
+                        methodAst -> {
+                            this.current = methodAst;
+                            return visitDefineMethodBody(defineMethod.defineMethodBody());
+                        }
+                );
+            }
+
             for (ApsarsParser.DefineMethodContext defineMethod : ctx.defineMethod()) {
                 this.current = classAst;
 
                 classAst.addMethod(visitDefineMethod(defineMethod));
+            }
+
+            for (ApsarsParser.DefineMemberFieldContext defineMemberField : ctx.defineMemberField()) {
+                this.current = classAst;
+
+                classAst.addMemberParameter(visitDefineMemberField(defineMemberField));
             }
         }
         return this.current;
@@ -257,22 +478,91 @@ public class ApsarsTreeVisitor extends ApsarsBaseVisitor<ApsAst> {
 
     @Override
     public ApsLetAst visitDefineLet(ApsarsParser.DefineLetContext ctx) {
-        ApsLetAst let = new ApsLetAst(this.current);
+        ApsLetAst ast = new ApsLetAst(this.current);
 
         ApsarsParser.MakeAlternateLetContext alternate = ctx.makeAlternateLet();
 
         if (alternate.permissionModifiers() != null) {
-            let.addAccessible(new GenericAccessibleModifier(alternate.permissionModifiers().getText()));
+            ast.addAccessible(new GenericAccessibleModifier(alternate.permissionModifiers().getText()));
         }
 
-        return let;
+        if (alternate.optionalFieldStaticAndFinal() != null) {
+            for (ApsarsParser.OptionalFieldStaticAndFinalContext optionalFieldStaticAndFinalContext : alternate.optionalFieldStaticAndFinal()) {
+                ApsMemberParameterKeyword keyword = ApsMemberParameterKeyword.ofNullable(optionalFieldStaticAndFinalContext.getText());
+                if (keyword != null) {
+                    ast.addModifier(ApsMemberParameterModifier.create(keyword));
+                }
+            }
+        }
+
+        if (alternate.optionalFieldAndMethodModifiers() != null) {
+            for (ApsarsParser.OptionalFieldAndMethodModifiersContext optionalFieldAndMethodModifiersContext : alternate.optionalFieldAndMethodModifiers()) {
+                for (ApsarsParser.FieldModifiersContext fieldModifiers : optionalFieldAndMethodModifiersContext.fieldModifiers()) {
+                    ApsMemberParameterKeyword keyword = ApsMemberParameterKeyword.ofNullable(fieldModifiers.getText());
+                    if (keyword != null) {
+                        ast.addModifier(ApsMemberParameterModifier.create(keyword));
+                    }
+                }
+
+                for (ApsarsParser.MethodModifiersContext methodModifiers : optionalFieldAndMethodModifiersContext.methodModifiers()) {
+                    ApsMethodKeyword keyword = ApsMethodKeyword.ofNullable(methodModifiers.getText());
+                    if (keyword != null) {
+                        ast.addModifier(ApsMethodModifier.create(keyword));
+                    }
+                }
+            }
+        }
+
+        if (ctx.defineLetClassContent() != null) {
+            for (ApsarsParser.DefineLetMethodContext defineMethodContext : ctx.defineLetClassContent().defineLetMethod()) {
+                this.current = ast;
+
+                ast.addMethod(visitDefineLetMethod(defineMethodContext));
+            }
+
+            for (ApsarsParser.DefineLetMemberFieldContext defineMemberFieldContext : ctx.defineLetClassContent().defineLetMemberField()) {
+                this.current = ast;
+
+                ast.addMemberParameter(visitDefineLetMemberField(defineMemberFieldContext));
+            }
+        }
+
+        return ast;
     }
 
     @Override
-    public ApsAst visitDefineMemberField(ApsarsParser.DefineMemberFieldContext ctx) {
-        return visitChildren(ctx);
+    public ApsMemberParameterAst visitDefineMemberField(ApsarsParser.DefineMemberFieldContext ctx) {
+        ApsMemberParameterAst ast = new ApsMemberParameterAst(this.current.findAst(ApsClassAst.class));
+        if (ctx.permissionModifiers() != null) {
+            ast.accessible(new GenericAccessibleModifier(ctx.permissionModifiers().getText()));
+        }
+        if (ctx.optionalFieldStaticAndFinal() != null) {
+            if (!ctx.optionalFieldStaticAndFinal().isStatic().isEmpty()) {
+                ast.addModifier(ApsMemberParameterModifier.create(ApsMemberParameterKeyword.STATIC));
+            }
+
+            if (!ctx.optionalFieldStaticAndFinal().fieldFinal().isEmpty()) {
+                ast.addModifier(ApsMemberParameterModifier.create(ApsMemberParameterKeyword.FINAL));
+            }
+        }
+        ast.nameIdentity(ctx.identifier().getText());
+        ast.argType(visitArgType(ctx.argType()));
+        if (ctx.assignment() != null) {
+            ast.value(visitResultPresenting(ctx.resultPresenting()));
+        }
+        return ast;
     }
 
+    @Override
+    public ApsMemberParameterAst visitDefineLetMemberField(ApsarsParser.DefineLetMemberFieldContext ctx) {
+        ApsMemberParameterAst ast = new ApsMemberParameterAst(this.current.findAst(ApsClassAst.class));
+        ast.nameIdentity(ctx.identifier().getText());
+        ast.argType(visitArgType(ctx.argType()));
+        if (ctx.assignment() != null) {
+            ast.value(visitResultPresenting(ctx.resultPresenting()));
+        }
+        return ast;
+    }
 
     @Override
     public ApsAst visitChildren(RuleNode node) {
@@ -284,10 +574,7 @@ public class ApsarsTreeVisitor extends ApsarsBaseVisitor<ApsAst> {
             }
 
             ParseTree c = node.getChild(i);
-            ApsAst childResult = c.accept(this);
-            if (childResult != null) {
-                childResult.parent(parent);
-            }
+            c.accept(this);
         }
 
         this.current = parent;

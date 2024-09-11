@@ -21,6 +21,12 @@ public abstract class ApsAst implements ApsJavaGenerator {
 
     public abstract void print(String ident);
 
+    public void prepares() {
+        preprocess();
+        postprocess();
+        finalProcess();
+    }
+
     public abstract void preprocess();
 
     public void postprocess() {

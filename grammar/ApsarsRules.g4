@@ -61,19 +61,29 @@ isOverridable : Overridable ;
 Sync         : 'sync'         ;
 Synchronized : 'synchronized' ;
 
+// Try statement.
+Try      : 'try'     ;
+Catch    : 'catch'   ;
+Ignored  : 'ignored' ;
+catching : Catch     ;
+ignored  : Ignored   ;
+
 isSync         : Sync         ;
 isSynchronized : Synchronized ;
 
 sync : isSync | isSynchronized ;
 
 Identifier : [a-zA-Z_][a-zA-Z_0-9]*           ;
-FullName   : (Identifier + '.')* (Identifier) ;
+FullName   : (Identifier '.')+ (Identifier) ;
 Number     : [0-9]+                           ;
 
-identifier : Identifier ;
-fullName   : FullName   ;
-number     : Number     ;
+fullNameOrIdentifier : FullName | Identifier ;
+identifier           : Identifier            ;
+fullName             : FullName              ;
+number               : Number                ;
 
+// Template keyword.
+template : 'template' ;
 
 // Braces.
 LeftBrace  : '{'        ;
@@ -119,15 +129,17 @@ AndSign : '&'     ;
 OrSign  : '|'     ;
 ArgAnd  : ' and ' ;
 ArgOr   : ' or '  ;
-WordAnd  : 'and'  ;
-WordOr   : 'or'   ;
+WordAnd : 'and'   ;
+WordOr  : 'or'    ;
 and     : AndSign ;
 or      : OrSign  ;
 argAnd  : ArgAnd  ;
 argOr   : ArgOr   ;
-wordAnd  : WordAnd  ;
-wordOr   : WordOr   ;
+wordAnd : WordAnd ;
+wordOr  : WordOr  ;
 
+//
+Quotation : '"' ;
 
 assignment: Equal | LeftEquals | As ;
 
@@ -135,40 +147,33 @@ isEquals : Equals ;
 
 WHITESPACES : [ \r\t\n]+ -> skip ;
 
-fieldModifiers: isTransient   ?
-                isVolatile    ?
-                (
-                isHolder      ? |
-                isGetHolder   ? |
-                isSetHolder   ?
-                )             ?
-                isOverridable ? ;
+fieldModifiers: (
+                 isTransient   |
+                 isVolatile    |
+                 (
+                 isHolder      |
+                  (
+                   isGetHolder |
+                   isSetHolder
+                  ) +
+                 )             |
+                 isOverridable
+) + ;
 
 methodModifiers: isSynchronized |
                  isSync         ;
 
 makeAlternateLet: permissionModifiers              ?
                   (
-                   optionalFieldStaticAndFinal     ?
-                   optionalFieldAndMethodModifiers ?
-                  )                                ?
-;
+                   optionalFieldStaticAndFinal     |
+                   optionalFieldAndMethodModifiers
+) + ;
 
-optionalFieldAndMethodModifiers: (
-                                  fieldModifiers  ? methodModifiers   ? |
-                                  methodModifiers ? fieldModifiers    ? |
-                                 (fieldModifiers    methodModifiers ) ? |
-                                 (methodModifiers   fieldModifiers  ) ?
-) ;
+optionalFieldAndMethodModifiers: ( fieldModifiers | methodModifiers ) +;
 
-optionalFieldStaticAndFinal: (
-                              fieldFinal ? isStatic     ? |
-                              isStatic   ? fieldFinal   ? |
-                             (fieldFinal   isStatic   ) ? |
-                             (isStatic     fieldFinal ) ?
-) ;
+optionalFieldStaticAndFinal: ( fieldFinal | isStatic ) + ;
 
-optionalStaticAndFinal: ( isFinal | isStatic )+ ;
+optionalStaticAndFinal: ( isFinal | isStatic ) + ;
 
 
 permissionModifiers: isPublic    |

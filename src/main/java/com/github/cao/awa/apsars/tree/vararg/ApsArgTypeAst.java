@@ -10,6 +10,8 @@ import java.util.LinkedList;
 
 @Accessors(fluent = true)
 public class ApsArgTypeAst extends ApsAst {
+    public static final ApsArgTypeAst UNKNOWN = new ApsArgTypeAst(null);
+
     private final LinkedList<ApsArgTypeAst> args = ApricotCollectionFactor.linkedList();
     @Getter
     @Setter

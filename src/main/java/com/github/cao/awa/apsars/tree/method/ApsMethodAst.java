@@ -14,10 +14,13 @@ import com.github.cao.awa.apsars.tree.annotation.ApsAnnotationAst;
 import com.github.cao.awa.apsars.tree.clazz.ApsClassAst;
 import com.github.cao.awa.apsars.tree.method.parameter.ApsMethodParamElementAst;
 import com.github.cao.awa.apsars.tree.method.parameter.ApsMethodParameterAst;
+import com.github.cao.awa.apsars.tree.statement.ApsResultPresentingAst;
+import com.github.cao.awa.apsars.tree.statement.result.ApsReturnAst;
 import com.github.cao.awa.apsars.tree.statement.special.literal.ApsLiteralStatementAst;
 import com.github.cao.awa.apsars.tree.statement.trys.ApsCatchListAst;
 import com.github.cao.awa.apsars.tree.statement.trys.ApsMethodExtraCatchAst;
 import com.github.cao.awa.apsars.tree.statement.trys.ApsTryCatchAst;
+import com.github.cao.awa.apsars.tree.statement.variable.ApsVariableAst;
 import com.github.cao.awa.apsars.tree.vararg.ApsArgTypeAst;
 import com.github.cao.awa.sinuatum.manipulate.Manipulate;
 import lombok.Getter;
@@ -240,7 +243,7 @@ public class ApsMethodAst extends ApsAst implements ApsModifierRequiredAst<ApsMe
             safepointStatementMethodBody.addStatement(threadSleepStatement);
             safepointStatementAst.methodBody(safepointStatementMethodBody);
             ApsCatchListAst catchListAst = new ApsCatchListAst(safepointStatementAst);
-            catchListAst.addCatchTarget("InterruptedException");
+            catchListAst.addCatchTarget(new ApsArgTypeAst(null).nameIdentity("InterruptedException"));
             safepointStatementAst.catchList(catchListAst);
 
             StringBuilder paramBuilder = new StringBuilder();
@@ -307,14 +310,15 @@ public class ApsMethodAst extends ApsAst implements ApsModifierRequiredAst<ApsMe
             );
             methodAst.returnType(type);
             methodAst.nameIdentity(nameIdentity);
-            methodAst.addModifier(ApsMethodModifier.create(isPublic ? ApsMethodKeyword.PUBLIC : ApsMethodKeyword.PRIVATE));
+            methodAst.accessible(isPublic ? ApsAccessibleType.PUBLIC.generic() : ApsAccessibleType.PRIVATE.generic());
             ApsMethodBodyAst methodBodyAst = new ApsMethodBodyAst(methodAst, null);
-            ApsLiteralStatementAst statementAst = new ApsLiteralStatementAst(
-                    methodBodyAst,
-                    "return " + (isStatic ? "" : "this.") + nameIdentity
-            );
-            statementAst.withEnd(true);
-            methodBodyAst.addStatement(statementAst);
+            ApsReturnAst returnAst = new ApsReturnAst(methodBodyAst);
+            returnAst.result(
+                    new ApsResultPresentingAst(returnAst).refToken(
+                            (isStatic ? "" : "this.") + nameIdentity
+                    )
+            ).withEnd(true);
+            methodBodyAst.addStatement(returnAst);
             methodAst.methodBody(methodBodyAst);
             return methodAst;
         } else {
@@ -324,11 +328,15 @@ public class ApsMethodAst extends ApsAst implements ApsModifierRequiredAst<ApsMe
             methodAst.nameIdentity(nameIdentity);
             methodAst.addAccessible(isPublic ? ApsAccessibleType.PUBLIC : ApsAccessibleType.PRIVATE);
             ApsMethodBodyAst methodBodyAst = new ApsMethodBodyAst(methodAst, null);
-            ApsLiteralStatementAst statementAst = new ApsLiteralStatementAst(
-                    methodBodyAst,
-                    (isStatic ? "" : "this.") + nameIdentity + "=" + nameIdentity + "_"
-            );
-            statementAst.withEnd(true);
+            ApsVariableAst variableAst = new ApsVariableAst(methodAst);
+            variableAst.nameIdentity(
+                            (isStatic ? "" : "this.") + nameIdentity
+                    )
+                    .defining(false)
+                    .assignment(
+                            new ApsResultPresentingAst(variableAst).refToken(nameIdentity + "_")
+                    )
+                    .withEnd(true);
             ApsMethodParameterAst methodParamAst = new ApsMethodParameterAst(methodAst);
             ApsMethodParamElementAst methodParamElementAst = new ApsMethodParamElementAst(methodParamAst);
             methodParamElementAst.addModifier(ApsMethodParamModifier.create(ApsMethodParamKeyword.VAL));
@@ -336,9 +344,31 @@ public class ApsMethodAst extends ApsAst implements ApsModifierRequiredAst<ApsMe
             methodParamElementAst.nameIdentity(nameIdentity + "_");
             methodParamAst.addParam(methodParamElementAst);
             methodAst.param(methodParamAst);
-            methodBodyAst.addStatement(statementAst);
+            methodBodyAst.addStatement(variableAst);
             methodAst.methodBody(methodBodyAst);
             return methodAst;
         }
+    }
+
+    public static ApsMethodAst createByTemplate(String name, Function<ApsMethodAst, ApsMethodBodyAst> bodyGenerator, ApsAst parent) {
+        ApsMethodAst methodAst = new ApsMethodAst(parent);
+        switch (name) {
+            case "main" -> {
+                methodAst.nameIdentity("main");
+                ApsMethodParameterAst parameters = new ApsMethodParameterAst(methodAst);
+                ApsMethodParamElementAst stringArgsElement = new ApsMethodParamElementAst(parameters);
+                parameters.addParam(stringArgsElement.argType(
+                                new ApsArgTypeAst(stringArgsElement)
+                                        .nameIdentity("String")
+                                        .arrayArgType(true)
+                        ).nameIdentity("args")
+                );
+                methodAst.addModifier(ApsMethodModifier.create(ApsMethodKeyword.STATIC));
+                methodAst.accessible(ApsAccessibleType.PUBLIC.generic());
+                methodAst.param(parameters);
+                methodAst.methodBody(bodyGenerator.apply(methodAst));
+            }
+        }
+        return methodAst;
     }
 }

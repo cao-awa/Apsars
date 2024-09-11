@@ -30,6 +30,7 @@ public class ApsMethodBodyAst extends ApsAst {
 
     public void addFieldVariable(ApsVariableAst variableAst) {
         this.fieldVariables.add(variableAst);
+        this.statements.add(variableAst);
     }
 
     public ApsStatementAst searchLastStatement() {

@@ -5,7 +5,7 @@ import com.github.cao.awa.apsars.element.modifier.ApsAccessibleModifier;
 import com.github.cao.awa.apsars.element.modifier.ApsModifier;
 import com.github.cao.awa.apsars.element.modifier.ApsModifierRequiredAst;
 import com.github.cao.awa.apsars.element.modifier.method.ApsMethodModifier;
-import com.github.cao.awa.apsars.parser.token.keyword.method.ApsMethodKeyword;
+import com.github.cao.awa.apsars.element.modifier.parameter.ApsMemberParameterModifier;
 import com.github.cao.awa.apsars.tree.ApsAst;
 import com.github.cao.awa.apsars.tree.method.ApsMethodAst;
 import lombok.Getter;
@@ -19,8 +19,20 @@ public class ApsLetAst extends ApsAst implements ApsModifierRequiredAst<ApsModif
     @Getter
     private final List<ApsModifier<?>> modifiers = ApricotCollectionFactor.arrayList();
     @Getter
+    private final List<ApsMethodAst> methods = ApricotCollectionFactor.arrayList();
+    @Getter
+    private final List<ApsMemberParameterAst> parameters = ApricotCollectionFactor.arrayList();
+    @Getter
     @Setter
     private ApsAccessibleModifier accessible = null;
+
+    public void addMethod(ApsMethodAst method) {
+        this.methods.add(method);
+    }
+
+    public void addMemberParameter(ApsMemberParameterAst parameter) {
+        this.parameters.add(parameter);
+    }
 
     public void addModifier(final ApsModifier<?> modifier) {
         this.modifiers.add(modifier);
@@ -37,21 +49,42 @@ public class ApsLetAst extends ApsAst implements ApsModifierRequiredAst<ApsModif
 
     @Override
     public void print(String ident) {
-
+        System.out.println();
     }
 
     @Override
     public void preprocess() {
-        for (ApsModifier<?> modifier : this.modifiers) {
-            ApsMethodKeyword keyword = ApsMethodKeyword.ofNullable(modifier.literal());
-            if (keyword != null) {
-                ApsMethodModifier methodModifier = ApsMethodModifier.create(keyword);
-                for (ApsMethodAst method : findAst(ApsClassAst.class).methods()) {
-                    method.addModifierIgnoredPresent(methodModifier);
+        ApsClassAst classAst = findAst(ApsClassAst.class);
+
+        if (!this.modifiers.isEmpty()) {
+            for (ApsModifier<?> modifier : this.modifiers) {
+                if (modifier instanceof ApsMethodModifier methodModifier) {
+                    for (ApsMethodAst method : methods()) {
+                        method.addModifierIgnoredPresent(methodModifier);
+                        method.accessible(this.accessible);
+                    }
+                }
+
+                if (modifier instanceof ApsMemberParameterModifier parameterModifier) {
+                    for (ApsMemberParameterAst parameter : parameters()) {
+                        parameter.addModifierIgnoredPresent(parameterModifier);
+                        parameter.accessible(this.accessible);
+                    }
                 }
             }
         }
 
+        // Extract methods to class.
+        for (ApsMethodAst method : methods()) {
+            method.accessible(this.accessible);
+            classAst.addMethod(method);
+        }
+
+        // Extract fields to class.
+        for (ApsMemberParameterAst parameter : parameters()) {
+            parameter.accessible(this.accessible);
+            classAst.addMemberParameter(parameter);
+        }
     }
 
     @Override
