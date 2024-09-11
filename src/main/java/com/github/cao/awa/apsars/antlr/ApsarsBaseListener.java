@@ -2106,6 +2106,42 @@ public class ApsarsBaseListener implements ApsarsListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
+    public void enterDefineJavaMemberField(ApsarsParser.DefineJavaMemberFieldContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void exitDefineJavaMemberField(ApsarsParser.DefineJavaMemberFieldContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void enterDefineApsarsMemberField(ApsarsParser.DefineApsarsMemberFieldContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void exitDefineApsarsMemberField(ApsarsParser.DefineApsarsMemberFieldContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
     public void enterDefineLetMemberField(ApsarsParser.DefineLetMemberFieldContext ctx) {
     }
 
@@ -2116,6 +2152,42 @@ public class ApsarsBaseListener implements ApsarsListener {
      */
     @Override
     public void exitDefineLetMemberField(ApsarsParser.DefineLetMemberFieldContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void enterDefineJavaLetMemberField(ApsarsParser.DefineJavaLetMemberFieldContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void exitDefineJavaLetMemberField(ApsarsParser.DefineJavaLetMemberFieldContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void enterDefineApsarsLetMemberField(ApsarsParser.DefineApsarsLetMemberFieldContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void exitDefineApsarsLetMemberField(ApsarsParser.DefineApsarsLetMemberFieldContext ctx) {
     }
 
     /**

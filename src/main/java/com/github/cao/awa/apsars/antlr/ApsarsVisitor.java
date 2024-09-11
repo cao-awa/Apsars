@@ -939,12 +939,44 @@ public interface ApsarsVisitor<T> extends ParseTreeVisitor<T> {
     T visitDefineMemberField(ApsarsParser.DefineMemberFieldContext ctx);
 
     /**
+     * Visit a parse tree produced by {@link ApsarsParser#defineJavaMemberField}.
+     *
+     * @param ctx the parse tree
+     * @return the visitor result
+     */
+    T visitDefineJavaMemberField(ApsarsParser.DefineJavaMemberFieldContext ctx);
+
+    /**
+     * Visit a parse tree produced by {@link ApsarsParser#defineApsarsMemberField}.
+     *
+     * @param ctx the parse tree
+     * @return the visitor result
+     */
+    T visitDefineApsarsMemberField(ApsarsParser.DefineApsarsMemberFieldContext ctx);
+
+    /**
      * Visit a parse tree produced by {@link ApsarsParser#defineLetMemberField}.
      *
      * @param ctx the parse tree
      * @return the visitor result
      */
     T visitDefineLetMemberField(ApsarsParser.DefineLetMemberFieldContext ctx);
+
+    /**
+     * Visit a parse tree produced by {@link ApsarsParser#defineJavaLetMemberField}.
+     *
+     * @param ctx the parse tree
+     * @return the visitor result
+     */
+    T visitDefineJavaLetMemberField(ApsarsParser.DefineJavaLetMemberFieldContext ctx);
+
+    /**
+     * Visit a parse tree produced by {@link ApsarsParser#defineApsarsLetMemberField}.
+     *
+     * @param ctx the parse tree
+     * @return the visitor result
+     */
+    T visitDefineApsarsLetMemberField(ApsarsParser.DefineApsarsLetMemberFieldContext ctx);
 
     /**
      * Visit a parse tree produced by {@link ApsarsParser#fieldName}.

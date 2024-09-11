@@ -20,9 +20,17 @@ defineLetClassContent: ( defineLetMemberField | defineLetMethod ) + ;
 
 defineLet: let makeAlternateLet? leftBrace defineLetClassContent? rightBrace;
 
-defineMemberField: permissionModifiers? optionalFieldStaticAndFinal? fieldName colon argType (assignment (resultPresenting | assignmentIdentifier))? semicolon ;
+defineMemberField: defineApsarsMemberField | defineJavaMemberField ;
 
-defineLetMemberField: fieldName colon argType (assignment (resultPresenting | assignmentIdentifier))? semicolon ;
+defineJavaMemberField: permissionModifiers? optionalFieldStaticAndFinal? argType fieldName (assignment (resultPresenting | assignmentIdentifier))? semicolon ;
+
+defineApsarsMemberField: permissionModifiers? optionalFieldStaticAndFinal? fieldName colon argType (assignment (resultPresenting | assignmentIdentifier))? semicolon ;
+
+defineLetMemberField: defineApsarsLetMemberField | defineJavaLetMemberField ;
+
+defineJavaLetMemberField: fieldName colon argType (assignment (resultPresenting | assignmentIdentifier))? semicolon ;
+
+defineApsarsLetMemberField: argType fieldName (assignment (resultPresenting | assignmentIdentifier))? semicolon ;
 
 fieldName: identifier ;
 

@@ -1632,6 +1632,34 @@ public interface ApsarsListener extends ParseTreeListener {
     void exitDefineMemberField(ApsarsParser.DefineMemberFieldContext ctx);
 
     /**
+     * Enter a parse tree produced by {@link ApsarsParser#defineJavaMemberField}.
+     *
+     * @param ctx the parse tree
+     */
+    void enterDefineJavaMemberField(ApsarsParser.DefineJavaMemberFieldContext ctx);
+
+    /**
+     * Exit a parse tree produced by {@link ApsarsParser#defineJavaMemberField}.
+     *
+     * @param ctx the parse tree
+     */
+    void exitDefineJavaMemberField(ApsarsParser.DefineJavaMemberFieldContext ctx);
+
+    /**
+     * Enter a parse tree produced by {@link ApsarsParser#defineApsarsMemberField}.
+     *
+     * @param ctx the parse tree
+     */
+    void enterDefineApsarsMemberField(ApsarsParser.DefineApsarsMemberFieldContext ctx);
+
+    /**
+     * Exit a parse tree produced by {@link ApsarsParser#defineApsarsMemberField}.
+     *
+     * @param ctx the parse tree
+     */
+    void exitDefineApsarsMemberField(ApsarsParser.DefineApsarsMemberFieldContext ctx);
+
+    /**
      * Enter a parse tree produced by {@link ApsarsParser#defineLetMemberField}.
      *
      * @param ctx the parse tree
@@ -1644,6 +1672,34 @@ public interface ApsarsListener extends ParseTreeListener {
      * @param ctx the parse tree
      */
     void exitDefineLetMemberField(ApsarsParser.DefineLetMemberFieldContext ctx);
+
+    /**
+     * Enter a parse tree produced by {@link ApsarsParser#defineJavaLetMemberField}.
+     *
+     * @param ctx the parse tree
+     */
+    void enterDefineJavaLetMemberField(ApsarsParser.DefineJavaLetMemberFieldContext ctx);
+
+    /**
+     * Exit a parse tree produced by {@link ApsarsParser#defineJavaLetMemberField}.
+     *
+     * @param ctx the parse tree
+     */
+    void exitDefineJavaLetMemberField(ApsarsParser.DefineJavaLetMemberFieldContext ctx);
+
+    /**
+     * Enter a parse tree produced by {@link ApsarsParser#defineApsarsLetMemberField}.
+     *
+     * @param ctx the parse tree
+     */
+    void enterDefineApsarsLetMemberField(ApsarsParser.DefineApsarsLetMemberFieldContext ctx);
+
+    /**
+     * Exit a parse tree produced by {@link ApsarsParser#defineApsarsLetMemberField}.
+     *
+     * @param ctx the parse tree
+     */
+    void exitDefineApsarsLetMemberField(ApsarsParser.DefineApsarsLetMemberFieldContext ctx);
 
     /**
      * Enter a parse tree produced by {@link ApsarsParser#fieldName}.

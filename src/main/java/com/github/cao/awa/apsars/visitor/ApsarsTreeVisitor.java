@@ -606,6 +606,44 @@ public class ApsarsTreeVisitor extends ApsarsBaseVisitor<ApsAst> {
 
     @Override
     public ApsMemberParameterAst visitDefineMemberField(ApsarsParser.DefineMemberFieldContext ctx) {
+        if (ctx.defineApsarsMemberField() != null) {
+            return visitDefineApsarsMemberField(ctx.defineApsarsMemberField());
+        } else if (ctx.defineJavaMemberField() != null) {
+            return visitDefineJavaMemberField(ctx.defineJavaMemberField());
+        }
+        return null;
+    }
+
+    @Override
+    public ApsMemberParameterAst visitDefineJavaMemberField(ApsarsParser.DefineJavaMemberFieldContext ctx) {
+        ApsMemberParameterAst ast = new ApsMemberParameterAst(this.current.findAst(ApsClassAst.class));
+        if (ctx.permissionModifiers() != null) {
+            ast.accessible(new GenericAccessibleModifier(ctx.permissionModifiers().getText()));
+        }
+        if (ctx.optionalFieldStaticAndFinal() != null) {
+            if (!ctx.optionalFieldStaticAndFinal().isStatic().isEmpty()) {
+                ast.addModifier(ApsMemberParameterModifier.create(ApsMemberParameterKeyword.STATIC));
+            }
+
+            if (!ctx.optionalFieldStaticAndFinal().fieldFinal().isEmpty()) {
+                ast.addModifier(ApsMemberParameterModifier.create(ApsMemberParameterKeyword.FINAL));
+            }
+        }
+        ast.nameIdentity(ctx.fieldName().getText());
+        ast.argType(visitArgType(ctx.argType()));
+        if (ctx.assignment() != null) {
+            if (ctx.resultPresenting() != null) {
+                this.current = ast;
+                ast.value(visitResultPresenting(ctx.resultPresenting()));
+            } else {
+                ast.value(new ApsResultPresentingAst(ast).refToken(ctx.assignmentIdentifier().getText()));
+            }
+        }
+        return ast;
+    }
+
+    @Override
+    public ApsMemberParameterAst visitDefineApsarsMemberField(ApsarsParser.DefineApsarsMemberFieldContext ctx) {
         ApsMemberParameterAst ast = new ApsMemberParameterAst(this.current.findAst(ApsClassAst.class));
         if (ctx.permissionModifiers() != null) {
             ast.accessible(new GenericAccessibleModifier(ctx.permissionModifiers().getText()));
@@ -634,6 +672,32 @@ public class ApsarsTreeVisitor extends ApsarsBaseVisitor<ApsAst> {
 
     @Override
     public ApsMemberParameterAst visitDefineLetMemberField(ApsarsParser.DefineLetMemberFieldContext ctx) {
+        if (ctx.defineApsarsLetMemberField() != null) {
+            return visitDefineApsarsLetMemberField(ctx.defineApsarsLetMemberField());
+        } else if (ctx.defineJavaLetMemberField() != null) {
+            return visitDefineJavaLetMemberField(ctx.defineJavaLetMemberField());
+        }
+        return null;
+    }
+
+    @Override
+    public ApsMemberParameterAst visitDefineJavaLetMemberField(ApsarsParser.DefineJavaLetMemberFieldContext ctx) {
+        ApsMemberParameterAst ast = new ApsMemberParameterAst(this.current.findAst(ApsClassAst.class));
+        ast.nameIdentity(ctx.fieldName().getText());
+        ast.argType(visitArgType(ctx.argType()));
+        if (ctx.assignment() != null) {
+            if (ctx.resultPresenting() != null) {
+                this.current = ast;
+                ast.value(visitResultPresenting(ctx.resultPresenting()));
+            } else {
+                ast.value(new ApsResultPresentingAst(ast).refToken(ctx.assignmentIdentifier().getText()));
+            }
+        }
+        return ast;
+    }
+
+    @Override
+    public ApsMemberParameterAst visitDefineApsarsLetMemberField(ApsarsParser.DefineApsarsLetMemberFieldContext ctx) {
         ApsMemberParameterAst ast = new ApsMemberParameterAst(this.current.findAst(ApsClassAst.class));
         ast.nameIdentity(ctx.fieldName().getText());
         ast.argType(visitArgType(ctx.argType()));
