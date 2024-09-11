@@ -1,10 +1,35 @@
 package com.github.cao.awa.apsars;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 public class Sample2 {
+    static LOGGER: Logger = LogManager.getLogger("Sample2");
+
     template main {
+        String x = null ;
         try {
-            System.out.println("Trying");
+            System.out.println(x.toString());
         } ignored ;
+
+        try {
+            System.out.println(x.toString());
+        } print ;
+
+        String somethingStr = "Something";
+
+        try {
+            System.out.println(x.toString());
+        } deliver LOGGER::error with somethingStr ;
+
+        try {
+            System.out.println(x.toString());
+        } deliver Sample2::handleErr ;
+
         System.out.println("Hello\{}world");
+    }
+
+    static handleErr(err: Throwable) {
+        System.out.println("Call\{}handling");
     }
 }

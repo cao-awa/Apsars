@@ -20,7 +20,7 @@ validToken: (identifier | constant) ;
 
 extraToken: comma validToken ;
 
-constant: (string | number);
+constant: ( string | number | null);
 
 string: Quotation identifierOrSpace* Quotation;
 

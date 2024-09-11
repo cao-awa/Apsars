@@ -330,6 +330,48 @@ public interface ApsarsListener extends ParseTreeListener {
     void exitIgnored(ApsarsParser.IgnoredContext ctx);
 
     /**
+     * Enter a parse tree produced by {@link ApsarsParser#print}.
+     *
+     * @param ctx the parse tree
+     */
+    void enterPrint(ApsarsParser.PrintContext ctx);
+
+    /**
+     * Exit a parse tree produced by {@link ApsarsParser#print}.
+     *
+     * @param ctx the parse tree
+     */
+    void exitPrint(ApsarsParser.PrintContext ctx);
+
+    /**
+     * Enter a parse tree produced by {@link ApsarsParser#deliver}.
+     *
+     * @param ctx the parse tree
+     */
+    void enterDeliver(ApsarsParser.DeliverContext ctx);
+
+    /**
+     * Exit a parse tree produced by {@link ApsarsParser#deliver}.
+     *
+     * @param ctx the parse tree
+     */
+    void exitDeliver(ApsarsParser.DeliverContext ctx);
+
+    /**
+     * Enter a parse tree produced by {@link ApsarsParser#with}.
+     *
+     * @param ctx the parse tree
+     */
+    void enterWith(ApsarsParser.WithContext ctx);
+
+    /**
+     * Exit a parse tree produced by {@link ApsarsParser#with}.
+     *
+     * @param ctx the parse tree
+     */
+    void exitWith(ApsarsParser.WithContext ctx);
+
+    /**
      * Enter a parse tree produced by {@link ApsarsParser#isSync}.
      *
      * @param ctx the parse tree
@@ -736,6 +778,20 @@ public interface ApsarsListener extends ParseTreeListener {
     void exitWordOr(ApsarsParser.WordOrContext ctx);
 
     /**
+     * Enter a parse tree produced by {@link ApsarsParser#null}.
+     *
+     * @param ctx the parse tree
+     */
+    void enterNull(ApsarsParser.NullContext ctx);
+
+    /**
+     * Exit a parse tree produced by {@link ApsarsParser#null}.
+     *
+     * @param ctx the parse tree
+     */
+    void exitNull(ApsarsParser.NullContext ctx);
+
+    /**
      * Enter a parse tree produced by {@link ApsarsParser#assignment}.
      *
      * @param ctx the parse tree
@@ -930,6 +986,20 @@ public interface ApsarsListener extends ParseTreeListener {
      * @param ctx the parse tree
      */
     void exitClassFinal(ApsarsParser.ClassFinalContext ctx);
+
+    /**
+     * Enter a parse tree produced by {@link ApsarsParser#assignmentIdentifier}.
+     *
+     * @param ctx the parse tree
+     */
+    void enterAssignmentIdentifier(ApsarsParser.AssignmentIdentifierContext ctx);
+
+    /**
+     * Exit a parse tree produced by {@link ApsarsParser#assignmentIdentifier}.
+     *
+     * @param ctx the parse tree
+     */
+    void exitAssignmentIdentifier(ApsarsParser.AssignmentIdentifierContext ctx);
 
     /**
      * Enter a parse tree produced by {@link ApsarsParser#defineMethodUsingTemplate}.
@@ -1282,6 +1352,62 @@ public interface ApsarsListener extends ParseTreeListener {
     void exitTryStatement(ApsarsParser.TryStatementContext ctx);
 
     /**
+     * Enter a parse tree produced by {@link ApsarsParser#refCall}.
+     *
+     * @param ctx the parse tree
+     */
+    void enterRefCall(ApsarsParser.RefCallContext ctx);
+
+    /**
+     * Exit a parse tree produced by {@link ApsarsParser#refCall}.
+     *
+     * @param ctx the parse tree
+     */
+    void exitRefCall(ApsarsParser.RefCallContext ctx);
+
+    /**
+     * Enter a parse tree produced by {@link ApsarsParser#refCallFrom}.
+     *
+     * @param ctx the parse tree
+     */
+    void enterRefCallFrom(ApsarsParser.RefCallFromContext ctx);
+
+    /**
+     * Exit a parse tree produced by {@link ApsarsParser#refCallFrom}.
+     *
+     * @param ctx the parse tree
+     */
+    void exitRefCallFrom(ApsarsParser.RefCallFromContext ctx);
+
+    /**
+     * Enter a parse tree produced by {@link ApsarsParser#refCallMethod}.
+     *
+     * @param ctx the parse tree
+     */
+    void enterRefCallMethod(ApsarsParser.RefCallMethodContext ctx);
+
+    /**
+     * Exit a parse tree produced by {@link ApsarsParser#refCallMethod}.
+     *
+     * @param ctx the parse tree
+     */
+    void exitRefCallMethod(ApsarsParser.RefCallMethodContext ctx);
+
+    /**
+     * Enter a parse tree produced by {@link ApsarsParser#withMessage}.
+     *
+     * @param ctx the parse tree
+     */
+    void enterWithMessage(ApsarsParser.WithMessageContext ctx);
+
+    /**
+     * Exit a parse tree produced by {@link ApsarsParser#withMessage}.
+     *
+     * @param ctx the parse tree
+     */
+    void exitWithMessage(ApsarsParser.WithMessageContext ctx);
+
+    /**
      * Enter a parse tree produced by {@link ApsarsParser#tryStatementBody}.
      *
      * @param ctx the parse tree
@@ -1408,6 +1534,20 @@ public interface ApsarsListener extends ParseTreeListener {
     void exitDefineVariableStatement(ApsarsParser.DefineVariableStatementContext ctx);
 
     /**
+     * Enter a parse tree produced by {@link ApsarsParser#variableName}.
+     *
+     * @param ctx the parse tree
+     */
+    void enterVariableName(ApsarsParser.VariableNameContext ctx);
+
+    /**
+     * Exit a parse tree produced by {@link ApsarsParser#variableName}.
+     *
+     * @param ctx the parse tree
+     */
+    void exitVariableName(ApsarsParser.VariableNameContext ctx);
+
+    /**
      * Enter a parse tree produced by {@link ApsarsParser#defineClass}.
      *
      * @param ctx the parse tree
@@ -1504,4 +1644,18 @@ public interface ApsarsListener extends ParseTreeListener {
      * @param ctx the parse tree
      */
     void exitDefineLetMemberField(ApsarsParser.DefineLetMemberFieldContext ctx);
+
+    /**
+     * Enter a parse tree produced by {@link ApsarsParser#fieldName}.
+     *
+     * @param ctx the parse tree
+     */
+    void enterFieldName(ApsarsParser.FieldNameContext ctx);
+
+    /**
+     * Exit a parse tree produced by {@link ApsarsParser#fieldName}.
+     *
+     * @param ctx the parse tree
+     */
+    void exitFieldName(ApsarsParser.FieldNameContext ctx);
 }

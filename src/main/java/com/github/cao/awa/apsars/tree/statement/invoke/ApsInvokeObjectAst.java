@@ -14,21 +14,25 @@ import lombok.experimental.Accessors;
 import java.util.List;
 
 @Accessors(fluent = true)
-public class ApsInvokeAst extends ApsResultingStatementAst {
+public class ApsInvokeObjectAst extends ApsResultingStatementAst {
     @Getter
     @Setter
     private String nameIdentity;
+    @Getter
+    @Setter
+    private String methodName;
     @Getter
     private final List<ApsResultPresentingAst> params = ApricotCollectionFactor.arrayList();
     @Getter
     @Setter
     private ApsStatementAst fluentInvoke;
 
-    public void addParam(ApsResultPresentingAst param) {
+    public ApsInvokeObjectAst addParam(ApsResultPresentingAst param) {
         this.params.add(param);
+        return this;
     }
 
-    public ApsInvokeAst(ApsAst ast) {
+    public ApsInvokeObjectAst(ApsAst ast) {
         super(ast);
     }
 
@@ -62,9 +66,11 @@ public class ApsInvokeAst extends ApsResultingStatementAst {
     public void generateJava(StringBuilder builder) {
         if (this.fluentInvoke != null) {
             builder.append(".");
+        } else {
+            builder.append(this.nameIdentity);
+            builder.append(".");
         }
-
-        builder.append(this.nameIdentity);
+        builder.append(this.methodName);
         builder.append("(");
 
         int edge = this.params.size() - 1;

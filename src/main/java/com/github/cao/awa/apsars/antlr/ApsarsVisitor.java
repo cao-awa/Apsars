@@ -195,6 +195,30 @@ public interface ApsarsVisitor<T> extends ParseTreeVisitor<T> {
     T visitIgnored(ApsarsParser.IgnoredContext ctx);
 
     /**
+     * Visit a parse tree produced by {@link ApsarsParser#print}.
+     *
+     * @param ctx the parse tree
+     * @return the visitor result
+     */
+    T visitPrint(ApsarsParser.PrintContext ctx);
+
+    /**
+     * Visit a parse tree produced by {@link ApsarsParser#deliver}.
+     *
+     * @param ctx the parse tree
+     * @return the visitor result
+     */
+    T visitDeliver(ApsarsParser.DeliverContext ctx);
+
+    /**
+     * Visit a parse tree produced by {@link ApsarsParser#with}.
+     *
+     * @param ctx the parse tree
+     * @return the visitor result
+     */
+    T visitWith(ApsarsParser.WithContext ctx);
+
+    /**
      * Visit a parse tree produced by {@link ApsarsParser#isSync}.
      *
      * @param ctx the parse tree
@@ -427,6 +451,14 @@ public interface ApsarsVisitor<T> extends ParseTreeVisitor<T> {
     T visitWordOr(ApsarsParser.WordOrContext ctx);
 
     /**
+     * Visit a parse tree produced by {@link ApsarsParser#null}.
+     *
+     * @param ctx the parse tree
+     * @return the visitor result
+     */
+    T visitNull(ApsarsParser.NullContext ctx);
+
+    /**
      * Visit a parse tree produced by {@link ApsarsParser#assignment}.
      *
      * @param ctx the parse tree
@@ -537,6 +569,14 @@ public interface ApsarsVisitor<T> extends ParseTreeVisitor<T> {
      * @return the visitor result
      */
     T visitClassFinal(ApsarsParser.ClassFinalContext ctx);
+
+    /**
+     * Visit a parse tree produced by {@link ApsarsParser#assignmentIdentifier}.
+     *
+     * @param ctx the parse tree
+     * @return the visitor result
+     */
+    T visitAssignmentIdentifier(ApsarsParser.AssignmentIdentifierContext ctx);
 
     /**
      * Visit a parse tree produced by {@link ApsarsParser#defineMethodUsingTemplate}.
@@ -739,6 +779,38 @@ public interface ApsarsVisitor<T> extends ParseTreeVisitor<T> {
     T visitTryStatement(ApsarsParser.TryStatementContext ctx);
 
     /**
+     * Visit a parse tree produced by {@link ApsarsParser#refCall}.
+     *
+     * @param ctx the parse tree
+     * @return the visitor result
+     */
+    T visitRefCall(ApsarsParser.RefCallContext ctx);
+
+    /**
+     * Visit a parse tree produced by {@link ApsarsParser#refCallFrom}.
+     *
+     * @param ctx the parse tree
+     * @return the visitor result
+     */
+    T visitRefCallFrom(ApsarsParser.RefCallFromContext ctx);
+
+    /**
+     * Visit a parse tree produced by {@link ApsarsParser#refCallMethod}.
+     *
+     * @param ctx the parse tree
+     * @return the visitor result
+     */
+    T visitRefCallMethod(ApsarsParser.RefCallMethodContext ctx);
+
+    /**
+     * Visit a parse tree produced by {@link ApsarsParser#withMessage}.
+     *
+     * @param ctx the parse tree
+     * @return the visitor result
+     */
+    T visitWithMessage(ApsarsParser.WithMessageContext ctx);
+
+    /**
      * Visit a parse tree produced by {@link ApsarsParser#tryStatementBody}.
      *
      * @param ctx the parse tree
@@ -811,6 +883,14 @@ public interface ApsarsVisitor<T> extends ParseTreeVisitor<T> {
     T visitDefineVariableStatement(ApsarsParser.DefineVariableStatementContext ctx);
 
     /**
+     * Visit a parse tree produced by {@link ApsarsParser#variableName}.
+     *
+     * @param ctx the parse tree
+     * @return the visitor result
+     */
+    T visitVariableName(ApsarsParser.VariableNameContext ctx);
+
+    /**
      * Visit a parse tree produced by {@link ApsarsParser#defineClass}.
      *
      * @param ctx the parse tree
@@ -865,4 +945,12 @@ public interface ApsarsVisitor<T> extends ParseTreeVisitor<T> {
      * @return the visitor result
      */
     T visitDefineLetMemberField(ApsarsParser.DefineLetMemberFieldContext ctx);
+
+    /**
+     * Visit a parse tree produced by {@link ApsarsParser#fieldName}.
+     *
+     * @param ctx the parse tree
+     * @return the visitor result
+     */
+    T visitFieldName(ApsarsParser.FieldNameContext ctx);
 }

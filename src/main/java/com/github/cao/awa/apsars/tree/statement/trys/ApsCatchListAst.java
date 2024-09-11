@@ -37,7 +37,7 @@ public class ApsCatchListAst extends ApsAst {
         System.out.println(ident + "|_ Aps catching: " + this.catchName);
         ident += "    ";
 
-        System.out.println(ident + "|_ catch target: " + this.catchTargets);
+        System.out.println(ident + "|_ catch target: " + this.catchTargets.stream().map(ApsArgTypeAst::generateJava).toList());
     }
 
     @Override

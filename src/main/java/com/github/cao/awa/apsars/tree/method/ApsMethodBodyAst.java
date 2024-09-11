@@ -24,13 +24,20 @@ public class ApsMethodBodyAst extends ApsAst {
         this.parentBody = parentBody;
     }
 
-    public void addStatement(ApsStatementAst statement) {
+    public ApsMethodBodyAst addStatement(ApsStatementAst statement) {
         this.statements.add(statement);
+        return this;
     }
 
-    public void addFieldVariable(ApsVariableAst variableAst) {
+    public ApsMethodBodyAst addPresentingFieldVariable(ApsVariableAst variableAst) {
+        this.fieldVariables.add(variableAst);
+        return this;
+    }
+
+    public ApsMethodBodyAst addFieldVariable(ApsVariableAst variableAst) {
         this.fieldVariables.add(variableAst);
         this.statements.add(variableAst);
+        return this;
     }
 
     public ApsStatementAst searchLastStatement() {

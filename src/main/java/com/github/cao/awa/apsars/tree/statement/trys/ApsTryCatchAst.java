@@ -3,6 +3,7 @@ package com.github.cao.awa.apsars.tree.statement.trys;
 import com.github.cao.awa.apsars.tree.ApsAst;
 import com.github.cao.awa.apsars.tree.method.ApsMethodBodyAst;
 import com.github.cao.awa.apsars.tree.statement.ApsStatementAst;
+import com.github.cao.awa.apsars.tree.statement.variable.ApsVariableAst;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -65,7 +66,12 @@ public class ApsTryCatchAst extends ApsStatementAst {
     @Override
     public void preprocess() {
         this.methodBody.preprocess();
-        this.methodBody.preprocess();
+        this.catchingMethodBody.preprocess();
         this.catchList.preprocess();
+
+        this.catchingMethodBody.addPresentingFieldVariable(
+                new ApsVariableAst(this)
+                        .nameIdentity(catchList().catchName())
+        );
     }
 }

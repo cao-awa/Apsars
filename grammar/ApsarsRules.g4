@@ -65,8 +65,14 @@ Synchronized : 'synchronized' ;
 Try      : 'try'     ;
 Catch    : 'catch'   ;
 Ignored  : 'ignored' ;
+Print    : 'print'   ;
+Deliver  : 'deliver' ;
+With     : 'with'    ;
 catching : Catch     ;
 ignored  : Ignored   ;
+print    : Print     ;
+deliver  : Deliver   ;
+with     : With      ;
 
 isSync         : Sync         ;
 isSynchronized : Synchronized ;
@@ -74,7 +80,7 @@ isSynchronized : Synchronized ;
 sync : isSync | isSynchronized ;
 
 Identifier : [a-zA-Z_][a-zA-Z_0-9]*           ;
-FullName   : (Identifier '.')+ (Identifier) ;
+FullName   : (Identifier '.')+ (Identifier)   ;
 Number     : [0-9]+                           ;
 
 fullNameOrIdentifier : FullName | Identifier ;
@@ -141,6 +147,10 @@ wordOr  : WordOr  ;
 //
 Quotation : '"' ;
 
+// Null
+Null : ' null' | ' null ' ;
+null : Null               ;
+
 assignment: Equal | LeftEquals | As ;
 
 isEquals : Equals ;
@@ -189,3 +199,5 @@ fieldFinal : isVal | isFinal ;
 methodFinal : isFinal ;
 
 classFinal: isUnique | isFinal ;
+
+assignmentIdentifier: identifier ;

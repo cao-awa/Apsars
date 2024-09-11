@@ -12,15 +12,17 @@ defineClass: permissionModifiers                    ?
              )
 ;
 
-makeAlternateLetAndContent: (defineLet | defineClassContent) +;
+makeAlternateLetAndContent: ( defineLet | defineClassContent) +;
 
-defineClassContent: (defineMethodUsingTemplate | defineMethod | defineMemberField) + ;
+defineClassContent: ( defineMethodUsingTemplate | defineMemberField | defineMethod ) + ;
 
-defineLetClassContent: (defineLetMethod | defineLetMemberField) + ;
+defineLetClassContent: ( defineLetMemberField | defineLetMethod ) + ;
 
 defineLet: let makeAlternateLet? leftBrace defineLetClassContent? rightBrace;
 
-defineMemberField: permissionModifiers? optionalFieldStaticAndFinal identifier colon argType (assignment resultPresenting)? semicolon ;
+defineMemberField: permissionModifiers? optionalFieldStaticAndFinal? fieldName colon argType (assignment (resultPresenting | assignmentIdentifier))? semicolon ;
 
-defineLetMemberField: identifier colon argType (assignment resultPresenting)? semicolon ;
+defineLetMemberField: fieldName colon argType (assignment (resultPresenting | assignmentIdentifier))? semicolon ;
+
+fieldName: identifier ;
 

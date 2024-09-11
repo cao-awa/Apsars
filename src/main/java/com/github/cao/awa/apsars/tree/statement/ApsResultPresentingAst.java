@@ -1,6 +1,7 @@
 package com.github.cao.awa.apsars.tree.statement;
 
 import com.github.cao.awa.apsars.tree.ApsAst;
+import com.github.cao.awa.apsars.tree.statement.special.literal.ApsLiteralStatementAst;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -9,15 +10,13 @@ import lombok.experimental.Accessors;
 public class ApsResultPresentingAst extends ApsAst {
     @Getter
     @Setter
-    private String constantLiteral;
+    private ApsLiteralStatementAst constantLiteral;
     @Getter
     @Setter
     private String refToken;
-
     @Getter
     @Setter
     private ApsResultingStatementAst resultingStatement;
-
 //    @Getter
 //    @Setter
 //    private String refToken;
@@ -33,7 +32,7 @@ public class ApsResultPresentingAst extends ApsAst {
         } else if (this.resultingStatement != null) {
             System.out.println("Statement: " + this.resultingStatement.generateJava());
         } else if (this.constantLiteral != null) {
-            System.out.println(ident + "Constant: " + this.constantLiteral);
+            System.out.println(ident + "Constant: " + this.constantLiteral.generateJava());
         }
     }
 
@@ -49,7 +48,7 @@ public class ApsResultPresentingAst extends ApsAst {
         } else if (this.resultingStatement != null) {
             this.resultingStatement.generateJava(builder);
         } else if (this.constantLiteral != null) {
-            builder.append(this.constantLiteral);
+            this.constantLiteral.generateJava(builder);
         }
     }
 }
