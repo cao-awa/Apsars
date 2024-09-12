@@ -4,9 +4,38 @@ import ApsarsRules, ArgType, ApsarsMethod;
 
 defineStatement: theStatement+ ;
 
-theStatement: (tryStatement | resultingStatement | defineVariableStatement) semicolon?;
+theStatement: (tryStatement | resultingStatement | defineVariableStatement | returnStatement | yieldStatement ) semicolon?;
 
-resultingStatement: invokeStatement ;
+resultingStatement: invokeStatement | ifStatement ;
+
+ifStatement: ifKeyword
+             leftParen (
+              resultPresenting   |
+              comparingStatement
+             ) rightParen
+             statementBlock
+             (
+              (
+               elseIfStatement
+              )                  |
+              (
+               elseStatement
+              )
+             ) ?
+;
+
+elseIfStatement: elseKeyword ifStatement ;
+
+elseStatement: elseKeyword statementBlock ;
+
+statementBlock: leftBrace (
+                 defineMethodBody
+                ) rightBrace
+;
+
+returnStatement: returnKeyword resultPresenting ;
+
+yieldStatement: yieldKeyword resultPresenting ;
 
 // xxx(param?)
 invokeStatement: fullNameOrIdentifier leftParen invokeParamList? rightParen ;
@@ -44,6 +73,10 @@ tryStatement: Try
               )
 ;
 
+resultPresenting: constant | resultingStatement ;
+
+comparingStatement: resultPresenting (moreThan | lessThan) resultPresenting ;
+
 refCall: refCallFrom colon colon refCallMethod ;
 
 refCallFrom: identifier ;
@@ -66,11 +99,9 @@ validInvokeParam: ( validToken | resultPresenting );
 
 validExtraInvokeParam: comma validInvokeParam;
 
-resultPresenting: constant | resultingStatement ;
-
 // <type> <name>
 // <type> <name> = <value>
-defineVariableStatement: argType variableName (assignment ( resultPresenting | assignmentIdentifier ))? ;
+defineVariableStatement: argType? variableName (assignment ( resultPresenting | assignmentIdentifier ))? ;
 
 variableName: identifier ;
 

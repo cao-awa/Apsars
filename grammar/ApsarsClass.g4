@@ -4,7 +4,7 @@ import ApsarsRules, ApsarsMethod;
 
 defineClass: permissionModifiers                    ?
              classFinal                             ?
-             class identifier
+             classKeyword identifier
              leftBrace
              (
               rightBrace                            |

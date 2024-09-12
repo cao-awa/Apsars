@@ -7,6 +7,7 @@ import com.github.cao.awa.apsars.parser.token.ApsTokens;
 import com.github.cao.awa.apsars.tree.ApsAst;
 import com.github.cao.awa.apsars.tree.statement.ApsResultPresentingAst;
 import com.github.cao.awa.apsars.tree.statement.ApsStatementAst;
+import com.github.cao.awa.apsars.tree.statement.control.ApsIfStatementAst;
 import com.github.cao.awa.apsars.tree.vararg.ApsArgTypeAst;
 import lombok.Getter;
 import lombok.Setter;
@@ -28,6 +29,7 @@ public class ApsVariableAst extends ApsStatementAst {
     @Getter
     @Setter
     private boolean defining = true;
+    private boolean isAlternate = false;
     private final Map<ApsLocalVariableModifierType, ApsLocalVariableModifier> modifiers = ApricotCollectionFactor.hashMap();
 
     public ApsVariableAst(ApsAst ast) {
@@ -57,7 +59,29 @@ public class ApsVariableAst extends ApsStatementAst {
 
     @Override
     public void preprocess() {
+        if (this.type == null) {
+            this.defining = false;
+        }
 
+        if (this.assignment != null) {
+            this.assignment.preprocess();
+        }
+
+        if (this.assignment != null && this.assignment.resultingStatement() instanceof ApsIfStatementAst ifStatementAst) {
+            this.isAlternate = true;
+
+            ifStatementAst.preprocess();
+
+            ifStatementAst.requestAssigment(this);
+        }
+    }
+
+    public ApsVariableAst assignmentToSelf(ApsResultPresentingAst assignment) {
+        return new ApsVariableAst(parent())
+                .nameIdentity(this.nameIdentity)
+                .assignment(assignment)
+                .withEnd(true)
+                .defining(false);
     }
 
     @Override
@@ -76,7 +100,12 @@ public class ApsVariableAst extends ApsStatementAst {
 
         if (this.assignment != null) {
             builder.append(ApsTokens.EQUAL);
-            this.assignment.generateJava(builder);
+            if (this.isAlternate) {
+                builder.append("null;");
+                this.assignment.generateJava(builder);
+            } else {
+                this.assignment.generateJava(builder);
+            }
         }
 
         if (withEnd()) {

@@ -8,26 +8,18 @@ public class Sample2 {
     public static Logger field2 = LogManager.getLogger("Sample2");
 
     template main {
-        String x = null ;
-        try {
-            System.out.println(x.toString());
-        } ignored ;
-
-        try {
-            System.out.println(x.toString());
-        } LOGGER::error ;
-
-        String somethingStr = "Something";
-
-        try {
-            System.out.println(x.toString());
-        } deliver LOGGER::error with somethingStr ;
-
-        try {
-            System.out.println(x.toString());
-        } deliver Sample2::handleErr ;
-
-        System.out.println("Hello\{}world");
+        String str = if (true) {
+            System.out.println("trues");
+            yield "result1";
+        } else if (false) {
+            System.out.println("falses");
+            yield "result2";
+        } else if(true) {
+            System.out.println("elses");
+            yield "result3";
+        } else if (false) {
+            System.out.println("No_results");
+        }
     }
 
     static handleErr(err: Throwable) {

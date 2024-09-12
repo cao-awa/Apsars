@@ -40,12 +40,37 @@ public class ApsMethodBodyAst extends ApsAst {
         return this;
     }
 
+    public ApsMethodBodyAst addReassignmentFieldVariable(ApsVariableAst variableAst) {
+        this.statements.add(variableAst);
+        return this;
+    }
+
     public ApsStatementAst searchLastStatement() {
         if (this.statements.isEmpty()) {
             return null;
         }
 
         return this.statements.getLast();
+    }
+
+    public ApsStatementAst removeLastStatement() {
+        if (this.statements.isEmpty()) {
+            return null;
+        }
+
+        return this.statements.removeLast();
+    }
+
+    public ApsStatementAst replaceLastStatement(ApsStatementAst statement) {
+        if (this.statements.isEmpty()) {
+            return null;
+        }
+
+        ApsStatementAst oldStatement = this.statements.removeLast();
+
+        this.statements.add(statement);
+
+        return oldStatement;
     }
 
     public ApsInvokeAst searchLastInvoke() {

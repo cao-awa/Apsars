@@ -38,9 +38,11 @@ isStatic : Static ;
 // Class(s).
 Class      : 'class'  ;
 Return     : 'return' ;
+Yield      : 'yield'  ;
 
-class      : Class  ;
-return     : Return ;
+classKeyword  : Class  ;
+returnKeyword : Return ;
+yieldKeyword  : Yield  ;
 
 // Member field keywords.
 Transient   : 'transient'   ;
@@ -79,17 +81,12 @@ isSynchronized : Synchronized ;
 
 sync : isSync | isSynchronized ;
 
-Identifier : [a-zA-Z_][a-zA-Z_0-9]*           ;
-FullName   : (Identifier '.')+ (Identifier)   ;
-Number     : [0-9]+                           ;
-
-fullNameOrIdentifier : FullName | Identifier ;
-identifier           : Identifier            ;
-fullName             : FullName              ;
-number               : Number                ;
-
 // Template keyword.
 template : 'template' ;
+
+// Control statement.
+ifKeyword   : 'if'       ;
+elseKeyword : 'else'     ;
 
 // Braces.
 LeftBrace  : '{'        ;
@@ -148,12 +145,26 @@ wordOr  : WordOr  ;
 Quotation : '"' ;
 
 // Null
-Null : ' null' | ' null ' ;
-null : Null               ;
+Null : ' null' | ' null ' | 'null ' ;
+null : Null                         ;
+
+// Boolean.
+True  : 'true'       ;
+False : 'false'      ;
+bool  : True | False ;
 
 assignment: Equal | LeftEquals | As ;
 
 isEquals : Equals ;
+
+Identifier : [a-zA-Z_][a-zA-Z_0-9]*           ;
+FullName   : (Identifier '.')+ (Identifier)   ;
+Number     : [0-9]+                           ;
+
+fullNameOrIdentifier : FullName | Identifier ;
+identifier           : Identifier            ;
+fullName             : FullName              ;
+number               : Number                ;
 
 WHITESPACES : [ \r\t\n]+ -> skip ;
 

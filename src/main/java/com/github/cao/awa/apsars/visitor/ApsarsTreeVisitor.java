@@ -21,8 +21,12 @@ import com.github.cao.awa.apsars.tree.method.parameter.ApsMethodParamElementAst;
 import com.github.cao.awa.apsars.tree.method.parameter.ApsMethodParameterAst;
 import com.github.cao.awa.apsars.tree.statement.ApsResultPresentingAst;
 import com.github.cao.awa.apsars.tree.statement.ApsResultingStatementAst;
+import com.github.cao.awa.apsars.tree.statement.ApsStatementAst;
+import com.github.cao.awa.apsars.tree.statement.control.ApsIfStatementAst;
 import com.github.cao.awa.apsars.tree.statement.invoke.ApsInvokeAst;
 import com.github.cao.awa.apsars.tree.statement.invoke.ApsInvokeObjectAst;
+import com.github.cao.awa.apsars.tree.statement.result.ApsReturnAst;
+import com.github.cao.awa.apsars.tree.statement.result.ApsYieldAst;
 import com.github.cao.awa.apsars.tree.statement.special.literal.ApsLiteralStatementAst;
 import com.github.cao.awa.apsars.tree.statement.trys.ApsCatchListAst;
 import com.github.cao.awa.apsars.tree.statement.trys.ApsTryCatchAst;
@@ -181,13 +185,28 @@ public class ApsarsTreeVisitor extends ApsarsBaseVisitor<ApsAst> {
 
                 boolean withEnd = theStatementContext.semicolon() != null;
 
+                if (theStatementContext.returnStatement() != null) {
+                    ast.addStatement(visitReturnStatement(theStatementContext.returnStatement()));
+                    continue;
+                }
+
+                if (theStatementContext.yieldStatement() != null) {
+                    ast.addStatement(visitYieldStatement(theStatementContext.yieldStatement()));
+                    continue;
+                }
+
                 if (theStatementContext.tryStatement() != null) {
                     ast.addStatement(visitTryStatement(theStatementContext.tryStatement()));
                     continue;
                 }
 
                 if (theStatementContext.defineVariableStatement() != null) {
-                    ast.addFieldVariable(visitDefineVariableStatement(theStatementContext.defineVariableStatement()).withEnd(withEnd));
+                    ApsVariableAst variable = visitDefineVariableStatement(theStatementContext.defineVariableStatement()).withEnd(withEnd);
+                    if (variable.defining()) {
+                        ast.addFieldVariable(variable);
+                    } else {
+                        ast.addReassignmentFieldVariable(variable);
+                    }
                     continue;
                 }
 
@@ -196,6 +215,20 @@ public class ApsarsTreeVisitor extends ApsarsBaseVisitor<ApsAst> {
                 }
             }
         }
+        return ast;
+    }
+
+    @Override
+    public ApsStatementAst visitReturnStatement(ApsarsParser.ReturnStatementContext ctx) {
+        ApsReturnAst ast = new ApsReturnAst(this.current);
+        ast.result(visitResultPresenting(ctx.resultPresenting()));
+        return ast;
+    }
+
+    @Override
+    public ApsYieldAst visitYieldStatement(ApsarsParser.YieldStatementContext ctx) {
+        ApsYieldAst ast = new ApsYieldAst(this.current);
+        ast.result(visitResultPresenting(ctx.resultPresenting()));
         return ast;
     }
 
@@ -296,6 +329,10 @@ public class ApsarsTreeVisitor extends ApsarsBaseVisitor<ApsAst> {
             return visitInvokeStatement(ctx.invokeStatement());
         }
 
+        if (ctx.ifStatement() != null) {
+            return visitIfStatement(ctx.ifStatement());
+        }
+
         return null;
     }
 
@@ -383,7 +420,11 @@ public class ApsarsTreeVisitor extends ApsarsBaseVisitor<ApsAst> {
     @Override
     public ApsVariableAst visitDefineVariableStatement(ApsarsParser.DefineVariableStatementContext ctx) {
         ApsVariableAst ast = new ApsVariableAst(this.current);
-        ast.type(visitArgType(ctx.argType()));
+        if (ctx.argType() != null) {
+            ast.type(visitArgType(ctx.argType()));
+        } else {
+            ast.defining(false);
+        }
         ast.nameIdentity(ctx.variableName().getText());
         if (ctx.assignment() != null) {
             if (ctx.resultPresenting() != null) {
@@ -431,7 +472,9 @@ public class ApsarsTreeVisitor extends ApsarsBaseVisitor<ApsAst> {
     @Override
     public ApsArgTypeAst visitArgType(ApsarsParser.ArgTypeContext ctx) {
         ApsArgTypeAst ast = new ApsArgTypeAst(this.current);
-        ast.nameIdentity(ctx.identifier().getText());
+        if (ctx.identifier() != null) {
+            ast.nameIdentity(ctx.identifier().getText());
+        }
         if (ctx.typedArgType() != null) {
             if (ctx.typedArgType().argType() != null) {
                 this.current = ast;
@@ -548,6 +591,52 @@ public class ApsarsTreeVisitor extends ApsarsBaseVisitor<ApsAst> {
             }
         }
         return this.current;
+    }
+
+    @Override
+    public ApsIfStatementAst visitIfStatement(ApsarsParser.IfStatementContext ctx) {
+        ApsIfStatementAst ast = new ApsIfStatementAst(this.current);
+        if (ctx.resultPresenting() != null) {
+            ast.predicate(visitResultPresenting(ctx.resultPresenting()));
+        } else if (ctx.comparingStatement() != null) {
+            ast.predicate(visitComparingStatement(ctx.comparingStatement()));
+        }
+
+        if (ctx.statementBlock() != null) {
+            ast.statements(visitStatementBlock(ctx.statementBlock()));
+        }
+
+        if (ctx.elseStatement() != null) {
+            ast.elseStatements(visitElseStatement(ctx.elseStatement()));
+        }
+
+        if (ctx.elseIfStatement() != null) {
+            ast.elseIfStatement(visitElseIfStatement(ctx.elseIfStatement()));
+        }
+
+        return ast;
+    }
+
+    @Override
+    public ApsIfStatementAst visitElseIfStatement(ApsarsParser.ElseIfStatementContext ctx) {
+        return visitIfStatement(ctx.ifStatement());
+    }
+
+    @Override
+    public ApsMethodBodyAst visitElseStatement(ApsarsParser.ElseStatementContext ctx) {
+        return visitStatementBlock(ctx.statementBlock());
+    }
+
+    @Override
+    public ApsResultPresentingAst visitComparingStatement(ApsarsParser.ComparingStatementContext ctx) {
+        ApsResultPresentingAst ast = new ApsResultPresentingAst(this.current);
+
+        return ast;
+    }
+
+    @Override
+    public ApsMethodBodyAst visitStatementBlock(ApsarsParser.StatementBlockContext ctx) {
+        return visitDefineMethodBody(ctx.defineMethodBody());
     }
 
     @Override
