@@ -426,10 +426,16 @@ public class ApsarsTreeVisitor extends ApsarsBaseVisitor<ApsAst> {
 
         if (ctx.calculateStatementWithTotalParen() != null) {
             ast = visitCalculateStatementWithTotalParen(ctx.calculateStatementWithTotalParen());
+            ast.totalWithParen(true);
         } else {
-            ast.left(visitCalculateLeft(ctx.calculateLeft()));
-            ast.symbol(ctx.operator().getText());
-            ast.right(visitCalculateRight(ctx.calculateRight()));
+            if (ctx.calculateStatementWithParen() != null) {
+                ast = visitCalculateStatementWithParen(ctx.calculateStatementWithParen());
+                ast.totalWithParen(true);
+            } else {
+                ast.left(visitCalculateLeft(ctx.calculateLeft()));
+                ast.symbol(ctx.operator().getText());
+                ast.right(visitCalculateRight(ctx.calculateRight()));
+            }
         }
 
         if (ctx.extraCalculateStatement() != null) {

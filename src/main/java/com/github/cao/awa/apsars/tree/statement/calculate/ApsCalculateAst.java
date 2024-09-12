@@ -40,9 +40,11 @@ public class ApsCalculateAst extends ApsResultingStatementAst {
 
     @Override
     public void print(String ident) {
-        System.out.println("Aps calculate: ");
+        String concat = this.symbol != null ? "|" : " ";
+
+        System.out.println("Aps calculate" + (this.totalWithParen ? " with parenthesis" : "") + ": ");
         System.out.print(ident + "|_ Left: ");
-        this.left.print(ident + "|   ");
+        this.left.print(ident + concat + "   ");
         if (this.symbol != null) {
             System.out.println(ident + "|   Symbol: " + this.symbol);
             System.out.print(ident + "|_  Right: ");
@@ -78,10 +80,10 @@ public class ApsCalculateAst extends ApsResultingStatementAst {
             if (this.rightWithParen) {
                 builder.append(")");
             }
+        }
 
-            if (this.totalWithParen) {
-                builder.append('(');
-            }
+        if (this.totalWithParen) {
+            builder.append(')');
         }
     }
 }

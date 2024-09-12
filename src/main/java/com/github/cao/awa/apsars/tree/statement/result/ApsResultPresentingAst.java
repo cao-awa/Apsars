@@ -38,7 +38,13 @@ public class ApsResultPresentingAst extends ApsAst {
 
     @Override
     public void preprocess() {
+        if (this.resultingStatement != null) {
+            this.resultingStatement.preprocess();
+        }
 
+        if (this.constantLiteral != null) {
+            this.constantLiteral.preprocess();
+        }
     }
 
     @Override
