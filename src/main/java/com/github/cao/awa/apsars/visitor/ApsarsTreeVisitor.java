@@ -19,14 +19,16 @@ import com.github.cao.awa.apsars.tree.method.ApsMethodAst;
 import com.github.cao.awa.apsars.tree.method.ApsMethodBodyAst;
 import com.github.cao.awa.apsars.tree.method.parameter.ApsMethodParamElementAst;
 import com.github.cao.awa.apsars.tree.method.parameter.ApsMethodParameterAst;
-import com.github.cao.awa.apsars.tree.statement.ApsResultPresentingAst;
-import com.github.cao.awa.apsars.tree.statement.ApsResultingStatementAst;
 import com.github.cao.awa.apsars.tree.statement.ApsStatementAst;
+import com.github.cao.awa.apsars.tree.statement.calculate.ApsCalculateAst;
 import com.github.cao.awa.apsars.tree.statement.control.ApsIfStatementAst;
 import com.github.cao.awa.apsars.tree.statement.invoke.ApsInvokeAst;
 import com.github.cao.awa.apsars.tree.statement.invoke.ApsInvokeObjectAst;
+import com.github.cao.awa.apsars.tree.statement.result.ApsResultPresentingAst;
+import com.github.cao.awa.apsars.tree.statement.result.ApsResultingStatementAst;
 import com.github.cao.awa.apsars.tree.statement.result.ApsReturnAst;
 import com.github.cao.awa.apsars.tree.statement.result.ApsYieldAst;
+import com.github.cao.awa.apsars.tree.statement.result.instance.ApsNewInstanceStatementAst;
 import com.github.cao.awa.apsars.tree.statement.special.literal.ApsLiteralStatementAst;
 import com.github.cao.awa.apsars.tree.statement.trys.ApsCatchListAst;
 import com.github.cao.awa.apsars.tree.statement.trys.ApsTryCatchAst;
@@ -248,8 +250,8 @@ public class ApsarsTreeVisitor extends ApsarsBaseVisitor<ApsAst> {
                 ast.catchingMethodBody(
                         body.addStatement(
                                 new ApsInvokeObjectAst(body)
-                                        .nameIdentity("ex")
-                                        .methodName("printStackTrace")
+                                        .objectName("ex")
+                                        .nameIdentity("printStackTrace")
                                         .withEnd(true)
                         )
                 );
@@ -260,8 +262,8 @@ public class ApsarsTreeVisitor extends ApsarsBaseVisitor<ApsAst> {
                 if (ctx.with() == null) {
                     body.addStatement(
                             invokeAst
-                                    .nameIdentity(ctx.refCall().refCallFrom().getText())
-                                    .methodName(ctx.refCall().refCallMethod().getText())
+                                    .objectName(ctx.refCall().refCallFrom().getText())
+                                    .nameIdentity(ctx.refCall().refCallMethod().getText())
                                     .addParam(new ApsResultPresentingAst(invokeAst).refToken("ex"))
                                     .withEnd(true)
                     );
@@ -290,8 +292,8 @@ public class ApsarsTreeVisitor extends ApsarsBaseVisitor<ApsAst> {
 
                     body.addStatement(
                             invokeAst
-                                    .nameIdentity(ctx.refCall().refCallFrom().getText())
-                                    .methodName(ctx.refCall().refCallMethod().getText())
+                                    .objectName(ctx.refCall().refCallFrom().getText())
+                                    .nameIdentity(ctx.refCall().refCallMethod().getText())
                                     .addParam(withMessage)
                                     .addParam(new ApsResultPresentingAst(invokeAst).refToken("ex"))
                                     .withEnd(true)
@@ -333,7 +335,36 @@ public class ApsarsTreeVisitor extends ApsarsBaseVisitor<ApsAst> {
             return visitIfStatement(ctx.ifStatement());
         }
 
+        if (ctx.newInstanceStatement() != null) {
+            return visitNewInstanceStatement(ctx.newInstanceStatement());
+        }
+
+        if (ctx.calculateStatement() != null) {
+            return visitCalculateStatement(ctx.calculateStatement());
+        }
+
         return null;
+    }
+
+    @Override
+    public ApsNewInstanceStatementAst visitNewInstanceStatement(ApsarsParser.NewInstanceStatementContext ctx) {
+        ApsNewInstanceStatementAst ast = new ApsNewInstanceStatementAst(this.current);
+        ast.resultType(ctx.identifier().getText());
+        ApsarsParser.InvokeParamListContext paramList = ctx.invokeParamList();
+        if (paramList != null && paramList.validInvokeParam() != null) {
+            this.current = ast;
+
+            ast.addParam(visitValidInvokeParam(paramList.validInvokeParam()));
+
+            if (ctx.invokeParamList().validExtraInvokeParam() != null) {
+                for (ApsarsParser.ValidExtraInvokeParamContext validExtraInvokeParamContext : ctx.invokeParamList().validExtraInvokeParam()) {
+                    this.current = ast;
+
+                    ast.addParam(visitValidInvokeParam(validExtraInvokeParamContext.validInvokeParam()));
+                }
+            }
+        }
+        return ast;
     }
 
     @Override
@@ -354,7 +385,139 @@ public class ApsarsTreeVisitor extends ApsarsBaseVisitor<ApsAst> {
                 }
             }
         }
+
+        if (ctx.fluentInvokeStatement() != null) {
+            for (ApsarsParser.FluentInvokeStatementContext fluentInvokeStatementContext : ctx.fluentInvokeStatement()) {
+                this.current = ast;
+
+                ast.fluentInvoke().add(visitFluentInvokeStatement(fluentInvokeStatementContext));
+            }
+        }
+
         return ast;
+    }
+
+    @Override
+    public ApsInvokeAst visitFluentInvokeStatement(ApsarsParser.FluentInvokeStatementContext ctx) {
+        ApsInvokeAst ast = new ApsInvokeAst(this.current);
+        ast.isFluent(true);
+        ast.nameIdentity(ctx.identifier().getText());
+        ApsarsParser.InvokeParamListContext paramList = ctx.invokeParamList();
+        if (paramList != null && paramList.validInvokeParam() != null) {
+            this.current = ast;
+
+            ast.addParam(visitValidInvokeParam(paramList.validInvokeParam()));
+
+            if (ctx.invokeParamList().validExtraInvokeParam() != null) {
+                for (ApsarsParser.ValidExtraInvokeParamContext validExtraInvokeParamContext : ctx.invokeParamList().validExtraInvokeParam()) {
+                    this.current = ast;
+
+                    ast.addParam(visitValidInvokeParam(validExtraInvokeParamContext.validInvokeParam()));
+                }
+            }
+        }
+        ast.withEnd(false);
+        return ast;
+    }
+
+    @Override
+    public ApsCalculateAst visitCalculateStatement(ApsarsParser.CalculateStatementContext ctx) {
+        ApsCalculateAst ast = new ApsCalculateAst(this.current);
+
+        if (ctx.calculateStatementWithTotalParen() != null) {
+            ast = visitCalculateStatementWithTotalParen(ctx.calculateStatementWithTotalParen());
+        } else {
+            ast.left(visitCalculateLeft(ctx.calculateLeft()));
+            ast.symbol(ctx.operator().getText());
+            ast.right(visitCalculateRight(ctx.calculateRight()));
+        }
+
+        if (ctx.extraCalculateStatement() != null) {
+            for (ApsarsParser.ExtraCalculateStatementContext extraCalculateStatementContext : ctx.extraCalculateStatement()) {
+                ApsCalculateAst extraAst = new ApsCalculateAst(this.current);
+                extraAst.left(new ApsResultPresentingAst(ast).resultingStatement(ast));
+                extraAst.symbol(extraCalculateStatementContext.operator().getText());
+                extraAst.right(visitCalculatableResultPresenting(extraCalculateStatementContext.calculatableResultPresenting()));
+
+                ast = extraAst;
+            }
+        }
+
+        return ast;
+    }
+
+    @Override
+    public ApsCalculateAst visitCalculateStatementWithTotalParen(ApsarsParser.CalculateStatementWithTotalParenContext ctx) {
+        ApsCalculateAst ast = new ApsCalculateAst(this.current);
+
+        ast.left(visitCalculateLeft(ctx.calculateLeft()));
+        ast.symbol(ctx.operator().getText());
+        ast.right(visitCalculateRight(ctx.calculateRight()));
+        if (ctx.extraCalculateStatement() != null) {
+            for (ApsarsParser.ExtraCalculateStatementContext extraCalculateStatementContext : ctx.extraCalculateStatement()) {
+                ApsCalculateAst extraAst = new ApsCalculateAst(this.current);
+                extraAst.left(new ApsResultPresentingAst(ast).resultingStatement(ast));
+                extraAst.symbol(extraCalculateStatementContext.operator().getText());
+                extraAst.right(visitCalculatableResultPresenting(extraCalculateStatementContext.calculatableResultPresenting()));
+
+                ast = extraAst;
+            }
+        }
+
+        return ast;
+    }
+
+    @Override
+    public ApsResultPresentingAst visitCalculateLeft(ApsarsParser.CalculateLeftContext ctx) {
+        return visitCalculatableResultPresenting(ctx.calculatableResultPresenting());
+    }
+
+    @Override
+    public ApsResultPresentingAst visitCalculateRight(ApsarsParser.CalculateRightContext ctx) {
+        return visitCalculatableResultPresenting(ctx.calculatableResultPresenting());
+    }
+
+    @Override
+    public ApsResultPresentingAst visitCalculatableResultPresenting(ApsarsParser.CalculatableResultPresentingContext ctx) {
+        ApsResultPresentingAst ast = this.current instanceof ApsResultPresentingAst presentingAst ? presentingAst : new ApsResultPresentingAst(this.current);
+        if (ctx.invokeStatement() != null) {
+            ast.resultingStatement(visitInvokeStatement(ctx.invokeStatement()));
+        } else if (ctx.newInstanceStatement() != null) {
+            ast.resultingStatement(visitNewInstanceStatement(ctx.newInstanceStatement()));
+        } else if (ctx.constant() != null) {
+            ast.constantLiteral(visitConstant(ctx.constant()));
+        } else if (ctx.calculateStatementWithParen() != null) {
+            ast.resultingStatement(visitCalculateStatementWithParen(ctx.calculateStatementWithParen()));
+        }
+        return ast;
+    }
+
+    @Override
+    public ApsCalculateAst visitCalculateStatementWithParen(ApsarsParser.CalculateStatementWithParenContext ctx) {
+        ApsCalculateAst ast = new ApsCalculateAst(this.current);
+        ast.leftWithParen(true);
+        ast.left(visitCalculateLeftStatementWithParen(ctx.calculateLeftStatementWithParen()));
+        if (ctx.operator() != null) {
+            ast.symbol(ctx.operator().getText());
+            ast.right(visitCalculateRightStatementWithParen(ctx.calculateRightStatementWithParen()));
+        }
+        return ast;
+    }
+
+    @Override
+    public ApsResultPresentingAst visitCalculateRightStatementWithParen(ApsarsParser.CalculateRightStatementWithParenContext ctx) {
+        if (ctx.calculateStatement() != null) {
+            return new ApsResultPresentingAst(this.current).resultingStatement(visitCalculateStatement(ctx.calculateStatement()));
+        }
+        return visitCalculatableResultPresenting(ctx.calculatableResultPresenting());
+    }
+
+    @Override
+    public ApsResultPresentingAst visitCalculateLeftStatementWithParen(ApsarsParser.CalculateLeftStatementWithParenContext ctx) {
+        if (ctx.calculateStatement() != null) {
+            return new ApsResultPresentingAst(this.current).resultingStatement(visitCalculateStatement(ctx.calculateStatement()));
+        }
+        return visitCalculatableResultPresenting(ctx.calculatableResultPresenting());
     }
 
     @Override

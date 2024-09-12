@@ -8,19 +8,10 @@ class Sample2 {
     public static Logger field2 = LogManager.getLogger("Sample2");
 
     public static void main(String[] args) {
-        String str = null;
-        if (true) {
-            System.out.println("trues");
-            str = "result1";
-        } else if (false) {
-            System.out.println("falses");
-            str = "result2";
-        } else if (true) {
-            System.out.println("elses");
-            str = "result3";
-        } else if (false) {
-            System.out.println("No_results");
-        }
+        int x = 1 + 1;
+        int y = (1 + 100) + (1 + 456);
+        int z = 1 + (1 + 123 + 567);
+        int awa = (1 + 1) + 123 + 456 + 789;
     }
 
     private static void handleErr(Throwable err) {

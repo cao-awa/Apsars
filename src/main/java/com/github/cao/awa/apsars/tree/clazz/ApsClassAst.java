@@ -80,23 +80,26 @@ public class ApsClassAst extends ApsAst implements ApsModifierRequiredAst<ApsCla
     }
 
     @Override
-    public void print(String ident) {
+    public void print(String ident, boolean endElement) {
+        String concat = endElement ? " " : ".";
+
         System.out.println(ident + "|_ Aps class: " + this.nameIdentity);
         if (!this.modifiers.isEmpty()) {
-            System.out.println(ident + "    |_ Aps class modifier: ");
-            String modifierIdent = ident + "        ";
+            System.out.println(ident + concat + "   |_ Aps class modifier: ");
+            String modifierIdent = ident + ".       ";
             this.modifiers.forEach((type, modifier) -> {
                 System.out.println(modifierIdent + "|_ " + modifier.type() + ": " + modifier.literal());
             });
         }
-        System.out.println(ident + "    |_ params: ");
+        System.out.println(ident + concat + "   |_ params: ");
         for (ApsMemberParameterAst parameter : this.parameters) {
-            parameter.print(ident + "        ");
+            parameter.print(ident + concat + "   |   ");
         }
-        System.out.println(ident + "    |_ binders: " + this.binders);
-        System.out.println(ident + "    |_ methods: ");
+        System.out.println(ident + concat + "   |_ binders: " + this.binders);
+        System.out.println(ident + concat + "   |_ methods: ");
+        int i = 1;
         for (ApsMethodAst method : this.methods) {
-            method.print(ident + "        ");
+            method.print(ident + concat + "       ", i++ == this.methods.size());
         }
     }
 

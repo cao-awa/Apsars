@@ -100,7 +100,7 @@ public class ApsMethodBodyAst extends ApsAst {
 
         for (ApsStatementAst statement : this.statements) {
             System.out.print(ident + statements++ + ": ");
-            statement.print(ident);
+            statement.print(ident + "    ");
         }
     }
 

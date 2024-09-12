@@ -8,18 +8,10 @@ public class Sample2 {
     public static Logger field2 = LogManager.getLogger("Sample2");
 
     template main {
-        String str = if (true) {
-            System.out.println("trues");
-            yield "result1";
-        } else if (false) {
-            System.out.println("falses");
-            yield "result2";
-        } else if(true) {
-            System.out.println("elses");
-            yield "result3";
-        } else if (false) {
-            System.out.println("No_results");
-        }
+        int x = 1 + 1;
+        int y = (1 + 100) + (1 + 456);
+        int z = 1 + (1 + 123 + 567);
+        int awa = (1 + 1) + 123 + 456 + 789;
     }
 
     static handleErr(err: Throwable) {

@@ -6,7 +6,11 @@ defineStatement: theStatement+ ;
 
 theStatement: (tryStatement | resultingStatement | defineVariableStatement | returnStatement | yieldStatement ) semicolon?;
 
-resultingStatement: invokeStatement | ifStatement ;
+resultPresenting: constant | resultingStatement ;
+
+resultingStatement: invokeStatement | newInstanceStatement | ifStatement | calculateStatement ;
+
+calculatableResultPresenting: calculateStatementWithParen | invokeStatement | newInstanceStatement | constant ;
 
 ifStatement: ifKeyword
              leftParen (
@@ -33,12 +37,32 @@ statementBlock: leftBrace (
                 ) rightBrace
 ;
 
+calculateStatementWithParen: leftParen ( calculateLeftStatementWithParen ) rightParen (operator ( calculateRightStatementWithParen ))? ;
+
+calculateLeftStatementWithParen: calculateStatement | calculatableResultPresenting ;
+
+calculateRightStatementWithParen: calculateStatement | calculatableResultPresenting ;
+
+calculateStatement: (calculateLeft operator calculateRight extraCalculateStatement*) | (calculateStatementWithTotalParen extraCalculateStatement*) | calculateStatementWithParen ;
+
+calculateStatementWithTotalParen: leftParen calculateLeft operator calculateRight extraCalculateStatement* rightParen;
+
+calculateLeft: calculatableResultPresenting ;
+
+calculateRight: calculatableResultPresenting ;
+
+extraCalculateStatement: operator calculatableResultPresenting ;
+
 returnStatement: returnKeyword resultPresenting ;
 
 yieldStatement: yieldKeyword resultPresenting ;
 
 // xxx(param?)
-invokeStatement: fullNameOrIdentifier leftParen invokeParamList? rightParen ;
+invokeStatement: fullNameOrIdentifier leftParen invokeParamList? rightParen fluentInvokeStatement*;
+
+fluentInvokeStatement: point identifier leftParen invokeParamList? rightParen ;
+
+newInstanceStatement: newKeyword identifier leftParen invokeParamList? rightParen ;
 
 tryStatement: Try
               leftBrace (
@@ -72,8 +96,6 @@ tryStatement: Try
                )
               )
 ;
-
-resultPresenting: constant | resultingStatement ;
 
 comparingStatement: resultPresenting (moreThan | lessThan) resultPresenting ;
 

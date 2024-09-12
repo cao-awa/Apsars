@@ -25,7 +25,7 @@ public class ApsMethodParameterAst extends ApsAst {
     @Override
     public void print(String ident) {
         this.params.forEach((key, value) -> {
-            value.print(ident + "    ");
+            value.print(ident);
         });
     }
 

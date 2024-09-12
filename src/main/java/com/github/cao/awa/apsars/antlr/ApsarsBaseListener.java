@@ -576,6 +576,24 @@ public class ApsarsBaseListener implements ApsarsListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
+    public void enterNewKeyword(ApsarsParser.NewKeywordContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void exitNewKeyword(ApsarsParser.NewKeywordContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
     public void enterIfKeyword(ApsarsParser.IfKeywordContext ctx) {
     }
 
@@ -604,6 +622,24 @@ public class ApsarsBaseListener implements ApsarsListener {
      */
     @Override
     public void exitElseKeyword(ApsarsParser.ElseKeywordContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void enterPoint(ApsarsParser.PointContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void exitPoint(ApsarsParser.PointContext ctx) {
     }
 
     /**
@@ -982,6 +1018,114 @@ public class ApsarsBaseListener implements ApsarsListener {
      */
     @Override
     public void exitWordOr(ApsarsParser.WordOrContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void enterPlus(ApsarsParser.PlusContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void exitPlus(ApsarsParser.PlusContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void enterMinus(ApsarsParser.MinusContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void exitMinus(ApsarsParser.MinusContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void enterMultiply(ApsarsParser.MultiplyContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void exitMultiply(ApsarsParser.MultiplyContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void enterDevide(ApsarsParser.DevideContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void exitDevide(ApsarsParser.DevideContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void enterPow(ApsarsParser.PowContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void exitPow(ApsarsParser.PowContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void enterOperator(ApsarsParser.OperatorContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void exitOperator(ApsarsParser.OperatorContext ctx) {
     }
 
     /**
@@ -1764,6 +1908,24 @@ public class ApsarsBaseListener implements ApsarsListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
+    public void enterResultPresenting(ApsarsParser.ResultPresentingContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void exitResultPresenting(ApsarsParser.ResultPresentingContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
     public void enterResultingStatement(ApsarsParser.ResultingStatementContext ctx) {
     }
 
@@ -1774,6 +1936,24 @@ public class ApsarsBaseListener implements ApsarsListener {
      */
     @Override
     public void exitResultingStatement(ApsarsParser.ResultingStatementContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void enterCalculatableResultPresenting(ApsarsParser.CalculatableResultPresentingContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void exitCalculatableResultPresenting(ApsarsParser.CalculatableResultPresentingContext ctx) {
     }
 
     /**
@@ -1854,6 +2034,150 @@ public class ApsarsBaseListener implements ApsarsListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
+    public void enterCalculateStatementWithParen(ApsarsParser.CalculateStatementWithParenContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void exitCalculateStatementWithParen(ApsarsParser.CalculateStatementWithParenContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void enterCalculateLeftStatementWithParen(ApsarsParser.CalculateLeftStatementWithParenContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void exitCalculateLeftStatementWithParen(ApsarsParser.CalculateLeftStatementWithParenContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void enterCalculateRightStatementWithParen(ApsarsParser.CalculateRightStatementWithParenContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void exitCalculateRightStatementWithParen(ApsarsParser.CalculateRightStatementWithParenContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void enterCalculateStatement(ApsarsParser.CalculateStatementContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void exitCalculateStatement(ApsarsParser.CalculateStatementContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void enterCalculateStatementWithTotalParen(ApsarsParser.CalculateStatementWithTotalParenContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void exitCalculateStatementWithTotalParen(ApsarsParser.CalculateStatementWithTotalParenContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void enterCalculateLeft(ApsarsParser.CalculateLeftContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void exitCalculateLeft(ApsarsParser.CalculateLeftContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void enterCalculateRight(ApsarsParser.CalculateRightContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void exitCalculateRight(ApsarsParser.CalculateRightContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void enterExtraCalculateStatement(ApsarsParser.ExtraCalculateStatementContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void exitExtraCalculateStatement(ApsarsParser.ExtraCalculateStatementContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
     public void enterReturnStatement(ApsarsParser.ReturnStatementContext ctx) {
     }
 
@@ -1908,6 +2232,42 @@ public class ApsarsBaseListener implements ApsarsListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
+    public void enterFluentInvokeStatement(ApsarsParser.FluentInvokeStatementContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void exitFluentInvokeStatement(ApsarsParser.FluentInvokeStatementContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void enterNewInstanceStatement(ApsarsParser.NewInstanceStatementContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void exitNewInstanceStatement(ApsarsParser.NewInstanceStatementContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
     public void enterTryStatement(ApsarsParser.TryStatementContext ctx) {
     }
 
@@ -1918,24 +2278,6 @@ public class ApsarsBaseListener implements ApsarsListener {
      */
     @Override
     public void exitTryStatement(ApsarsParser.TryStatementContext ctx) {
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
-     */
-    @Override
-    public void enterResultPresenting(ApsarsParser.ResultPresentingContext ctx) {
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
-     */
-    @Override
-    public void exitResultPresenting(ApsarsParser.ResultPresentingContext ctx) {
     }
 
     /**

@@ -9,7 +9,7 @@ import com.github.cao.awa.apsars.element.modifier.method.ApsMethodModifier;
 import com.github.cao.awa.apsars.element.modifier.parameter.ApsMemberParameterModifier;
 import com.github.cao.awa.apsars.parser.token.keyword.method.ApsMethodKeyword;
 import com.github.cao.awa.apsars.tree.method.ApsMethodAst;
-import com.github.cao.awa.apsars.tree.statement.ApsResultPresentingAst;
+import com.github.cao.awa.apsars.tree.statement.result.ApsResultPresentingAst;
 import com.github.cao.awa.apsars.tree.vararg.ApsAstWithVarargs;
 import com.github.cao.awa.sinuatum.manipulate.Manipulate;
 import lombok.Getter;
@@ -64,16 +64,16 @@ public class ApsMemberParameterAst extends ApsAstWithVarargs implements ApsModif
     @Override
     public void print(String ident) {
         System.out.println(ident + "|_ Aps member parameter: " + this.nameIdentity);
-        System.out.println(ident + "    |_ type: ");
-        argType().print(ident + "        ");
+        System.out.println(ident + ".   |_ type: ");
+        argType().print(ident + ".   |   ");
         if (this.value == null) {
-            System.out.println(ident + "    |_ value: " + "<UNSETTED>");
+            System.out.println(ident + ".   |_ value: " + "<UNSETTED>");
         } else {
-            System.out.print(ident + "    |_ value: ");
-            this.value.print("");
+            System.out.print(ident + ".   |_ value: ");
+            this.value.print(ident + ".   |");
         }
-        System.out.println(ident + "    |_ Aps member parameter modifier: ");
-        ident += "        ";
+        System.out.println(ident + ".   |_ Aps member parameter modifier: ");
+        ident += ".        ";
         for (ApsMemberParameterModifier apsMemberParameterModifier : this.modifiers.values()) {
             System.out.println(ident + "|_ " + apsMemberParameterModifier.type() + ": " + apsMemberParameterModifier.literal());
         }

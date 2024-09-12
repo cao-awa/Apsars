@@ -1,7 +1,6 @@
 package com.github.cao.awa.apsars.tree.statement.result;
 
 import com.github.cao.awa.apsars.tree.ApsAst;
-import com.github.cao.awa.apsars.tree.statement.ApsResultPresentingAst;
 import com.github.cao.awa.apsars.tree.statement.ApsStatementAst;
 import lombok.Getter;
 import lombok.Setter;

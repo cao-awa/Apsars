@@ -14,7 +14,7 @@ import com.github.cao.awa.apsars.tree.annotation.ApsAnnotationAst;
 import com.github.cao.awa.apsars.tree.clazz.ApsClassAst;
 import com.github.cao.awa.apsars.tree.method.parameter.ApsMethodParamElementAst;
 import com.github.cao.awa.apsars.tree.method.parameter.ApsMethodParameterAst;
-import com.github.cao.awa.apsars.tree.statement.ApsResultPresentingAst;
+import com.github.cao.awa.apsars.tree.statement.result.ApsResultPresentingAst;
 import com.github.cao.awa.apsars.tree.statement.result.ApsReturnAst;
 import com.github.cao.awa.apsars.tree.statement.special.literal.ApsLiteralStatementAst;
 import com.github.cao.awa.apsars.tree.statement.trys.ApsCatchListAst;
@@ -100,12 +100,14 @@ public class ApsMethodAst extends ApsAst implements ApsModifierRequiredAst<ApsMe
     }
 
     @Override
-    public void print(String ident) {
+    public void print(String ident, boolean endElement) {
+        String concat = endElement ? " " : "|";
+
         System.out.println(ident + "|_ Aps method: " + this.nameIdentity);
-        ident += "    ";
+        ident += concat + "   ";
         if (!this.modifiers.isEmpty()) {
             System.out.println(ident + "|_ Aps method modifier: ");
-            String modifierIdent = ident + "    ";
+            String modifierIdent = ident + ".   ";
             this.modifiers.forEach((type, modifier) -> {
                 System.out.println(modifierIdent + "|_ " + modifier.type() + ": " + modifier.literal());
             });
@@ -119,7 +121,7 @@ public class ApsMethodAst extends ApsAst implements ApsModifierRequiredAst<ApsMe
 
         if (this.param != null && !this.param.names().isEmpty()) {
             System.out.println(ident + "|_ params: ");
-            this.param.print(ident);
+            this.param.print(ident + ".   ");
         }
         if (this.methodBody != null) {
             this.methodBody.print(ident);

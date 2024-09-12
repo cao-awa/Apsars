@@ -19,7 +19,13 @@ public abstract class ApsAst implements ApsJavaGenerator {
         print("");
     }
 
-    public abstract void print(String ident);
+    public void print(String ident) {
+        print(ident, true);
+    }
+
+    public void print(String ident, boolean endElement) {
+        print(ident);
+    }
 
     public void prepares() {
         preprocess();

@@ -4,6 +4,7 @@ import com.github.cao.awa.apricot.util.collection.ApricotCollectionFactor;
 import com.github.cao.awa.apsars.tree.ApsAst;
 import com.github.cao.awa.apsars.tree.clazz.ApsClassAst;
 import com.github.cao.awa.apsars.tree.clazz.inherit.ApsBinderAst;
+import com.github.cao.awa.apsars.tree.vararg.ApsArgTypeAst;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -41,14 +42,17 @@ public class ApsFileAst extends ApsAst {
     public void print(String ident) {
         System.out.println("--Aps file");
         System.out.println("    |_ package at: " + this.packageAt);
+        int i = 1;
         for (ApsImportAst importAst : this.imports) {
-            importAst.print(ident + "    ");
+            importAst.print(ident + "    ", i++ == this.imports.size());
         }
+        i = 1;
         for (ApsClassAst classAst : this.classes) {
-            classAst.print(ident + "    ");
+            classAst.print(ident + "    ", i++ == this.classes.size());
         }
+        i = 1;
         for (ApsBinderAst binderAst : this.binders) {
-            binderAst.print(ident + "    ");
+            binderAst.print(ident + "    ", i++ == this.binders.size());
         }
     }
 
@@ -82,5 +86,15 @@ public class ApsFileAst extends ApsAst {
         importAst.importStatic(true);
         importAst.importAll(true);
         addImport(importAst);
+    }
+
+    public ApsArgTypeAst findValidArgType(String name) {
+        for (ApsImportAst anImport : this.imports) {
+            if (anImport.argType().nameIdentity().equals(name)) {
+                return anImport.argType();
+            }
+        }
+
+        return null;
     }
 }

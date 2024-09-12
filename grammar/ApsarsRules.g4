@@ -85,8 +85,13 @@ sync : isSync | isSynchronized ;
 template : 'template' ;
 
 // Control statement.
+newKeyword  : 'new'      ;
 ifKeyword   : 'if'       ;
 elseKeyword : 'else'     ;
+
+// Point.
+Point : '.'   ;
+point : Point ;
 
 // Braces.
 LeftBrace  : '{'        ;
@@ -140,6 +145,19 @@ argAnd  : ArgAnd  ;
 argOr   : ArgOr   ;
 wordAnd : WordAnd ;
 wordOr  : WordOr  ;
+
+// Operators.
+Plus     : '+'                                    ;
+Minus    : '-'                                    ;
+Multiply : '*'                                    ;
+Devide   : '/'                                    ;
+Pow      : '^'                                    ;
+plus     : Plus                                   ;
+minus    : Minus                                  ;
+multiply : Multiply                               ;
+devide   : Devide                                 ;
+pow      : Pow                                    ;
+operator : Plus | Minus | Multiply | Devide | Pow ;
 
 //
 Quotation : '"' ;

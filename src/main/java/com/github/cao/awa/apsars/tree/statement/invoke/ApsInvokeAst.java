@@ -3,9 +3,8 @@ package com.github.cao.awa.apsars.tree.statement.invoke;
 import com.github.cao.awa.apricot.util.collection.ApricotCollectionFactor;
 import com.github.cao.awa.apsars.parser.token.ApsTokens;
 import com.github.cao.awa.apsars.tree.ApsAst;
-import com.github.cao.awa.apsars.tree.statement.ApsResultPresentingAst;
-import com.github.cao.awa.apsars.tree.statement.ApsResultingStatementAst;
-import com.github.cao.awa.apsars.tree.statement.ApsStatementAst;
+import com.github.cao.awa.apsars.tree.statement.result.ApsResultPresentingAst;
+import com.github.cao.awa.apsars.tree.statement.result.ApsResultingStatementAst;
 import com.github.cao.awa.apsars.tree.vararg.ApsArgTypeAst;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,10 +21,15 @@ public class ApsInvokeAst extends ApsResultingStatementAst {
     private final List<ApsResultPresentingAst> params = ApricotCollectionFactor.arrayList();
     @Getter
     @Setter
-    private ApsStatementAst fluentInvoke;
+    private List<ApsInvokeAst> fluentInvoke = ApricotCollectionFactor.arrayList();
+    @Getter
+    @Setter
+    private boolean isFluent = false;
 
-    public void addParam(ApsResultPresentingAst param) {
+    public ApsInvokeAst addParam(ApsResultPresentingAst param) {
         this.params.add(param);
+
+        return this;
     }
 
     public ApsInvokeAst(ApsAst ast) {
@@ -38,17 +42,23 @@ public class ApsInvokeAst extends ApsResultingStatementAst {
     }
 
     @Override
-    public void print(String ident) {
-        System.out.println("Aps invoke: " + this.nameIdentity + (this.fluentInvoke == null ? "" : " (fluent" + (withEnd() ? "/end" : "") + ")"));
-        if (this.fluentInvoke != null) {
-            System.out.println(ident + "    |_ invoke parent: " + this.fluentInvoke.generateJava());
+    public void print(String ident, boolean endElement) {
+        System.out.println("Aps invoke: " + this.nameIdentity + (this.fluentInvoke.isEmpty() ? "" : " (fluent" + (withEnd() ? "/end" : "") + ")"));
+        if (!this.fluentInvoke.isEmpty()) {
+            System.out.println(ident + "|_ next invoke: ");
+            int i = 1;
+            for (ApsInvokeAst fluentInvoke : this.fluentInvoke) {
+                System.out.print(ident + "   " + i + ": ");
+                fluentInvoke.print(ident, i++ == this.fluentInvoke.size());
+            }
         }
         if (!this.params.isEmpty()) {
-            System.out.println(ident + "    |_ params: ");
+            System.out.println(ident + "|_ params: ");
             int i = 0;
+            ident = ident + "   ";
             for (ApsResultPresentingAst param : this.params) {
-                System.out.print(ident + "        " + i++ + ": ");
-                param.print("");
+                System.out.print(ident + i++ + ": ");
+                param.print(ident);
             }
         }
     }
@@ -60,13 +70,29 @@ public class ApsInvokeAst extends ApsResultingStatementAst {
 
     @Override
     public void generateJava(StringBuilder builder) {
-        if (this.fluentInvoke != null) {
+        if (this.isFluent) {
             builder.append(".");
         }
 
         builder.append(this.nameIdentity);
         builder.append("(");
 
+        generateParams(builder);
+
+        builder.append(")");
+
+        if (!this.fluentInvoke.isEmpty()) {
+            for (ApsInvokeAst fluent : this.fluentInvoke) {
+                fluent.generateJava(builder);
+            }
+        }
+
+        if (withEnd()) {
+            builder.append(ApsTokens.SEMICOLON);
+        }
+    }
+
+    public void generateParams(StringBuilder builder) {
         int edge = this.params.size() - 1;
         int index = 0;
         for (ApsResultPresentingAst param : this.params) {
@@ -75,12 +101,6 @@ public class ApsInvokeAst extends ApsResultingStatementAst {
                 builder.append(",");
             }
             index++;
-        }
-
-        builder.append(")");
-
-        if (withEnd()) {
-            builder.append(ApsTokens.SEMICOLON);
         }
     }
 }
