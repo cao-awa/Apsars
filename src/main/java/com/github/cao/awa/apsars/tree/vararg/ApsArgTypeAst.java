@@ -8,21 +8,17 @@ import lombok.experimental.Accessors;
 
 import java.util.LinkedList;
 
+@Getter
 @Accessors(fluent = true)
 public class ApsArgTypeAst extends ApsAst {
     public static final ApsArgTypeAst UNKNOWN = new ApsArgTypeAst(null);
-
     private final LinkedList<ApsArgTypeAst> args = ApricotCollectionFactor.linkedList();
-    @Getter
     @Setter
     private String nameIdentity;
-    @Getter
     @Setter
     private boolean arrayArgType = false;
-    @Getter
     @Setter
     private int arraySize = -1;
-    @Getter
     @Setter
     private int arrayDepth = 1;
 
@@ -46,35 +42,6 @@ public class ApsArgTypeAst extends ApsAst {
         System.out.println(ident + "|_ " + this.nameIdentity + varargCountBuilder + (this.arrayArgType ? "[?]".repeat(this.arrayDepth) : ""));
         for (ApsArgTypeAst argType : this.args) {
             argType.print(ident + "    ");
-        }
-    }
-
-    @Override
-    public void generateJava(StringBuilder builder) {
-        builder.append(this.nameIdentity);
-        if (!this.args.isEmpty()) {
-            builder.append("<");
-            LinkedList<ApsArgTypeAst> args = this.args;
-            int size = args.size();
-            int edge = size - 1;
-            for (int i = 0; i < size; i++) {
-                ApsArgTypeAst arg = args.get(i);
-                arg.generateJava(builder);
-                if (i != edge) {
-                    builder.append(",");
-                }
-            }
-            builder.append(">");
-        }
-        if (this.arrayArgType) {
-            int depth = this.arrayDepth;
-            while (depth-- > 0) {
-                builder.append("[");
-                if (this.arraySize == 1) {
-                    builder.append(this.arraySize);
-                }
-                builder.append("]");
-            }
         }
     }
 

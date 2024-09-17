@@ -9,6 +9,9 @@ import com.github.cao.awa.apsars.element.modifier.method.ApsMethodModifier;
 import com.github.cao.awa.apsars.element.modifier.method.parameter.ApsMethodParamModifier;
 import com.github.cao.awa.apsars.parser.token.keyword.method.ApsMethodKeyword;
 import com.github.cao.awa.apsars.parser.token.keyword.method.ApsMethodParamKeyword;
+import com.github.cao.awa.apsars.translate.ApsTranslator;
+import com.github.cao.awa.apsars.translate.lang.TranslateTarget;
+import com.github.cao.awa.apsars.translate.lang.element.TranslateElement;
 import com.github.cao.awa.apsars.tree.ApsAst;
 import com.github.cao.awa.apsars.tree.annotation.ApsAnnotationAst;
 import com.github.cao.awa.apsars.tree.clazz.ApsClassAst;
@@ -27,36 +30,31 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
+import javax.annotation.Nullable;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 
+@Getter
 @Accessors(fluent = true)
 public class ApsMethodAst extends ApsAst implements ApsModifierRequiredAst<ApsMethodModifier> {
     @Setter
-    @Getter
     private String nameIdentity;
-    @Getter
     @Setter
     private ApsArgTypeAst returnType;
-    @Getter
     @Setter
     private ApsMethodParameterAst param;
-    @Getter
     @Setter
     private ApsMethodBodyAst methodBody;
-    @Getter
     @Setter
     private ApsMethodExtraCatchAst extraCatch;
-    @Getter
     @Setter
     private boolean isBinder;
-    @Getter
     @Setter
     private boolean isVirtual;
     private final Map<ApsMethodModifierType, ApsMethodModifier> modifiers = ApricotCollectionFactor.hashMap();
-    @Getter
     @Setter
     private ApsAccessibleModifier accessible = ApsAccessibleType.PRIVATE.generic();
     private final Map<String, ApsAnnotationAst> annotations = ApricotCollectionFactor.hashMap();
@@ -66,7 +64,15 @@ public class ApsMethodAst extends ApsAst implements ApsModifierRequiredAst<ApsMe
         super(parent);
     }
 
-    public void addModifier(ApsMethodModifier modifier) {
+    @Override
+    public Collection<ApsMethodModifier> modifierValues() {
+        return this.modifiers.values();
+    }
+
+    public void addModifier(@Nullable ApsMethodModifier modifier) {
+        if (modifier == null) {
+            return;
+        }
         ApsMethodModifier definedModifier = this.modifiers.get(modifier.type());
         if (definedModifier != null) {
             throw new IllegalArgumentException("The modifier type '" + definedModifier.type() + "' already defined as '" + definedModifier.literal() + "'");
@@ -99,6 +105,10 @@ public class ApsMethodAst extends ApsAst implements ApsModifierRequiredAst<ApsMe
         this.compilerFlags.addAll(List.of(flag));
     }
 
+    public boolean hasExtraCatch() {
+        return this.extraCatch != null;
+    }
+
     @Override
     public void print(String ident, boolean endElement) {
         String concat = endElement ? " " : "|";
@@ -119,7 +129,7 @@ public class ApsMethodAst extends ApsAst implements ApsModifierRequiredAst<ApsMe
             this.returnType.print(ident + "    ");
         }
 
-        if (this.param != null && !this.param.names().isEmpty()) {
+        if (this.param != null && !this.param.params().isEmpty()) {
             System.out.println(ident + "|_ params: ");
             this.param.print(ident + ".   ");
         }
@@ -140,69 +150,6 @@ public class ApsMethodAst extends ApsAst implements ApsModifierRequiredAst<ApsMe
             for (ApsAnnotationAst annotationAst : this.annotations.values()) {
                 System.out.println(ident + "    |_ " + annotationAst.nameIdentity());
             }
-        }
-    }
-
-    @Override
-    public void generateJava(StringBuilder builder) {
-        if (!this.annotations.isEmpty()) {
-            for (ApsAnnotationAst annotationAst : this.annotations.values()) {
-                annotationAst.generateJava(builder);
-                builder.append(" ");
-            }
-        }
-
-        if (!this.isBinder) {
-            builder.append(this.accessible.getAccessibleType().literal());
-            builder.append(" ");
-
-            // 设置修饰符
-            for (ApsMethodModifierType modifierType : ApsMethodModifierType.values()) {
-                Manipulate.notNull(this.modifiers.get(modifierType), modifier -> {
-                    if (modifier.isLiteral()) {
-                        builder.append(modifier.literal());
-                        builder.append(" ");
-                    }
-                });
-            }
-        }
-
-        if (this.isBinder && !this.isVirtual) {
-            builder.append("default ");
-        }
-
-        if (this.returnType == null) {
-            builder.append("void");
-        } else {
-            this.returnType.generateJava(builder);
-        }
-        builder.append(" ");
-
-        builder.append(this.nameIdentity);
-        builder.append("(");
-        if (this.param != null) {
-            this.param.generateJava(builder);
-        }
-        builder.append(")");
-
-        if (!this.isVirtual) {
-            if (this.extraCatch == null) {
-                if (this.methodBody == null) {
-                    builder.append("{}");
-                } else {
-                    builder.append("{");
-                    this.methodBody.generateJava(builder);
-                    builder.append("}");
-                }
-            } else {
-                this.extraCatch.generateJava(builder, (innerBuilder) -> {
-                    if (this.methodBody != null) {
-                        this.methodBody.generateJava(innerBuilder);
-                    }
-                });
-            }
-        } else {
-            builder.append(";");
         }
     }
 
@@ -250,8 +197,8 @@ public class ApsMethodAst extends ApsAst implements ApsModifierRequiredAst<ApsMe
 
             StringBuilder paramBuilder = new StringBuilder();
             int index = 0;
-            int edge = this.param.names().size() - 1;
-            for (String name : this.param.names()) {
+            int edge = this.param.params().size() - 1;
+            for (String name : this.param.params().keySet()) {
                 paramBuilder.append(name);
                 if (index != edge) {
                     paramBuilder.append(",");
@@ -269,7 +216,7 @@ public class ApsMethodAst extends ApsAst implements ApsModifierRequiredAst<ApsMe
             if (this.returnType == null) {
                 invokeStatementAst = new ApsLiteralStatementAst(selfMethodBody, safepointMethod + "(" + paramBuilder + ")");
             } else {
-                invokeStatementAst = new ApsLiteralStatementAst(selfMethodBody, this.returnType.generateJava() + " result=" + safepointMethod + "(" + paramBuilder + ")");
+                invokeStatementAst = new ApsLiteralStatementAst(selfMethodBody, ApsTranslator.translate(TranslateTarget.JAVA, TranslateElement.ARG_TYPE, this.returnType) + " result=" + safepointMethod + "(" + paramBuilder + ")");
             }
 
             selfMethodBody.addStatement(invokeStatementAst);

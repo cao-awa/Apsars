@@ -11,7 +11,7 @@ public class Sample2 {
         int x = (1 + 1);
         int y = (1 + 100) + (1 + 456);
         int z = 1 + (1 + 123 + 567);
-        int awa = (1 + 1) + 123 + 456 + ((((((789))))));
+        int awa = (1 + 1) + (1234) + 456 + ((((((789))))));
     }
 
     static handleErr(err: Throwable) {

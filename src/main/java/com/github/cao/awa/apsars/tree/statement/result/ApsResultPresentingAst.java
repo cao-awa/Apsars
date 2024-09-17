@@ -1,25 +1,21 @@
 package com.github.cao.awa.apsars.tree.statement.result;
 
+import com.github.cao.awa.apsars.translate.ApsTranslator;
+import com.github.cao.awa.apsars.translate.lang.TranslateTarget;
+import com.github.cao.awa.apsars.translate.lang.element.TranslateElement;
 import com.github.cao.awa.apsars.tree.ApsAst;
 import com.github.cao.awa.apsars.tree.statement.special.literal.ApsLiteralStatementAst;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
+@Setter
+@Getter
 @Accessors(fluent = true)
 public class ApsResultPresentingAst extends ApsAst {
-    @Getter
-    @Setter
     private ApsLiteralStatementAst constantLiteral;
-    @Getter
-    @Setter
     private String refToken;
-    @Getter
-    @Setter
     private ApsResultingStatementAst resultingStatement;
-//    @Getter
-//    @Setter
-//    private String refToken;
 
     public ApsResultPresentingAst(ApsAst parent) {
         super(parent);
@@ -32,7 +28,7 @@ public class ApsResultPresentingAst extends ApsAst {
         } else if (this.resultingStatement != null) {
             this.resultingStatement.print(ident);
         } else if (this.constantLiteral != null) {
-            System.out.println("Constant: " + this.constantLiteral.generateJava());
+            System.out.println("Constant: " + ApsTranslator.translate(TranslateTarget.JAVA, TranslateElement.LITERAL_STATEMENT, this.constantLiteral));
         }
     }
 
@@ -44,17 +40,6 @@ public class ApsResultPresentingAst extends ApsAst {
 
         if (this.constantLiteral != null) {
             this.constantLiteral.preprocess();
-        }
-    }
-
-    @Override
-    public void generateJava(StringBuilder builder) {
-        if (this.refToken != null) {
-            builder.append(this.refToken);
-        } else if (this.resultingStatement != null) {
-            this.resultingStatement.generateJava(builder);
-        } else if (this.constantLiteral != null) {
-            this.constantLiteral.generateJava(builder);
         }
     }
 }

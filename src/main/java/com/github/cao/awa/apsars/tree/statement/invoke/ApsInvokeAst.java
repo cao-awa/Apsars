@@ -1,7 +1,6 @@
 package com.github.cao.awa.apsars.tree.statement.invoke;
 
 import com.github.cao.awa.apricot.util.collection.ApricotCollectionFactor;
-import com.github.cao.awa.apsars.parser.token.ApsTokens;
 import com.github.cao.awa.apsars.tree.ApsAst;
 import com.github.cao.awa.apsars.tree.statement.result.ApsResultPresentingAst;
 import com.github.cao.awa.apsars.tree.statement.result.ApsResultingStatementAst;
@@ -66,41 +65,5 @@ public class ApsInvokeAst extends ApsResultingStatementAst {
     @Override
     public void preprocess() {
 
-    }
-
-    @Override
-    public void generateJava(StringBuilder builder) {
-        if (this.isFluent) {
-            builder.append(".");
-        }
-
-        builder.append(this.nameIdentity);
-        builder.append("(");
-
-        generateParams(builder);
-
-        builder.append(")");
-
-        if (!this.fluentInvoke.isEmpty()) {
-            for (ApsInvokeAst fluent : this.fluentInvoke) {
-                fluent.generateJava(builder);
-            }
-        }
-
-        if (withEnd()) {
-            builder.append(ApsTokens.SEMICOLON);
-        }
-    }
-
-    public void generateParams(StringBuilder builder) {
-        int edge = this.params.size() - 1;
-        int index = 0;
-        for (ApsResultPresentingAst param : this.params) {
-            param.generateJava(builder);
-            if (index != edge) {
-                builder.append(",");
-            }
-            index++;
-        }
     }
 }

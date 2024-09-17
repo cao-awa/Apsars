@@ -1,7 +1,10 @@
 package com.github.cao.awa.apsars.tree.clazz.inherit;
 
 import com.github.cao.awa.apricot.util.collection.ApricotCollectionFactor;
+import com.github.cao.awa.apsars.element.ApsAccessibleType;
 import com.github.cao.awa.apsars.element.clazz.inherit.ApsBinderModifierType;
+import com.github.cao.awa.apsars.element.modifier.ApsAccessibleModifier;
+import com.github.cao.awa.apsars.element.modifier.ApsModifierRequiredAst;
 import com.github.cao.awa.apsars.element.modifier.clazz.inherit.ApsBinderModifier;
 import com.github.cao.awa.apsars.tree.ApsAst;
 import com.github.cao.awa.apsars.tree.method.ApsMethodAst;
@@ -10,18 +13,18 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+@Getter
 @Accessors(fluent = true)
-public class ApsBinderAst extends ApsAst {
+public class ApsBinderAst extends ApsAst implements ApsModifierRequiredAst<ApsBinderModifier> {
     @Setter
-    @Getter
     private String nameIdentity;
     private final Map<ApsBinderModifierType, ApsBinderModifier> modifiers = ApricotCollectionFactor.hashMap();
-    @Getter
+    private ApsAccessibleModifier accessible = ApsAccessibleType.PUBLIC.generic();
     private final List<ApsBindingParameterAst> parameters = ApricotCollectionFactor.arrayList();
-    @Getter
     private final List<ApsMethodAst> methods = ApricotCollectionFactor.arrayList();
 
     public ApsBinderAst(ApsAst parent) {
@@ -36,12 +39,22 @@ public class ApsBinderAst extends ApsAst {
         this.methods.add(methodAst);
     }
 
+    @Override
+    public Collection<ApsBinderModifier> modifierValues() {
+        return this.modifiers.values();
+    }
+
     public void addModifier(ApsBinderModifier modifier) {
         ApsBinderModifier definedModifier = this.modifiers.get(modifier.type());
         if (definedModifier != null) {
             throw new IllegalArgumentException("The modifier type '" + definedModifier.type() + "' already defined as '" + definedModifier.literal() + "'");
         }
         this.modifiers.put(modifier.type(), modifier);
+    }
+
+    @Override
+    public void addAccessible(ApsAccessibleModifier modifier) {
+        this.accessible = modifier;
     }
 
     @Override
@@ -79,28 +92,5 @@ public class ApsBinderAst extends ApsAst {
             methodAst.isBinder(true);
             methodAst.preprocess();
         }
-    }
-
-    @Override
-    public void generateJava(StringBuilder builder) {
-        // 设置修饰符
-//        for (ApsClassModifierType modifierType : ApsClassModifierType.values()) {
-//            Manipulate.notNull(this.modifiers.get(modifierType), modifier -> {
-//                if (modifier.isLiteral()) {
-//                    builder.append(modifier.literal());
-//                    builder.append(" ");
-//                }
-//            });
-//        }
-
-        builder.append("interface ");
-        builder.append(this.nameIdentity);
-        builder.append("{");
-
-        for (ApsMethodAst methodAst : this.methods) {
-            methodAst.generateJava(builder);
-        }
-
-        builder.append("}");
     }
 }

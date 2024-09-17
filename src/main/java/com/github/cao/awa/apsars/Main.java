@@ -3,7 +3,10 @@ package com.github.cao.awa.apsars;
 import com.github.cao.awa.apricot.util.io.IOUtil;
 import com.github.cao.awa.apsars.antlr.ApsarsLexer;
 import com.github.cao.awa.apsars.antlr.ApsarsParser;
-import com.github.cao.awa.apsars.tree.ApsAst;
+import com.github.cao.awa.apsars.translate.ApsTranslator;
+import com.github.cao.awa.apsars.translate.lang.TranslateTarget;
+import com.github.cao.awa.apsars.translate.lang.element.TranslateElement;
+import com.github.cao.awa.apsars.tree.aps.ApsFileAst;
 import com.github.cao.awa.apsars.visitor.ApsarsTreeVisitor;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.ErrorNode;
@@ -15,13 +18,15 @@ import java.io.FileReader;
 public class Main {
     public static void main(String[] args) {
         try {
+            ApsTranslator.registerJava();
+
             String aps = IOUtil.read(new FileReader("aps/sample.aps"));
             System.out.println(aps);
 
             ApsarsLexer lexer = new ApsarsLexer(CharStreams.fromString(aps));
             TokenStream tokens = new CommonTokenStream(lexer);
             ApsarsParser parser = new ApsarsParser(tokens);
-            ParseTree programContext = parser.program();
+            ApsarsParser.ProgramContext programContext = parser.program();
             parser.addErrorListener(new BaseErrorListener() {
                 @Override
                 public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol, int line, int charPositionInLine, String msg, RecognitionException e) {
@@ -38,7 +43,7 @@ public class Main {
             System.out.println("-- Visiting");
 
             ApsarsTreeVisitor visitor = new ApsarsTreeVisitor();
-            ApsAst ast = visitor.visit(programContext);
+            ApsFileAst ast = visitor.visitProgram(programContext);
 
             ast.prepares();
             
@@ -48,7 +53,8 @@ public class Main {
 
             System.out.println("-- Generate java");
 
-            System.out.println(ast.generateJava());
+            String generatedJava = ApsTranslator.translate(TranslateTarget.JAVA, TranslateElement.FILE, ast);
+            System.out.println(generatedJava);
         } catch (Exception e) {
             e.printStackTrace();
         }

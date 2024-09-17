@@ -12,11 +12,11 @@ import lombok.experimental.Accessors;
 import java.util.LinkedList;
 import java.util.List;
 
+@Getter
 @Accessors(fluent = true)
 public class ApsMethodBodyAst extends ApsAst {
     private final LinkedList<ApsVariableAst> fieldVariables = ApricotCollectionFactor.linkedList();
     private final LinkedList<ApsStatementAst> statements = ApricotCollectionFactor.linkedList();
-    @Getter
     private final ApsMethodBodyAst parentBody;
 
     public ApsMethodBodyAst(ApsAst parent, ApsMethodBodyAst parentBody) {
@@ -111,13 +111,6 @@ public class ApsMethodBodyAst extends ApsAst {
             variableAsts.addAll(this.parentBody.collectVariables());
         }
         return variableAsts;
-    }
-
-    @Override
-    public void generateJava(StringBuilder builder) {
-        for (ApsStatementAst statement : this.statements) {
-            statement.generateJava(builder);
-        }
     }
 
     @Override

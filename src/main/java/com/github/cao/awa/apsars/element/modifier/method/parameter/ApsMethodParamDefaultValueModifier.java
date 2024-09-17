@@ -1,7 +1,7 @@
 package com.github.cao.awa.apsars.element.modifier.method.parameter;
 
 import com.github.cao.awa.apsars.element.method.parameter.ApsMethodParamModifierType;
-import com.github.cao.awa.apsars.tree.method.parameter.preset.ApsPresetValueElementAst;
+import com.github.cao.awa.apsars.tree.method.parameter.preset.ApsMethodParameterDefaultValueAst;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -10,7 +10,7 @@ import lombok.experimental.Accessors;
 public class ApsMethodParamDefaultValueModifier extends ApsMethodParamModifier {
     @Getter
     @Setter
-    private ApsPresetValueElementAst presetValueAst;
+    private ApsMethodParameterDefaultValueAst presetValueAst;
 
     @Override
     public ApsMethodParamModifierType type() {

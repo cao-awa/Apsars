@@ -5,18 +5,13 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
+@Setter
+@Getter
 @Accessors(fluent = true)
 public abstract class ApsAstWithVarargs extends ApsAst {
-    @Getter
-    @Setter
     private ApsArgTypeAst argType;
 
     public ApsAstWithVarargs(ApsAst parent) {
         super(parent);
-    }
-
-    @Override
-    public void generateJava(StringBuilder builder) {
-        this.argType.generateJava(builder);
     }
 }

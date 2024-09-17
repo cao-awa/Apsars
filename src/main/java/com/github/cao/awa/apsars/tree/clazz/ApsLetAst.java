@@ -12,17 +12,15 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
+import java.util.Collection;
 import java.util.List;
 
+@Getter
 @Accessors(fluent = true)
 public class ApsLetAst extends ApsAst implements ApsModifierRequiredAst<ApsModifier<?>> {
-    @Getter
     private final List<ApsModifier<?>> modifiers = ApricotCollectionFactor.arrayList();
-    @Getter
     private final List<ApsMethodAst> methods = ApricotCollectionFactor.arrayList();
-    @Getter
     private final List<ApsMemberParameterAst> parameters = ApricotCollectionFactor.arrayList();
-    @Getter
     @Setter
     private ApsAccessibleModifier accessible = null;
 
@@ -32,6 +30,11 @@ public class ApsLetAst extends ApsAst implements ApsModifierRequiredAst<ApsModif
 
     public void addMemberParameter(ApsMemberParameterAst parameter) {
         this.parameters.add(parameter);
+    }
+
+    @Override
+    public Collection<ApsModifier<?>> modifierValues() {
+        return this.modifiers;
     }
 
     public void addModifier(final ApsModifier<?> modifier) {
@@ -85,10 +88,5 @@ public class ApsLetAst extends ApsAst implements ApsModifierRequiredAst<ApsModif
             parameter.accessible(this.accessible);
             classAst.addMemberParameter(parameter);
         }
-    }
-
-    @Override
-    public void generateJava(StringBuilder builder) {
-
     }
 }

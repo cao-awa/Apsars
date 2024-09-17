@@ -1,38 +1,50 @@
 package com.github.cao.awa.apsars.parser.token.keyword.method;
 
+import com.github.cao.awa.apsars.element.modifier.method.*;
 import com.github.cao.awa.apsars.parser.token.keyword.ApsKeyword;
 
+import java.util.function.Supplier;
+
 public enum ApsMethodKeyword implements ApsKeyword {
-    OPEN("public"),
-    PUB("pub"),
-    PUBLIC("public"),
-    PROTECTED("protected"),
-    PVT("pvt"),
-    PRIVATE("private"),
+    OPEN("public", null),
+    PUB("pub", null),
+    PUBLIC("public", null),
+    PROTECTED("protected", null),
+    PVT("pvt", null),
+    PRIVATE("private", null),
 
-    RIGID("rigid"),
-    STATIC("static"),
+    RIGID("rigid", ApsMethodStaticModifier::new),
+    STATIC("static", ApsMethodStaticModifier::new),
 
-    FINAL("final"),
+    FINAL("final", ApsMethodFinalModifier::new),
 
-    SYNC("sync"),
-    SYNCHRONIZED("synchronized"),
+    SYNC("sync", ApsMethodSynchronizedModifier::new),
+    SYNCHRONIZED("synchronized", ApsMethodSynchronizedModifier::new),
 
-    SAFEPOINT("safepoint"),
+    SAFEPOINT("safepoint", ApsMethodSafepointModifier::new),
 
-    NILSAFE("nilsafe"),
-    SAFE_NIL("s-nil"),
-    NULLSAFE("nullsafe")
+    NILSAFE("nilsafe", ApsMethodNullsafeModifier::new),
+    SAFE_NIL("s-nil", ApsMethodNullsafeModifier::new),
+    NULLSAFE("nullsafe", ApsMethodNullsafeModifier::new),
     ;
 
     private final String literal;
+    private final Supplier<ApsMethodModifier> modifier;
 
-    ApsMethodKeyword(String literal) {
+    ApsMethodKeyword(String literal, Supplier<ApsMethodModifier> modifier) {
         this.literal = literal;
+        this.modifier = modifier;
     }
 
     public String literal() {
         return this.literal;
+    }
+
+    public ApsMethodModifier modifier() {
+        if (this.modifier != null) {
+            return this.modifier.get();
+        }
+        return null;
     }
 
     public static ApsMethodKeyword of(String literal) {

@@ -134,6 +134,20 @@ public interface ApsarsListener extends ParseTreeListener {
     void exitIsUnique(ApsarsParser.IsUniqueContext ctx);
 
     /**
+     * Enter a parse tree produced by {@link ApsarsParser#isInline}.
+     *
+     * @param ctx the parse tree
+     */
+    void enterIsInline(ApsarsParser.IsInlineContext ctx);
+
+    /**
+     * Exit a parse tree produced by {@link ApsarsParser#isInline}.
+     *
+     * @param ctx the parse tree
+     */
+    void exitIsInline(ApsarsParser.IsInlineContext ctx);
+
+    /**
      * Enter a parse tree produced by {@link ApsarsParser#let}.
      *
      * @param ctx the parse tree

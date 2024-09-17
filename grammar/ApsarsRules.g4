@@ -18,6 +18,11 @@ isFinal  : Final  ;
 isVal    : Val    ;
 isUnique : Unique ;
 
+// Inline.
+Inline : 'inline' ;
+
+isInline : Inline ;
+
 // Let in class define.
 Let : 'let' ;
 
@@ -213,7 +218,6 @@ optionalFieldAndMethodModifiers: ( fieldModifiers | methodModifiers ) +;
 optionalFieldStaticAndFinal: ( fieldFinal | isStatic ) + ;
 
 optionalStaticAndFinal: ( isFinal | isStatic ) + ;
-
 
 permissionModifiers: isPublic    |
                      isPrivate   |

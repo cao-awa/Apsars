@@ -1,5 +1,8 @@
 package com.github.cao.awa.apsars.tree.statement.control;
 
+import com.github.cao.awa.apsars.translate.ApsTranslator;
+import com.github.cao.awa.apsars.translate.lang.TranslateTarget;
+import com.github.cao.awa.apsars.translate.lang.element.TranslateElement;
 import com.github.cao.awa.apsars.tree.ApsAst;
 import com.github.cao.awa.apsars.tree.method.ApsMethodBodyAst;
 import com.github.cao.awa.apsars.tree.statement.result.ApsResultPresentingAst;
@@ -11,19 +14,13 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
+@Setter
+@Getter
 @Accessors(fluent = true)
 public class ApsIfStatementAst extends ApsResultingStatementAst {
-    @Getter
-    @Setter
     private ApsMethodBodyAst statements;
-    @Getter
-    @Setter
     private ApsMethodBodyAst elseStatements;
-    @Getter
-    @Setter
     private ApsIfStatementAst elseIfStatement;
-    @Getter
-    @Setter
     private ApsResultPresentingAst predicate;
 
     public ApsIfStatementAst(ApsAst ast) {
@@ -38,7 +35,7 @@ public class ApsIfStatementAst extends ApsResultingStatementAst {
     @Override
     public void print(String ident) {
         System.out.println("Aps if: ");
-        System.out.println(ident + "    |_ predicate: " + this.predicate.generateJava());
+        System.out.println(ident + "    |_ predicate: " + ApsTranslator.translate(TranslateTarget.JAVA, TranslateElement.RESULT_PRESENTING_STATEMENT, this.predicate));
         this.statements.print(ident + "    ");
     }
 
@@ -61,28 +58,6 @@ public class ApsIfStatementAst extends ApsResultingStatementAst {
             if (this.statements.searchLastStatement() instanceof ApsYieldAst yieldAst) {
                 this.statements.replaceLastStatement(parent.assignmentToSelf(yieldAst.result()));
             }
-        }
-    }
-
-    @Override
-    public void generateJava(StringBuilder builder) {
-        builder.append("if");
-        builder.append("(");
-        this.predicate.generateJava(builder);
-        builder.append(")");
-        builder.append("{");
-        if (this.statements != null) {
-            this.statements.generateJava(builder);
-        }
-        builder.append("}");
-        if (this.elseStatements != null) {
-            builder.append("else");
-            builder.append("{");
-            this.elseStatements.generateJava(builder);
-            builder.append("}");
-        } else if (this.elseIfStatement != null) {
-            builder.append("else ");
-            this.elseIfStatement.generateJava(builder);
         }
     }
 }

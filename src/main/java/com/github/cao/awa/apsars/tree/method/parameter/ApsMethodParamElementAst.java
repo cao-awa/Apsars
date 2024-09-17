@@ -4,9 +4,12 @@ import com.github.cao.awa.apricot.util.collection.ApricotCollectionFactor;
 import com.github.cao.awa.apsars.element.method.parameter.ApsMethodParamModifierType;
 import com.github.cao.awa.apsars.element.modifier.method.parameter.ApsMethodParamDefaultValueModifier;
 import com.github.cao.awa.apsars.element.modifier.method.parameter.ApsMethodParamModifier;
+import com.github.cao.awa.apsars.translate.ApsTranslator;
+import com.github.cao.awa.apsars.translate.lang.TranslateTarget;
+import com.github.cao.awa.apsars.translate.lang.element.TranslateElement;
 import com.github.cao.awa.apsars.tree.ApsAst;
 import com.github.cao.awa.apsars.tree.method.ApsMethodAst;
-import com.github.cao.awa.apsars.tree.method.parameter.preset.ApsPresetValueElementAst;
+import com.github.cao.awa.apsars.tree.method.parameter.preset.ApsMethodParameterDefaultValueAst;
 import com.github.cao.awa.apsars.tree.vararg.ApsArgTypeAst;
 import com.github.cao.awa.sinuatum.manipulate.Manipulate;
 import lombok.Getter;
@@ -17,13 +20,12 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.Map;
 
+@Getter
 @Accessors(fluent = true)
 public class ApsMethodParamElementAst extends ApsAst {
     private static final Logger LOGGER = LogManager.getLogger("ApsMethodParamElementAst");
     @Setter
-    @Getter
     private String nameIdentity;
-    @Getter
     @Setter
     private ApsArgTypeAst argType;
     private final Map<ApsMethodParamModifierType, ApsMethodParamModifier> modifiers = ApricotCollectionFactor.hashMap();
@@ -45,32 +47,13 @@ public class ApsMethodParamElementAst extends ApsAst {
         System.out.println(ident + "|_ Aps method parameter: " + this.nameIdentity);
         System.out.println(ident + "    |_ type: ");
         this.argType.print(ident + "        ");
-        ApsPresetValueElementAst presetValueAst = defaultValue();
+        ApsMethodParameterDefaultValueAst presetValueAst = defaultValue();
         if (presetValueAst != null) {
-            System.out.println(ident + "    |_ default value: " + presetValueAst.generateJava());
+            System.out.println(ident + "    |_ default value: " + ApsTranslator.translate(TranslateTarget.JAVA, TranslateElement.METHOD_PARAMETER_DEFAULT, presetValueAst));
         }
     }
 
-    @Override
-    public void generateJava(StringBuilder builder) {
-        // 设置修饰符
-        for (ApsMethodParamModifierType modifierType : ApsMethodParamModifierType.values()) {
-            Manipulate.notNull(this.modifiers.get(modifierType), modifier -> {
-                if (modifier.isLiteral()) {
-                    builder.append(modifier.literal());
-                    builder.append(" ");
-                }
-            });
-        }
-
-        if (this.argType != null && this.nameIdentity != null) {
-            this.argType.generateJava(builder);
-            builder.append(" ");
-            builder.append(this.nameIdentity);
-        }
-    }
-
-    public ApsPresetValueElementAst defaultValue() {
+    public ApsMethodParameterDefaultValueAst defaultValue() {
         ApsMethodParamDefaultValueModifier defaultValueModifier = (ApsMethodParamDefaultValueModifier) this.modifiers.get(ApsMethodParamModifierType.DEFAULT_VALUE);
         if (defaultValueModifier != null) {
             return defaultValueModifier.presetValueAst();
@@ -78,7 +61,7 @@ public class ApsMethodParamElementAst extends ApsAst {
         return null;
     }
 
-    public void defaultValue(ApsPresetValueElementAst apsPresetValueAst) {
+    public void defaultValue(ApsMethodParameterDefaultValueAst apsPresetValueAst) {
         ApsMethodParamDefaultValueModifier defaultValueModifier = (ApsMethodParamDefaultValueModifier) this.modifiers.get(ApsMethodParamModifierType.DEFAULT_VALUE);
         if (defaultValueModifier != null) {
             defaultValueModifier.presetValueAst(apsPresetValueAst);
@@ -89,11 +72,11 @@ public class ApsMethodParamElementAst extends ApsAst {
     public void preprocess() {
         if (this.modifiers.get(ApsMethodParamModifierType.DEFAULT_VALUE) != null) {
             Manipulate.notNull(defaultValue(), value -> {
-                if (!value.type().literal().equals(this.argType.generateJava())) {
+                if (!value.type().literal().equals(ApsTranslator.translate(TranslateTarget.JAVA, TranslateElement.ARG_TYPE, this.argType))) {
                     defaultValue(null);
                     LOGGER.warn("The preset value of method parameter '{}' is not type matched to '{}', got '{}'",
                             this.nameIdentity,
-                            this.argType.generateJava(),
+                            ApsTranslator.translate(TranslateTarget.JAVA, TranslateElement.ARG_TYPE, this.argType),
                             value.type().literal()
                     );
                 }

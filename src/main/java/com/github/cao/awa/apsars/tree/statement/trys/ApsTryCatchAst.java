@@ -8,18 +8,15 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
+@Getter
 @Accessors(fluent = true)
 public class ApsTryCatchAst extends ApsStatementAst {
-    @Getter
     @Setter
     private ApsMethodBodyAst methodBody;
-    @Getter
     @Setter
     private ApsMethodBodyAst catchingMethodBody;
-    @Getter
     @Setter
     private ApsCatchListAst catchList;
-    @Getter
     private final ApsMethodBodyAst parentBody;
 
     public ApsTryCatchAst(ApsAst parent, ApsMethodBodyAst parentBody) {
@@ -39,27 +36,6 @@ public class ApsTryCatchAst extends ApsStatementAst {
         }
         if (this.catchingMethodBody != null) {
             this.catchingMethodBody.print(ident);
-        }
-    }
-
-    @Override
-    public void generateJava(StringBuilder builder) {
-        if (this.catchList != null) {
-            builder.append("try{");
-            if (this.methodBody != null) {
-                this.methodBody.generateJava(builder);
-            }
-            builder.append("}catch(");
-            this.catchList.generateJava(builder);
-            builder.append("){");
-            if (this.catchingMethodBody != null) {
-                this.catchingMethodBody.generateJava(builder);
-            }
-            builder.append("}");
-        } else {
-            if (this.methodBody != null) {
-                this.methodBody.generateJava(builder);
-            }
         }
     }
 

@@ -1,15 +1,12 @@
 package com.github.cao.awa.apsars.tree.clazz.inherit;
 
 import com.github.cao.awa.apricot.util.collection.ApricotCollectionFactor;
-import com.github.cao.awa.apsars.element.ApsAccessibleType;
 import com.github.cao.awa.apsars.element.clazz.ApsMemberParameterModifierType;
 import com.github.cao.awa.apsars.element.modifier.parameter.ApsMemberParameterModifier;
 import com.github.cao.awa.apsars.tree.clazz.ApsClassAst;
 import com.github.cao.awa.apsars.tree.clazz.ApsMemberParameterAst;
 import com.github.cao.awa.apsars.tree.statement.result.ApsResultPresentingAst;
-import com.github.cao.awa.apsars.tree.statement.result.ApsResultingStatementAst;
-import com.github.cao.awa.apsars.tree.vararg.ApsAstWithVarargs;
-import com.github.cao.awa.sinuatum.manipulate.Manipulate;
+import com.github.cao.awa.apsars.tree.vararg.ApsStatementWithVarargs;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -19,15 +16,14 @@ import org.apache.logging.log4j.Logger;
 import java.util.Map;
 
 @Accessors(fluent = true)
-public class ApsBindingParameterAst extends ApsAstWithVarargs {
+public class ApsBindingParameterAst extends ApsStatementWithVarargs {
     private static final Logger LOGGER = LogManager.getLogger("ApsMemberParameterAst");
-
     @Setter
     @Getter
     private String nameIdentity;
     @Setter
     @Getter
-    private ApsResultingStatementAst value;
+    private ApsResultPresentingAst value;
     private final Map<ApsMemberParameterModifierType, ApsMemberParameterModifier> modifiers = ApricotCollectionFactor.hashMap();
 
     public ApsBindingParameterAst(ApsBinderAst parent) {
@@ -60,32 +56,6 @@ public class ApsBindingParameterAst extends ApsAstWithVarargs {
     }
 
     @Override
-    public void generateJava(StringBuilder builder) {
-        processConflictModifiers();
-
-        builder.append(ApsAccessibleType.PUBLIC.literal());
-
-        // 设置修饰符
-        for (ApsMemberParameterModifierType modifierType : ApsMemberParameterModifierType.values()) {
-            Manipulate.notNull(this.modifiers.get(modifierType), modifier -> {
-                if (modifier.isLiteral()) {
-                    builder.append(modifier.literal());
-                    builder.append(" ");
-                }
-            });
-        }
-
-        super.generateJava(builder);
-        builder.append(" ");
-        builder.append(this.nameIdentity);
-        if (this.value != null) {
-            builder.append("=");
-            builder.append(this.value);
-        }
-        builder.append(";");
-    }
-
-    @Override
     public void preprocess() {
 
     }
@@ -108,12 +78,12 @@ public class ApsBindingParameterAst extends ApsAstWithVarargs {
 
         memberParameterAst.nameIdentity(this.nameIdentity);
         memberParameterAst.argType(argType());
-        memberParameterAst.value(new ApsResultPresentingAst(memberParameterAst).resultingStatement(this.value));
+        memberParameterAst.value(this.value);
 
         return memberParameterAst;
     }
 
-    private void processConflictModifiers() {
+    public void processConflictModifiers() {
         if (this.modifiers.get(ApsMemberParameterModifierType.VOLATILE) != null) {
             if (this.modifiers.get(ApsMemberParameterModifierType.IS_FINAL) != null) {
                 LOGGER.warn("The volatile modifier do not compatible to final modifier, final been be removed");

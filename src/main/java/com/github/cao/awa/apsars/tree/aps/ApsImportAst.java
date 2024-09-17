@@ -31,19 +31,6 @@ public class ApsImportAst extends ApsAst {
     }
 
     @Override
-    public void generateJava(StringBuilder builder) {
-        builder.append("import ");
-        if (this.importStatic) {
-            builder.append("static ");
-        }
-        builder.append(this.fullName);
-        if (this.importAll) {
-            builder.append(".*");
-        }
-        builder.append(";");
-    }
-
-    @Override
     public void preprocess() {
         this.argType = new ApsArgTypeAst(this);
         this.argType.nameIdentity(this.fullName.substring(

@@ -4,12 +4,12 @@ import com.github.cao.awa.apricot.util.collection.ApricotCollectionFactor;
 import com.github.cao.awa.apsars.tree.ApsAst;
 import com.github.cao.awa.apsars.tree.method.ApsMethodAst;
 import com.github.cao.awa.apsars.tree.vararg.ApsArgTypeAst;
+import lombok.Getter;
 import lombok.experimental.Accessors;
 
-import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 
+@Getter
 @Accessors(fluent = true)
 public class ApsMethodParameterAst extends ApsAst {
     private final Map<String, ApsMethodParamElementAst> params = ApricotCollectionFactor.hashMap();
@@ -27,21 +27,6 @@ public class ApsMethodParameterAst extends ApsAst {
         this.params.forEach((key, value) -> {
             value.print(ident);
         });
-    }
-
-    @Override
-    public void generateJava(StringBuilder builder) {
-        Iterator<ApsMethodParamElementAst> params = this.params.values().iterator();
-        while (params.hasNext()) {
-            params.next().generateJava(builder);
-            if (params.hasNext()) {
-                builder.append(",");
-            }
-        }
-    }
-
-    public Set<String> names() {
-        return this.params.keySet();
     }
 
     @Override

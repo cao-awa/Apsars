@@ -9,10 +9,10 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
+@Setter
+@Getter
 @Accessors(fluent = true)
 public class ApsNewInstanceStatementAst extends ApsInvokeAst {
-    @Getter
-    @Setter
     private String resultType;
 
     public ApsNewInstanceStatementAst(ApsAst parent) {
@@ -42,18 +42,5 @@ public class ApsNewInstanceStatementAst extends ApsInvokeAst {
     @Override
     public void preprocess() {
 
-    }
-
-    @Override
-    public void generateJava(StringBuilder builder) {
-        builder.append("new ");
-        builder.append(this.resultType);
-        builder.append("(");
-        generateParams(builder);
-        builder.append(")");
-
-        if (withEnd()) {
-            builder.append(";");
-        }
     }
 }

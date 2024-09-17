@@ -19,9 +19,4 @@ public class ApsYieldAst extends ApsReturnAst {
     public void preprocess() {
 
     }
-
-    @Override
-    public void generateJava(StringBuilder builder) {
-        // Dummy statement used to generate within preprocessing.
-    }
 }

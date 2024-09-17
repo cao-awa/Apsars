@@ -8,25 +8,15 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
+@Setter
+@Getter
 @Accessors(fluent = true)
 public class ApsCalculateAst extends ApsResultingStatementAst {
-    @Getter
-    @Setter
     private ApsResultPresentingAst left;
-    @Getter
-    @Setter
     private String symbol;
-    @Getter
-    @Setter
     private ApsResultPresentingAst right;
-    @Getter
-    @Setter
     private boolean leftWithParen;
-    @Getter
-    @Setter
     private boolean rightWithParen;
-    @Getter
-    @Setter
     private boolean totalWithParen;
 
     public ApsCalculateAst(ApsAst parent) {
@@ -46,8 +36,8 @@ public class ApsCalculateAst extends ApsResultingStatementAst {
         System.out.print(ident + "|_ Left: ");
         this.left.print(ident + concat + "   ");
         if (this.symbol != null) {
-            System.out.println(ident + "|   Symbol: " + this.symbol);
-            System.out.print(ident + "|_  Right: ");
+            System.out.println(ident + "|_ Symbol: " + this.symbol);
+            System.out.print(ident + "|_ Right: ");
             this.right.print(ident + "    ");
         }
     }
@@ -55,35 +45,5 @@ public class ApsCalculateAst extends ApsResultingStatementAst {
     @Override
     public void preprocess() {
 
-    }
-
-    @Override
-    public void generateJava(StringBuilder builder) {
-        if (this.totalWithParen) {
-            builder.append('(');
-        }
-
-        if (this.leftWithParen) {
-            builder.append("(");
-        }
-        this.left.generateJava(builder);
-        if (this.leftWithParen) {
-            builder.append(")");
-        }
-
-        if (this.symbol != null) {
-            builder.append(this.symbol);
-            if (this.rightWithParen) {
-                builder.append("(");
-            }
-            this.right.generateJava(builder);
-            if (this.rightWithParen) {
-                builder.append(")");
-            }
-        }
-
-        if (this.totalWithParen) {
-            builder.append(')');
-        }
     }
 }

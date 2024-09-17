@@ -3,7 +3,9 @@ package com.github.cao.awa.apsars.tree.statement.variable;
 import com.github.cao.awa.apricot.util.collection.ApricotCollectionFactor;
 import com.github.cao.awa.apsars.element.modifier.statement.ApsLocalVariableModifier;
 import com.github.cao.awa.apsars.element.statement.ApsLocalVariableModifierType;
-import com.github.cao.awa.apsars.parser.token.ApsTokens;
+import com.github.cao.awa.apsars.translate.ApsTranslator;
+import com.github.cao.awa.apsars.translate.lang.TranslateTarget;
+import com.github.cao.awa.apsars.translate.lang.element.TranslateElement;
 import com.github.cao.awa.apsars.tree.ApsAst;
 import com.github.cao.awa.apsars.tree.statement.ApsStatementAst;
 import com.github.cao.awa.apsars.tree.statement.calculate.ApsCalculateAst;
@@ -30,6 +32,7 @@ public class ApsVariableAst extends ApsStatementAst {
     @Getter
     @Setter
     private boolean defining = true;
+    @Getter
     private boolean isAlternate = false;
     private final Map<ApsLocalVariableModifierType, ApsLocalVariableModifier> modifiers = ApricotCollectionFactor.hashMap();
 
@@ -52,7 +55,7 @@ public class ApsVariableAst extends ApsStatementAst {
     @Override
     public void print(String ident) {
         if (this.defining) {
-            System.out.println("Local variable (" + this.type.generateJava() + ") ‘" + this.nameIdentity + "': ");
+            System.out.println("Local variable (" + ApsTranslator.translate(TranslateTarget.JAVA, TranslateElement.ARG_TYPE, this.type) + ") ‘" + this.nameIdentity + "': ");
         } else {
             System.out.println("Reassignment local variable ‘" + this.nameIdentity + "': ");
         }
@@ -87,44 +90,6 @@ public class ApsVariableAst extends ApsStatementAst {
                 .assignment(assignment)
                 .withEnd(true)
                 .defining(false);
-    }
-
-    @Override
-    public void generateJava(StringBuilder builder) {
-        if (this.isAlternate) {
-            if (this.defining) {
-                if (this.type != null && this.nameIdentity != null) {
-                    this.type.generateJava(builder);
-                    builder.append(ApsTokens.SPACE);
-                    builder.append(this.nameIdentity);
-                    builder.append(ApsTokens.EQUAL);
-                    builder.append("null;");
-                }
-            }
-
-            this.assignment.generateJava(builder);
-        } else {
-            if (this.defining) {
-                if (this.type != null && this.nameIdentity != null) {
-                    this.type.generateJava(builder);
-                    builder.append(ApsTokens.SPACE);
-                    builder.append(this.nameIdentity);
-                }
-            } else {
-                if (this.nameIdentity != null) {
-                    builder.append(this.nameIdentity);
-                }
-            }
-
-            if (this.assignment != null) {
-                builder.append(ApsTokens.EQUAL);
-                this.assignment.generateJava(builder);
-            }
-
-            if (withEnd()) {
-                builder.append(ApsTokens.SEMICOLON);
-            }
-        }
     }
 
     @Override

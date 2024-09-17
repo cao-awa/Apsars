@@ -50,12 +50,7 @@ methodReturnType: (
  colon argType
 ) ;
 
-alternateStaticAndFinalAndSync: (
-                                  optionalStaticAndFinal ? sync                     ? |
-                                  sync                   ? optionalStaticAndFinal   ? |
-                                 (optionalStaticAndFinal   sync                   ) ? |
-                                 (sync                     optionalStaticAndFinal ) ?
-) ;
+alternateStaticAndFinalAndSync: ( isFinal | isStatic | isInline | sync ) + ;
 
 defineMethodBody: defineStatement* ;
 

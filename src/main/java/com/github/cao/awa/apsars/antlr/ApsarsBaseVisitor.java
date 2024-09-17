@@ -99,6 +99,14 @@ public class ApsarsBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements
 	 * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
+    public T visitIsInline(ApsarsParser.IsInlineContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+     */
+    @Override
     public T visitLet(ApsarsParser.LetContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
@@ -1091,12 +1099,15 @@ public class ApsarsBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements
 	 * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public T visitTryCatchList(ApsarsParser.TryCatchListContext ctx) { return visitChildren(ctx); }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
+    public T visitTryCatchList(ApsarsParser.TryCatchListContext ctx) {
+        return visitChildren(ctx);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation returns the result of calling
+     * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
     public T visitTryCatchListExtraType(ApsarsParser.TryCatchListExtraTypeContext ctx) {

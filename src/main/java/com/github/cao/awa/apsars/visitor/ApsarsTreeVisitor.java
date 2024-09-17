@@ -2,7 +2,8 @@ package com.github.cao.awa.apsars.visitor;
 
 import com.github.cao.awa.apsars.antlr.ApsarsBaseVisitor;
 import com.github.cao.awa.apsars.antlr.ApsarsParser;
-import com.github.cao.awa.apsars.element.modifier.accessible.GenericAccessibleModifier;
+import com.github.cao.awa.apsars.element.ApsAccessibleType;
+import com.github.cao.awa.apsars.element.modifier.ApsModifierRequiredAst;
 import com.github.cao.awa.apsars.element.modifier.clazz.ApsClassModifier;
 import com.github.cao.awa.apsars.element.modifier.method.ApsMethodModifier;
 import com.github.cao.awa.apsars.element.modifier.parameter.ApsMemberParameterModifier;
@@ -34,8 +35,13 @@ import com.github.cao.awa.apsars.tree.statement.trys.ApsCatchListAst;
 import com.github.cao.awa.apsars.tree.statement.trys.ApsTryCatchAst;
 import com.github.cao.awa.apsars.tree.statement.variable.ApsVariableAst;
 import com.github.cao.awa.apsars.tree.vararg.ApsArgTypeAst;
+import org.antlr.v4.runtime.ParserRuleContext;
+import org.antlr.v4.runtime.RuleContext;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.RuleNode;
+
+import java.util.List;
+import java.util.function.Consumer;
 
 public class ApsarsTreeVisitor extends ApsarsBaseVisitor<ApsAst> {
     private ApsAst current;
@@ -118,33 +124,66 @@ public class ApsarsTreeVisitor extends ApsarsBaseVisitor<ApsAst> {
         return visitChildren(ctx);
     }
 
+    private <T extends ParserRuleContext> void ifAlternateValid(List<T> list, Consumer<T> action) {
+        if (list != null) {
+            System.out.println(list.stream().map(RuleContext::getText).toList());
+        }
+        if (list != null && !list.isEmpty()) {
+            action.accept(list.getFirst());
+        }
+    }
+
+    private void ifPermission(ApsarsParser.PermissionModifiersContext ctx, ApsModifierRequiredAst<?> ast) {
+        if (ctx != null) {
+            if (ctx.isPrivate() != null) {
+                ast.addAccessible(ApsAccessibleType.PUBLIC.generic());
+            }
+            if (ctx.isPublic() != null) {
+                ast.addAccessible(ApsAccessibleType.PUBLIC.generic());
+            }
+            if (ctx.isProtected() != null) {
+                ast.addAccessible(ApsAccessibleType.PROTECTED.generic());
+            }
+        }
+    }
+
     @Override
     public ApsMethodAst visitDefineMethod(ApsarsParser.DefineMethodContext ctx) {
         ApsMethodAst ast = new ApsMethodAst(this.current);
         this.current = ast;
-        if (ctx.permissionModifiers() != null) {
-            ast.addAccessible(new GenericAccessibleModifier(ctx.permissionModifiers().getText()));
-        }
-        ApsarsParser.AlternateStaticAndFinalAndSyncContext treeParamAlternate = ctx.alternateStaticAndFinalAndSync();
-        if (treeParamAlternate != null) {
-            ApsarsParser.OptionalStaticAndFinalContext staticAndFinal = treeParamAlternate.optionalStaticAndFinal();
-            if (!(staticAndFinal == null)) {
-                if (!staticAndFinal.isFinal().isEmpty()) {
-                    ast.addModifier(ApsMethodModifier.create(ApsMethodKeyword.FINAL));
-                }
-                if (!staticAndFinal.isStatic().isEmpty()) {
-                    ast.addModifier(ApsMethodModifier.create(ApsMethodKeyword.STATIC));
-                }
 
-                if (treeParamAlternate.sync() != null) {
-                    ast.addModifier(ApsMethodModifier.create(ApsMethodKeyword.of(treeParamAlternate.sync().getText())));
+        ifPermission(ctx.permissionModifiers(), ast);
+
+        ast.nameIdentity(ctx.identifier().getText());
+
+        ApsarsParser.AlternateStaticAndFinalAndSyncContext treeParamAlternate = ctx.alternateStaticAndFinalAndSync();
+        ifAlternateValid(
+                treeParamAlternate.sync(),
+                sync -> ast.addModifier(ApsMethodKeyword.SYNC.modifier())
+        );
+
+        ifAlternateValid(
+                treeParamAlternate.isFinal(),
+                sync -> ast.addModifier(ApsMethodKeyword.FINAL.modifier())
+        );
+
+        ifAlternateValid(
+                treeParamAlternate.isStatic(),
+                sync -> {
+                    ast.addModifier(ApsMethodKeyword.STATIC.modifier());
+
+                    ifAlternateValid(
+                            treeParamAlternate.isInline(),
+                            inline -> {
+                                ast.addCompilerFlag("try-inline");
+                            }
+                    );
                 }
-            }
-        }
+        );
+
         this.current = ast;
 
         ast.param(visitMethodParamListDefinition(ctx.methodParamListDefinition()));
-        ast.nameIdentity(ctx.identifier().getText());
         this.current = ast;
 
         if (ctx.methodReturnType() != null) {
@@ -696,12 +735,12 @@ public class ApsarsTreeVisitor extends ApsarsBaseVisitor<ApsAst> {
             ApsClassAst ast = new ApsClassAst(fileAst);
             this.current = ast;
 
-            if (ctx.permissionModifiers() != null) {
-                ast.addAccessible(new GenericAccessibleModifier(ctx.permissionModifiers().getText()));
-            }
+            ifPermission(ctx.permissionModifiers(), ast);
+
             if (ctx.classFinal() != null) {
                 ast.addModifier(ApsClassModifier.create(ApsClassKeyword.of(ctx.classFinal().getText())));
             }
+
             if (ctx.makeAlternateLetAndContent() != null) {
                 if (ctx.makeAlternateLetAndContent().defineLet() != null) {
                     for (ApsarsParser.DefineLetContext defineLet : ctx.makeAlternateLetAndContent().defineLet()) {
@@ -814,9 +853,7 @@ public class ApsarsTreeVisitor extends ApsarsBaseVisitor<ApsAst> {
 
         ApsarsParser.MakeAlternateLetContext alternate = ctx.makeAlternateLet();
 
-        if (alternate.permissionModifiers() != null) {
-            ast.addAccessible(new GenericAccessibleModifier(alternate.permissionModifiers().getText()));
-        }
+        ifPermission(alternate.permissionModifiers(), ast);
 
         if (alternate.optionalFieldStaticAndFinal() != null) {
             for (ApsarsParser.OptionalFieldStaticAndFinalContext optionalFieldStaticAndFinalContext : alternate.optionalFieldStaticAndFinal()) {
@@ -875,9 +912,9 @@ public class ApsarsTreeVisitor extends ApsarsBaseVisitor<ApsAst> {
     @Override
     public ApsMemberParameterAst visitDefineJavaMemberField(ApsarsParser.DefineJavaMemberFieldContext ctx) {
         ApsMemberParameterAst ast = new ApsMemberParameterAst(this.current.findAst(ApsClassAst.class));
-        if (ctx.permissionModifiers() != null) {
-            ast.accessible(new GenericAccessibleModifier(ctx.permissionModifiers().getText()));
-        }
+
+        ifPermission(ctx.permissionModifiers(), ast);
+
         if (ctx.optionalFieldStaticAndFinal() != null) {
             if (!ctx.optionalFieldStaticAndFinal().isStatic().isEmpty()) {
                 ast.addModifier(ApsMemberParameterModifier.create(ApsMemberParameterKeyword.STATIC));
@@ -903,9 +940,9 @@ public class ApsarsTreeVisitor extends ApsarsBaseVisitor<ApsAst> {
     @Override
     public ApsMemberParameterAst visitDefineApsarsMemberField(ApsarsParser.DefineApsarsMemberFieldContext ctx) {
         ApsMemberParameterAst ast = new ApsMemberParameterAst(this.current.findAst(ApsClassAst.class));
-        if (ctx.permissionModifiers() != null) {
-            ast.accessible(new GenericAccessibleModifier(ctx.permissionModifiers().getText()));
-        }
+
+        ifPermission(ctx.permissionModifiers(), ast);
+
         if (ctx.optionalFieldStaticAndFinal() != null) {
             if (!ctx.optionalFieldStaticAndFinal().isStatic().isEmpty()) {
                 ast.addModifier(ApsMemberParameterModifier.create(ApsMemberParameterKeyword.STATIC));

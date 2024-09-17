@@ -6,10 +6,10 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
+@Setter
+@Getter
 @Accessors(fluent = true)
 public class ApsReturnAst extends ApsStatementAst {
-    @Getter
-    @Setter
     private ApsResultPresentingAst result;
 
     public ApsReturnAst(ApsAst ast) {
@@ -25,15 +25,5 @@ public class ApsReturnAst extends ApsStatementAst {
     @Override
     public void preprocess() {
 
-    }
-
-    @Override
-    public void generateJava(StringBuilder builder) {
-        builder.append("return ");
-        this.result.generateJava(builder);
-
-        if (withEnd()) {
-            builder.append(";");
-        }
     }
 }

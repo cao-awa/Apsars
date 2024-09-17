@@ -83,6 +83,14 @@ public interface ApsarsVisitor<T> extends ParseTreeVisitor<T> {
     T visitIsUnique(ApsarsParser.IsUniqueContext ctx);
 
     /**
+     * Visit a parse tree produced by {@link ApsarsParser#isInline}.
+     *
+     * @param ctx the parse tree
+     * @return the visitor result
+     */
+    T visitIsInline(ApsarsParser.IsInlineContext ctx);
+
+    /**
      * Visit a parse tree produced by {@link ApsarsParser#let}.
      *
      * @param ctx the parse tree
