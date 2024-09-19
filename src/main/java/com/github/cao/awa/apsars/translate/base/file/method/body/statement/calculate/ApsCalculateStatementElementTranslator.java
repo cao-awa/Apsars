@@ -47,6 +47,6 @@ public interface ApsCalculateStatementElementTranslator extends ApsResultingStat
     }
 
     default void translateSymbol(ApsTranslator<ApsCalculateAst> translator) {
-        translator.builder().append(translator.ast().symbol());
+        translator.builder().append(translator.ast().symbol().symbol());
     }
 }

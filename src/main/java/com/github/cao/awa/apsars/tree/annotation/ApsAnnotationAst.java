@@ -8,6 +8,8 @@ import lombok.experimental.Accessors;
 @Getter
 @Accessors(fluent = true)
 public class ApsAnnotationAst extends ApsStatementAst {
+    public static final String DO_NOT_REF_PRIMARY = "com.github.cao.awa.apsars.std.DoNotRefPrimary";
+    public static final String TRY_INLINE = "com.github.cao.awa.apsars.std.TryInline";
     private final String nameIdentity;
 
     public ApsAnnotationAst(ApsAst ast, String nameIdentity) {

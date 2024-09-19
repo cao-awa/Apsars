@@ -1,10 +1,10 @@
 package com.github.cao.awa.apsars.tree.statement.control;
 
-import com.github.cao.awa.apsars.translate.ApsTranslator;
-import com.github.cao.awa.apsars.translate.lang.TranslateTarget;
-import com.github.cao.awa.apsars.translate.lang.element.TranslateElement;
 import com.github.cao.awa.apsars.tree.ApsAst;
+import com.github.cao.awa.apsars.tree.annotation.ApsAnnotationAst;
+import com.github.cao.awa.apsars.tree.clazz.ApsClassAst;
 import com.github.cao.awa.apsars.tree.method.ApsMethodBodyAst;
+import com.github.cao.awa.apsars.tree.statement.calculate.ApsCalculateAst;
 import com.github.cao.awa.apsars.tree.statement.result.ApsResultPresentingAst;
 import com.github.cao.awa.apsars.tree.statement.result.ApsResultingStatementAst;
 import com.github.cao.awa.apsars.tree.statement.result.ApsYieldAst;
@@ -35,7 +35,8 @@ public class ApsIfStatementAst extends ApsResultingStatementAst {
     @Override
     public void print(String ident) {
         System.out.println("Aps if: ");
-        System.out.println(ident + "    |_ predicate: " + ApsTranslator.translate(TranslateTarget.JAVA, TranslateElement.RESULT_PRESENTING_STATEMENT, this.predicate));
+        System.out.print(ident + "    |_ predicate: ");
+        this.predicate.print(ident + "    .   ");
         this.statements.print(ident + "    ");
     }
 
@@ -43,6 +44,13 @@ public class ApsIfStatementAst extends ApsResultingStatementAst {
     public void preprocess() {
         this.statements.preprocess();
         this.predicate.preprocess();
+
+        if (!findAst(ApsClassAst.class).isAnnotationPresent(ApsAnnotationAst.DO_NOT_REF_PRIMARY)) {
+            if (this.predicate.resultingStatement() instanceof ApsCalculateAst calculateAst) {
+                this.predicate = calculateAst.convertInvoke(false);
+                this.predicate.preprocess();
+            }
+        }
     }
 
     public void requestAssigment(ApsVariableAst parent) {

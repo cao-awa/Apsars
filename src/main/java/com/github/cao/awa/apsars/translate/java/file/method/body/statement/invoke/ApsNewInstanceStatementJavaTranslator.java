@@ -8,7 +8,7 @@ public class ApsNewInstanceStatementJavaTranslator extends ApsJavaTranslator<Aps
     @Override
     public void translate(StringBuilder builder, ApsNewInstanceStatementAst ast) {
         builder.append("new ");
-        builder.append(ast.resultType());
+        builder.append(ast.nameIdentity());
         paren(this, this::translateParams);
 
         translateFluents(this);

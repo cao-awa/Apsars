@@ -14,7 +14,7 @@ public class ApsMethodJavaTranslator extends ApsJavaTranslator<ApsMethodAst> imp
     public void translate(StringBuilder builder, ApsMethodAst ast) {
         if (!ast.annotations().isEmpty()) {
             translator(TranslateElement.ANNOTATION, next -> {
-                for (ApsAnnotationAst annotationAst : ast.annotations().values()) {
+                for (ApsAnnotationAst annotationAst : ast.annotations()) {
                     next.postTranslate(builder, annotationAst);
                     builder.append(" ");
                 }

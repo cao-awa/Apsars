@@ -29,11 +29,22 @@ public class ApsInvokeObjectAst extends ApsInvokeAst {
 
     @Override
     public void print(String ident, boolean endElement) {
-        super.print(ident, endElement);
-    }
-
-    @Override
-    public void preprocess() {
-
+        System.out.println("Aps invoke: " + objectName() + "." + nameIdentity() + (fluentInvoke().isEmpty() ? "" : " (fluent" + (withEnd() ? "/end" : "") + ")"));
+        System.out.println(ident + "|_ params: ");
+        if (!params().isEmpty()) {
+            int i = 0;
+            for (ApsResultPresentingAst param : params()) {
+                System.out.print(ident + "   " + i++ + ": ");
+                param.print(ident + "   ");
+            }
+        }
+        if (!fluentInvoke().isEmpty()) {
+            System.out.println(ident + "|_ next invoke: ");
+            int i = 1;
+            for (ApsInvokeAst fluentInvoke : fluentInvoke()) {
+                System.out.print(ident + "    " + i + ": ");
+                fluentInvoke.print(ident + "    ", i++ == fluentInvoke().size());
+            }
+        }
     }
 }

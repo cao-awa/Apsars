@@ -6,7 +6,9 @@ import com.github.cao.awa.apsars.element.clazz.ApsClassModifierType;
 import com.github.cao.awa.apsars.element.modifier.ApsAccessibleModifier;
 import com.github.cao.awa.apsars.element.modifier.ApsModifierRequiredAst;
 import com.github.cao.awa.apsars.element.modifier.clazz.ApsClassModifier;
+import com.github.cao.awa.apsars.translate.java.pool.ApsarsClassPool;
 import com.github.cao.awa.apsars.tree.ApsAst;
+import com.github.cao.awa.apsars.tree.annotation.ApsAnnotationAst;
 import com.github.cao.awa.apsars.tree.clazz.inherit.ApsBinderAst;
 import com.github.cao.awa.apsars.tree.clazz.inherit.ApsBindingParameterAst;
 import com.github.cao.awa.apsars.tree.method.ApsMethodAst;
@@ -33,9 +35,18 @@ public class ApsClassAst extends ApsAst implements ApsModifierRequiredAst<ApsCla
     private final List<ApsMethodAst> methods = ApricotCollectionFactor.arrayList();
     private final Set<ApsBinderAst> binders = ApricotCollectionFactor.hashSet();
     private final List<ApsLetAst> lets = ApricotCollectionFactor.arrayList();
+    private final List<ApsAnnotationAst> annotations = ApricotCollectionFactor.arrayList();
 
     public ApsClassAst(ApsAst parent) {
         super(parent);
+    }
+
+    public boolean isAnnotationPresent(String fullName) {
+        return this.annotations.contains(ApsarsClassPool.annotation(fullName));
+    }
+
+    public void addAnnotation(ApsAnnotationAst annotationAst) {
+        this.annotations.add(annotationAst);
     }
 
     public void addMemberParameter(ApsMemberParameterAst parameterAst) {
@@ -96,7 +107,12 @@ public class ApsClassAst extends ApsAst implements ApsModifierRequiredAst<ApsCla
         for (ApsMemberParameterAst parameter : this.parameters) {
             parameter.print(ident + concat + "   |   ");
         }
-        System.out.println(ident + concat + "   |_ binders: " + this.binders);
+        if (!this.binders.isEmpty()) {
+            System.out.println(ident + concat + "   |_ binders: " + this.binders);
+        }
+        if (!this.annotations.isEmpty()) {
+            System.out.println(ident + concat + "   |_ binders: " + this.annotations);
+        }
         System.out.println(ident + concat + "   |_ methods: ");
         int i = 1;
         for (ApsMethodAst method : this.methods) {
@@ -106,6 +122,10 @@ public class ApsClassAst extends ApsAst implements ApsModifierRequiredAst<ApsCla
 
     @Override
     public void preprocess() {
+        for (ApsAnnotationAst annotation : this.annotations) {
+            annotation.preprocess();
+        }
+
         for (ApsLetAst let : this.lets) {
             let.preprocess();
         }
@@ -129,6 +149,33 @@ public class ApsClassAst extends ApsAst implements ApsModifierRequiredAst<ApsCla
                     if (!parameter.isFinal()) {
                         addMethod(ApsMethodAst.accessor(parameter.nameIdentity(), parameter.argType(), false, false, true, null));
                     }
+                }
+            }
+        }
+    }
+
+    @Override
+    public void postprocess() {
+        for (ApsAnnotationAst annotation : this.annotations) {
+            annotation.postprocess();
+        }
+
+        for (ApsLetAst let : this.lets) {
+            let.postprocess();
+        }
+
+        for (ApsMemberParameterAst parameterAst : this.parameters) {
+            parameterAst.postprocess();
+        }
+
+        for (ApsMethodAst methodAst : this.methods) {
+            methodAst.postprocess();
+        }
+
+        if (!this.binders.isEmpty()) {
+            for (ApsBinderAst binder : findAst(ApsClassAst.class).binders()) {
+                for (ApsBindingParameterAst parameter : binder.parameters()) {
+                    parameter.postprocess();
                 }
             }
         }

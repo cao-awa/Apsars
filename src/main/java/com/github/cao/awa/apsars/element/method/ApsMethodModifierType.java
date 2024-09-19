@@ -1,15 +1,31 @@
 package com.github.cao.awa.apsars.element.method;
 
 import com.github.cao.awa.apsars.element.modifier.ApsModifierType;
+import com.github.cao.awa.apsars.element.modifier.method.*;
+
+import java.util.function.Supplier;
 
 public enum ApsMethodModifierType implements ApsModifierType {
-    IS_FINAL,
+    IS_FINAL(ApsMethodFinalModifier::new),
 
-    IS_STATIC,
+    IS_STATIC(ApsMethodStaticModifier::new),
 
-    SYNCHRONIZED,
+    SYNCHRONIZED(ApsMethodSynchronizedModifier::new),
 
-    SAFEPOINT,
+    SAFEPOINT(ApsMethodSafepointModifier::new),
 
-    NULLSAFE,
+    NULLSAFE(ApsMethodNullsafeModifier::new);
+
+    private final Supplier<ApsMethodModifier> modifier;
+
+    ApsMethodModifierType(Supplier<ApsMethodModifier> modifier) {
+        this.modifier = modifier;
+    }
+
+    public ApsMethodModifier modifier() {
+        if (this.modifier != null) {
+            return this.modifier.get();
+        }
+        return null;
+    }
 }

@@ -8,6 +8,7 @@ public abstract class ApsLocalVariableModifier extends ApsModifier<ApsLocalVaria
     public static ApsLocalVariableModifier create(ApsLocalVariableKeyword keyword) {
         return switch (keyword) {
             case FINAL -> new ApsLocalVariableFinalModifier();
+            case SYNC, SYNCHRONIZED -> new ApsLocalVariableSynchronizedModifier();
             default -> null;
         };
     }

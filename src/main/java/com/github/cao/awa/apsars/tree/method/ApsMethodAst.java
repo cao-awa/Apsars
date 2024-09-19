@@ -10,6 +10,7 @@ import com.github.cao.awa.apsars.element.modifier.method.parameter.ApsMethodPara
 import com.github.cao.awa.apsars.parser.token.keyword.method.ApsMethodKeyword;
 import com.github.cao.awa.apsars.parser.token.keyword.method.ApsMethodParamKeyword;
 import com.github.cao.awa.apsars.translate.ApsTranslator;
+import com.github.cao.awa.apsars.translate.java.pool.ApsarsClassPool;
 import com.github.cao.awa.apsars.translate.lang.TranslateTarget;
 import com.github.cao.awa.apsars.translate.lang.element.TranslateElement;
 import com.github.cao.awa.apsars.tree.ApsAst;
@@ -57,7 +58,7 @@ public class ApsMethodAst extends ApsAst implements ApsModifierRequiredAst<ApsMe
     private final Map<ApsMethodModifierType, ApsMethodModifier> modifiers = ApricotCollectionFactor.hashMap();
     @Setter
     private ApsAccessibleModifier accessible = ApsAccessibleType.PRIVATE.generic();
-    private final Map<String, ApsAnnotationAst> annotations = ApricotCollectionFactor.hashMap();
+    private final List<ApsAnnotationAst> annotations = ApricotCollectionFactor.arrayList();
     private final Set<String> compilerFlags = ApricotCollectionFactor.hashSet();
 
     public ApsMethodAst(ApsAst parent) {
@@ -94,11 +95,7 @@ public class ApsMethodAst extends ApsAst implements ApsModifierRequiredAst<ApsMe
     }
 
     public void addAnnotation(ApsAnnotationAst annotation) {
-        ApsAnnotationAst definedModifier = this.annotations.get(annotation.nameIdentity());
-        if (definedModifier != null) {
-            throw new IllegalArgumentException("The annotation '" + annotation.nameIdentity() + "' already defined as '" + annotation + "'");
-        }
-        this.annotations.put(annotation.nameIdentity(), annotation);
+        this.annotations.add(annotation);
     }
 
     public void addCompilerFlag(String... flag) {
@@ -147,7 +144,7 @@ public class ApsMethodAst extends ApsAst implements ApsModifierRequiredAst<ApsMe
         }
         if (!this.annotations.isEmpty()) {
             System.out.println(ident + "|_ compiler flags: ");
-            for (ApsAnnotationAst annotationAst : this.annotations.values()) {
+            for (ApsAnnotationAst annotationAst : this.annotations) {
                 System.out.println(ident + "    |_ " + annotationAst.nameIdentity());
             }
         }
@@ -155,8 +152,18 @@ public class ApsMethodAst extends ApsAst implements ApsModifierRequiredAst<ApsMe
 
     @Override
     public void preprocess() {
+        Manipulate.notNull(this.methodBody, ApsMethodBodyAst::preprocess);
+
+        for (ApsAnnotationAst value : this.annotations) {
+            value.preprocess();
+        }
+
         if (this.compilerFlags.contains("virtual-method")) {
             this.isVirtual = true;
+        }
+
+        if (this.compilerFlags.contains("try-inline")) {
+            Manipulate.notNull(ApsarsClassPool.annotation(ApsAnnotationAst.TRY_INLINE), this::addAnnotation);
         }
 
         if (this.modifiers.get(ApsMethodModifierType.IS_FINAL) != null) {
@@ -235,8 +242,20 @@ public class ApsMethodAst extends ApsAst implements ApsModifierRequiredAst<ApsMe
         }
 
         Manipulate.notNull(this.param, ApsMethodParameterAst::preprocess);
-        Manipulate.notNull(this.methodBody, ApsMethodBodyAst::preprocess);
         Manipulate.notNull(this.extraCatch, ApsMethodExtraCatchAst::preprocess);
+        Manipulate.notNull(this.returnType, ApsArgTypeAst::preprocess);
+    }
+
+    @Override
+    public void postprocess() {
+        Manipulate.notNull(this.methodBody, ApsMethodBodyAst::postprocess);
+        Manipulate.notNull(this.param, ApsMethodParameterAst::postprocess);
+        Manipulate.notNull(this.extraCatch, ApsMethodExtraCatchAst::postprocess);
+        Manipulate.notNull(this.returnType, ApsArgTypeAst::postprocess);
+
+        for (ApsAnnotationAst value : this.annotations) {
+            value.postprocess();
+        }
     }
 
     public static ApsMethodAst virtual(String nameIdentity, ApsArgTypeAst rType, Function<ApsMethodAst, ApsMethodParameterAst> param, ApsAst parentAst) {

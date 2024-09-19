@@ -2,10 +2,14 @@ package com.github.cao.awa.apsars.translate.java;
 
 import com.github.cao.awa.apsars.translate.ApsTranslator;
 import com.github.cao.awa.apsars.translate.java.file.ApsFileJavaTranslator;
+import com.github.cao.awa.apsars.translate.java.file.annotation.ApsAnnotationStatementJavaTranslator;
 import com.github.cao.awa.apsars.translate.java.file.binder.ApsBinderJavaTranslator;
 import com.github.cao.awa.apsars.translate.java.file.clazz.ApsClassJavaTranslator;
 import com.github.cao.awa.apsars.translate.java.file.clazz.param.ApsBindingParameterJavaTranslator;
 import com.github.cao.awa.apsars.translate.java.file.clazz.param.ApsMemberParameterJavaTranslator;
+import com.github.cao.awa.apsars.translate.java.file.constant.ApsConstantStatementJavaTranslator;
+import com.github.cao.awa.apsars.translate.java.file.constant.ApsStringConstantStatementJavaTranslator;
+import com.github.cao.awa.apsars.translate.java.file.constant.primary.*;
 import com.github.cao.awa.apsars.translate.java.file.importing.ApsImportJavaTranslator;
 import com.github.cao.awa.apsars.translate.java.file.method.ApsMethodJavaTranslator;
 import com.github.cao.awa.apsars.translate.java.file.method.body.ApsMethodBodyJavaTranslator;
@@ -40,6 +44,8 @@ public abstract class ApsJavaTranslator<T extends ApsAst> extends ApsTranslator<
 
         registerJava(TranslateElementEnum.IMPORT, new ApsImportJavaTranslator());
 
+        registerJava(TranslateElementEnum.ANNOTATION, new ApsAnnotationStatementJavaTranslator());
+
         registerJava(TranslateElementEnum.CLASS, new ApsClassJavaTranslator());
         registerJava(TranslateElementEnum.MEMBER_PARAMETER, new ApsMemberParameterJavaTranslator());
 
@@ -67,6 +73,16 @@ public abstract class ApsJavaTranslator<T extends ApsAst> extends ApsTranslator<
         registerJava(TranslateElementEnum.INVOKE_OBJECT_STATEMENT, new ApsInvokeObjectStatementJavaTranslator());
         registerJava(TranslateElementEnum.NEW_INSTANCE_STATEMENT, new ApsNewInstanceStatementJavaTranslator());
         registerJava(TranslateElementEnum.LITERAL_STATEMENT, new ApsLiteralStatementJavaTranslator());
+        registerJava(TranslateElementEnum.CONSTANT, new ApsConstantStatementJavaTranslator());
+        registerJava(TranslateElementEnum.CONSTANT_SHORT, new ApsShortConstantStatementJavaTranslator());
+        registerJava(TranslateElementEnum.CONSTANT_INT, new ApsIntConstantStatementJavaTranslator());
+        registerJava(TranslateElementEnum.CONSTANT_LONG, new ApsLongConstantStatementJavaTranslator());
+        registerJava(TranslateElementEnum.CONSTANT_FLOAT, new ApsFloatConstantStatementJavaTranslator());
+        registerJava(TranslateElementEnum.CONSTANT_DOUBLE, new ApsDoubleConstantStatementJavaTranslator());
+        registerJava(TranslateElementEnum.CONSTANT_BYTE, new ApsByteConstantStatementJavaTranslator());
+        registerJava(TranslateElementEnum.CONSTANT_CHAR, new ApsCharConstantStatementJavaTranslator());
+        registerJava(TranslateElementEnum.CONSTANT_BOOLEAN, new ApsBooleanConstantStatementJavaTranslator());
+        registerJava(TranslateElementEnum.CONSTANT_STRING, new ApsStringConstantStatementJavaTranslator());
         registerJava(TranslateElementEnum.RESULTING_STATEMENT, new ApsResultingStatementJavaTranslator());
         registerJava(TranslateElementEnum.RETURN_STATEMENT, new ApsReturnStatementJavaTranslator());
         registerJava(TranslateElementEnum.TRY_CATCH_STATEMENT, new ApsTryCatchStatementJavaTranslator());

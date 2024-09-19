@@ -7,10 +7,14 @@ import com.github.cao.awa.apsars.translate.ApsTranslator;
 import com.github.cao.awa.apsars.translate.lang.TranslateTarget;
 import com.github.cao.awa.apsars.translate.lang.element.TranslateElement;
 import com.github.cao.awa.apsars.tree.ApsAst;
+import com.github.cao.awa.apsars.tree.annotation.ApsAnnotationAst;
+import com.github.cao.awa.apsars.tree.clazz.ApsClassAst;
+import com.github.cao.awa.apsars.tree.method.ApsMethodBodyAst;
 import com.github.cao.awa.apsars.tree.statement.ApsStatementAst;
 import com.github.cao.awa.apsars.tree.statement.calculate.ApsCalculateAst;
 import com.github.cao.awa.apsars.tree.statement.control.ApsIfStatementAst;
 import com.github.cao.awa.apsars.tree.statement.result.ApsResultPresentingAst;
+import com.github.cao.awa.apsars.tree.statement.result.instance.ApsNewInstanceStatementAst;
 import com.github.cao.awa.apsars.tree.vararg.ApsArgTypeAst;
 import lombok.Getter;
 import lombok.Setter;
@@ -38,14 +42,11 @@ public class ApsVariableAst extends ApsStatementAst {
 
     public ApsVariableAst(ApsAst ast) {
         super(ast);
+        withEnd(true);
     }
 
     public void addModifier(ApsLocalVariableModifier modifier) {
-        ApsLocalVariableModifier definedModifier = this.modifiers.get(modifier.type());
-        if (definedModifier != null) {
-            throw new IllegalArgumentException("The modifier type '" + definedModifier.type() + "' already defined as '" + definedModifier.literal() + "'");
-        }
-        this.modifiers.put(modifier.type(), modifier);
+        this.modifiers.putIfAbsent(modifier.type(), modifier);
     }
 
     public void removeModifier(ApsLocalVariableModifierType modifierType) {
@@ -81,6 +82,77 @@ public class ApsVariableAst extends ApsStatementAst {
             ifStatementAst.preprocess();
 
             ifStatementAst.requestAssigment(this);
+        }
+
+        if (!findAst(ApsClassAst.class).isAnnotationPresent(ApsAnnotationAst.DO_NOT_REF_PRIMARY)) {
+            if (this.assignment != null && this.assignment.resultingStatement() instanceof ApsCalculateAst calculateAst) {
+                calculateAst.preprocess();
+
+                ApsResultPresentingAst ast = calculateAst.convertInvoke(true);
+                if (ast != null) {
+                    this.assignment = ast;
+                    this.assignment.preprocess();
+                }
+            }
+        }
+
+        try {
+            if (this.type != null && !this.type.isRefPrimary() && this.defining) {
+                this.type = this.type.varyPrimary(this.modifiers.get(ApsLocalVariableModifierType.SYNCHRONIZED) != null);
+
+                if (this.type.isRefPrimary()) {
+                    assertPrimaryAssigment();
+                }
+
+                addModifier(ApsLocalVariableModifierType.IS_FINAL.modifier());
+
+                this.type.preprocess();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void postprocess() {
+        for (ApsVariableAst variableAst : findAst(ApsMethodBodyAst.class).fieldVariables()) {
+            if (variableAst != this && variableAst.nameIdentity().equals(this.nameIdentity) && variableAst.type().isRefPrimary()) {
+                this.nameIdentity = this.nameIdentity + ".delegate";
+            }
+        }
+    }
+
+    public void primary(ApsVariableAst source) {
+        if (source != this && source.nameIdentity().equals(this.nameIdentity) && source.type().isRefPrimary()) {
+            this.nameIdentity = this.nameIdentity + ".delegate";
+        }
+    }
+
+    public String primaryTo() {
+        if (nameIdentity().equals(this.nameIdentity) && type().isRefPrimary()) {
+            return this.nameIdentity + ".delegate";
+        }
+        return this.nameIdentity;
+    }
+
+    public void assertPrimaryAssigment() {
+        System.out.println(this.assignment + " ///");
+
+        if (this.assignment != null) {
+            ApsMethodBodyAst body = findAst(ApsMethodBodyAst.class);
+            int index = body.searchHere(this);
+
+            ApsVariableAst assigment = new ApsVariableAst(body);
+            assigment.nameIdentity(this.nameIdentity);
+            assigment.defining(false);
+            assigment.assignment(this.assignment);
+
+            body.insertStatement(index + 1, assigment);
+
+            ApsNewInstanceStatementAst newApsarsPrimary = new ApsNewInstanceStatementAst(body);
+            newApsarsPrimary.nameIdentity(this.type.nameIdentity());
+
+            this.assignment = ApsResultPresentingAst.statement(this, newApsarsPrimary);
         }
     }
 

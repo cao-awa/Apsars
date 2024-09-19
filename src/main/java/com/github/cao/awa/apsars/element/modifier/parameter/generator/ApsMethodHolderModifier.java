@@ -1,13 +1,11 @@
 package com.github.cao.awa.apsars.element.modifier.parameter.generator;
 
 import com.github.cao.awa.apsars.element.clazz.ApsMemberParameterModifierType;
-import com.github.cao.awa.apsars.element.method.ApsMethodModifierType;
-import com.github.cao.awa.apsars.element.modifier.method.ApsMethodModifier;
 import com.github.cao.awa.apsars.element.modifier.parameter.ApsMemberParameterModifier;
 
 public class ApsMethodHolderModifier extends ApsMemberParameterModifier {
-    private boolean setter;
-    private boolean getter;
+    private final boolean setter;
+    private final boolean getter;
 
     public ApsMethodHolderModifier() {
         this(true, true);
@@ -16,6 +14,14 @@ public class ApsMethodHolderModifier extends ApsMemberParameterModifier {
     public ApsMethodHolderModifier(boolean setter, boolean getter) {
         this.setter = setter;
         this.getter = getter;
+    }
+
+    public static ApsMethodHolderModifier getter() {
+        return new ApsMethodHolderModifier(false, true);
+    }
+
+    public static ApsMethodHolderModifier setter() {
+        return new ApsMethodHolderModifier(true, false);
     }
 
     @Override

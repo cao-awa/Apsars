@@ -2,20 +2,22 @@ grammar ApsarsStatement;
 
 import ApsarsRules, ArgType, ApsarsMethod;
 
+annotation: atSign identifier ( leftParen rightParen ) ? ;
+
 defineStatement: theStatement+ ;
 
 theStatement: (tryStatement | resultingStatement | defineVariableStatement | returnStatement | yieldStatement ) semicolon?;
 
-resultPresenting: constant | resultingStatement ;
+resultPresenting: constant | resultingStatement | identifier | fullName ;
 
 resultingStatement: invokeStatement | newInstanceStatement | ifStatement | calculateStatement ;
 
-calculatableResultPresenting: calculateStatementWithParen | invokeStatement | newInstanceStatement | constant ;
+calculatableResultPresenting: calculateStatementWithParen | invokeStatement | newInstanceStatement | constant | identifier | fullName ;
 
 ifStatement: ifKeyword
              leftParen (
               resultPresenting   |
-              comparingStatement
+              calculateStatement
              ) rightParen
              statementBlock
              (
@@ -97,8 +99,6 @@ tryStatement: Try
               )
 ;
 
-comparingStatement: resultPresenting (moreThan | lessThan) resultPresenting ;
-
 refCall: refCallFrom colon colon refCallMethod ;
 
 refCallFrom: identifier ;
@@ -123,7 +123,7 @@ validExtraInvokeParam: comma validInvokeParam;
 
 // <type> <name>
 // <type> <name> = <value>
-defineVariableStatement: argType? variableName (assignment ( resultPresenting | assignmentIdentifier ))? ;
+defineVariableStatement: variableModifiers? argType? variableName (assignment ( resultPresenting | assignmentIdentifier ))? ;
 
-variableName: identifier ;
+variableName: identifier | fullName ;
 

@@ -12,7 +12,11 @@ public class ApsInvokeStatementJavaTranslator extends ApsJavaTranslator<ApsInvok
         }
 
         builder.append(ast.nameIdentity());
-        paren(this, this::translateParams);
+        parenOr(
+                this,
+                x -> !x.accessingPublicField(),
+                this::translateParams
+        );
 
         translateFluents(this);
 

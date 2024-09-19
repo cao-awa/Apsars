@@ -1,0 +1,30 @@
+package com.github.cao.awa.apsars.std;
+
+@DoNotRefPrimary
+public unique class ApsarsLong {
+    public delegate: long;
+
+    public inline isMoreThan(comparingTarget: short): boolean -> this.delegate > comparingTarget;
+    public inline isMoreThan(comparingTarget: int): boolean -> this.delegate > comparingTarget;
+    public inline isMoreThan(comparingTarget: long): boolean -> this.delegate > comparingTarget;
+    public inline isMoreThan(comparingTarget: float): boolean -> this.delegate > comparingTarget;
+    public inline isMoreThan(comparingTarget: double): boolean -> this.delegate > comparingTarget;
+    public inline isMoreThan(comparingTarget: byte): boolean -> this.delegate > comparingTarget;
+    public inline isMoreThan(comparingTarget: char): boolean -> this.delegate > comparingTarget;
+
+    public inline isLessThan(comparingTarget: short): boolean -> this.delegate < comparingTarget;
+    public inline isLessThan(comparingTarget: int): boolean -> this.delegate < comparingTarget;
+    public inline isLessThan(comparingTarget: long): boolean -> this.delegate < comparingTarget;
+    public inline isLessThan(comparingTarget: float): boolean -> this.delegate < comparingTarget;
+    public inline isLessThan(comparingTarget: double): boolean -> this.delegate < comparingTarget;
+    public inline isLessThan(comparingTarget: byte): boolean -> this.delegate < comparingTarget;
+    public inline isLessThan(comparingTarget: char): boolean -> this.delegate < comparingTarget;
+
+    public inline isEquals(comparingTarget: short): boolean -> this.delegate == comparingTarget;
+    public inline isEquals(comparingTarget: int): boolean -> this.delegate == comparingTarget;
+    public inline isEquals(comparingTarget: long): boolean -> this.delegate == comparingTarget;
+    public inline isEquals(comparingTarget: float): boolean -> this.delegate == comparingTarget;
+    public inline isEquals(comparingTarget: double): boolean -> this.delegate == comparingTarget;
+    public inline isEquals(comparingTarget: byte): boolean -> this.delegate == comparingTarget;
+    public inline isEquals(comparingTarget: char): boolean -> this.delegate == comparingTarget;
+}

@@ -12,8 +12,10 @@ public class ApsResultPresentingStatementJavaTranslator extends ApsJavaTranslato
             builder.append(ast.refToken());
         } else if (ast.resultingStatement() != null) {
             postTranslate(TranslateElement.RESULTING_STATEMENT, ast.resultingStatement());
-        } else if (ast.constantLiteral() != null) {
-            postTranslate(TranslateElement.LITERAL_STATEMENT, ast.constantLiteral());
+        } else if (ast.literal() != null) {
+            postTranslate(TranslateElement.LITERAL_STATEMENT, ast.literal());
+        } else if (ast.constant() != null) {
+            postTranslate(TranslateElement.CONSTANT, ast.constant());
         }
     }
 }

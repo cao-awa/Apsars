@@ -3,14 +3,18 @@ package com.github.cao.awa.apsars.visitor;
 import com.github.cao.awa.apsars.antlr.ApsarsBaseVisitor;
 import com.github.cao.awa.apsars.antlr.ApsarsParser;
 import com.github.cao.awa.apsars.element.ApsAccessibleType;
+import com.github.cao.awa.apsars.element.method.ApsMethodModifierType;
 import com.github.cao.awa.apsars.element.modifier.ApsModifierRequiredAst;
 import com.github.cao.awa.apsars.element.modifier.clazz.ApsClassModifier;
 import com.github.cao.awa.apsars.element.modifier.method.ApsMethodModifier;
 import com.github.cao.awa.apsars.element.modifier.parameter.ApsMemberParameterModifier;
+import com.github.cao.awa.apsars.element.statement.ApsLocalVariableModifierType;
 import com.github.cao.awa.apsars.parser.token.keyword.clazz.ApsClassKeyword;
 import com.github.cao.awa.apsars.parser.token.keyword.clazz.ApsMemberParameterKeyword;
 import com.github.cao.awa.apsars.parser.token.keyword.method.ApsMethodKeyword;
+import com.github.cao.awa.apsars.translate.java.pool.ApsarsClassPool;
 import com.github.cao.awa.apsars.tree.ApsAst;
+import com.github.cao.awa.apsars.tree.annotation.ApsAnnotationAst;
 import com.github.cao.awa.apsars.tree.aps.ApsFileAst;
 import com.github.cao.awa.apsars.tree.aps.ApsImportAst;
 import com.github.cao.awa.apsars.tree.clazz.ApsClassAst;
@@ -22,6 +26,13 @@ import com.github.cao.awa.apsars.tree.method.parameter.ApsMethodParamElementAst;
 import com.github.cao.awa.apsars.tree.method.parameter.ApsMethodParameterAst;
 import com.github.cao.awa.apsars.tree.statement.ApsStatementAst;
 import com.github.cao.awa.apsars.tree.statement.calculate.ApsCalculateAst;
+import com.github.cao.awa.apsars.tree.statement.calculate.symbol.ApsOperators;
+import com.github.cao.awa.apsars.tree.statement.calculate.symbol.ApsSymbolAst;
+import com.github.cao.awa.apsars.tree.statement.constant.ApsConstantAst;
+import com.github.cao.awa.apsars.tree.statement.constant.ApsStringAst;
+import com.github.cao.awa.apsars.tree.statement.constant.primary.ApsBooleanAst;
+import com.github.cao.awa.apsars.tree.statement.constant.primary.ApsIntAst;
+import com.github.cao.awa.apsars.tree.statement.constant.primary.ApsNullAst;
 import com.github.cao.awa.apsars.tree.statement.control.ApsIfStatementAst;
 import com.github.cao.awa.apsars.tree.statement.invoke.ApsInvokeAst;
 import com.github.cao.awa.apsars.tree.statement.invoke.ApsInvokeObjectAst;
@@ -30,20 +41,21 @@ import com.github.cao.awa.apsars.tree.statement.result.ApsResultingStatementAst;
 import com.github.cao.awa.apsars.tree.statement.result.ApsReturnAst;
 import com.github.cao.awa.apsars.tree.statement.result.ApsYieldAst;
 import com.github.cao.awa.apsars.tree.statement.result.instance.ApsNewInstanceStatementAst;
-import com.github.cao.awa.apsars.tree.statement.special.literal.ApsLiteralStatementAst;
 import com.github.cao.awa.apsars.tree.statement.trys.ApsCatchListAst;
 import com.github.cao.awa.apsars.tree.statement.trys.ApsTryCatchAst;
 import com.github.cao.awa.apsars.tree.statement.variable.ApsVariableAst;
 import com.github.cao.awa.apsars.tree.vararg.ApsArgTypeAst;
 import org.antlr.v4.runtime.ParserRuleContext;
-import org.antlr.v4.runtime.RuleContext;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.RuleNode;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.List;
 import java.util.function.Consumer;
 
 public class ApsarsTreeVisitor extends ApsarsBaseVisitor<ApsAst> {
+    private static final Logger LOGGER = LogManager.getLogger("ApsarsTreeVisitor");
     private ApsAst current;
 
     @Override
@@ -125,18 +137,27 @@ public class ApsarsTreeVisitor extends ApsarsBaseVisitor<ApsAst> {
     }
 
     private <T extends ParserRuleContext> void ifAlternateValid(List<T> list, Consumer<T> action) {
-        if (list != null) {
-            System.out.println(list.stream().map(RuleContext::getText).toList());
-        }
         if (list != null && !list.isEmpty()) {
             action.accept(list.getFirst());
+        }
+    }
+
+    private <T extends ParserRuleContext> void ifValid(T list, Consumer<T> action) {
+        if (list != null) {
+            action.accept(list);
+        }
+    }
+
+    private <T extends ParserRuleContext> void ifValid(List<T> list, Consumer<T> action) {
+        if (list != null && !list.isEmpty()) {
+            list.forEach(action);
         }
     }
 
     private void ifPermission(ApsarsParser.PermissionModifiersContext ctx, ApsModifierRequiredAst<?> ast) {
         if (ctx != null) {
             if (ctx.isPrivate() != null) {
-                ast.addAccessible(ApsAccessibleType.PUBLIC.generic());
+                ast.addAccessible(ApsAccessibleType.PRIVATE.generic());
             }
             if (ctx.isPublic() != null) {
                 ast.addAccessible(ApsAccessibleType.PUBLIC.generic());
@@ -156,27 +177,27 @@ public class ApsarsTreeVisitor extends ApsarsBaseVisitor<ApsAst> {
 
         ast.nameIdentity(ctx.identifier().getText());
 
-        ApsarsParser.AlternateStaticAndFinalAndSyncContext treeParamAlternate = ctx.alternateStaticAndFinalAndSync();
-        ifAlternateValid(
-                treeParamAlternate.sync(),
-                sync -> ast.addModifier(ApsMethodKeyword.SYNC.modifier())
-        );
-
-        ifAlternateValid(
-                treeParamAlternate.isFinal(),
-                sync -> ast.addModifier(ApsMethodKeyword.FINAL.modifier())
-        );
-
-        ifAlternateValid(
-                treeParamAlternate.isStatic(),
-                sync -> {
-                    ast.addModifier(ApsMethodKeyword.STATIC.modifier());
+        ifValid(
+                ctx.alternateMethodModifiers(),
+                methodModifiers -> {
+                    ifAlternateValid(
+                            methodModifiers.sync(),
+                            sync -> ast.addModifier(ApsMethodModifierType.SYNCHRONIZED.modifier())
+                    );
 
                     ifAlternateValid(
-                            treeParamAlternate.isInline(),
-                            inline -> {
-                                ast.addCompilerFlag("try-inline");
-                            }
+                            methodModifiers.isFinal(),
+                            sync -> ast.addModifier(ApsMethodModifierType.IS_FINAL.modifier())
+                    );
+
+                    ifAlternateValid(
+                            methodModifiers.isStatic(),
+                            sync -> ast.addModifier(ApsMethodModifierType.IS_STATIC.modifier())
+                    );
+
+                    ifAlternateValid(
+                            methodModifiers.isInline(),
+                            inline -> ast.addCompilerFlag("try-inline")
                     );
                 }
         );
@@ -191,7 +212,49 @@ public class ApsarsTreeVisitor extends ApsarsBaseVisitor<ApsAst> {
         }
 
         this.current = ast;
-        ast.methodBody(visitDefineMethodBody(ctx.defineMethodBody()));
+        if (ctx.defineMethodBody() != null) {
+            ast.methodBody(visitDefineMethodBody(ctx.defineMethodBody()));
+        }
+
+        if (ctx.resultPresenting() != null) {
+            ApsMethodBodyAst body = new ApsMethodBodyAst(ast, null);
+
+            ApsStatementAst statement;
+
+            if (ast.returnType() != null) {
+                statement = new ApsReturnAst(body).result(visitResultPresenting(ctx.resultPresenting()));
+            } else {
+                statement = visitResultPresenting(ctx.resultPresenting()).resultingStatement();
+            }
+
+            if (statement == null) {
+                if (ast.returnType() != null) {
+                    LOGGER.warn("The refs statement must returning a value when it has return type");
+                } else {
+                    LOGGER.warn("Unsupported statement in method '{}'", ast.nameIdentity());
+                }
+            } else {
+                body.addStatement(statement);
+            }
+
+            ast.methodBody(body);
+        }
+
+        if (ctx.defineVariableStatement() != null) {
+            ApsMethodBodyAst body = new ApsMethodBodyAst(ast, null);
+
+            body.addStatement(visitDefineVariableStatement(ctx.defineVariableStatement()));
+
+            if (ast.returnType() != null) {
+                if (ast.returnType().nameIdentity().equals(ast.findAst(ApsClassAst.class).nameIdentity())) {
+                    body.addStatement(new ApsReturnAst(body).result(ApsResultPresentingAst.ref(body, "this")));
+                } else {
+                    body.addStatement(new ApsReturnAst(body).result(ApsResultPresentingAst.ref(body, ctx.defineVariableStatement().variableName().getText())));
+                }
+            }
+
+            ast.methodBody(body);
+        }
 
         return ast;
     }
@@ -313,14 +376,14 @@ public class ApsarsTreeVisitor extends ApsarsBaseVisitor<ApsAst> {
                         if (ctx.withMessage().validInvokeParam().validToken().identifier() != null) {
                             withMessage.refToken(ctx.withMessage().validInvokeParam().validToken().identifier().getText());
                         } else {
-                            withMessage.constantLiteral(new ApsLiteralStatementAst(
-                                    withMessage,
-                                    ctx.withMessage()
+                            withMessage.constant(new ApsStringAst(
+                                            withMessage
+                                    ).value(ctx.withMessage()
                                             .validInvokeParam()
                                             .validToken()
                                             .constant()
-                                            .getText()
-                            ));
+                                            .getText())
+                            );
                         }
                     } else {
                         this.current = invokeAst;
@@ -388,7 +451,7 @@ public class ApsarsTreeVisitor extends ApsarsBaseVisitor<ApsAst> {
     @Override
     public ApsNewInstanceStatementAst visitNewInstanceStatement(ApsarsParser.NewInstanceStatementContext ctx) {
         ApsNewInstanceStatementAst ast = new ApsNewInstanceStatementAst(this.current);
-        ast.resultType(ctx.identifier().getText());
+        ast.nameIdentity(ctx.identifier().getText());
         ApsarsParser.InvokeParamListContext paramList = ctx.invokeParamList();
         if (paramList != null && paramList.validInvokeParam() != null) {
             this.current = ast;
@@ -472,7 +535,7 @@ public class ApsarsTreeVisitor extends ApsarsBaseVisitor<ApsAst> {
                 ast.totalWithParen(true);
             } else {
                 ast.left(visitCalculateLeft(ctx.calculateLeft()));
-                ast.symbol(ctx.operator().getText());
+                ast.symbol(visitOperator(ctx.operator()));
                 ast.right(visitCalculateRight(ctx.calculateRight()));
             }
         }
@@ -481,7 +544,7 @@ public class ApsarsTreeVisitor extends ApsarsBaseVisitor<ApsAst> {
             for (ApsarsParser.ExtraCalculateStatementContext extraCalculateStatementContext : ctx.extraCalculateStatement()) {
                 ApsCalculateAst extraAst = new ApsCalculateAst(this.current);
                 extraAst.left(new ApsResultPresentingAst(ast).resultingStatement(ast));
-                extraAst.symbol(extraCalculateStatementContext.operator().getText());
+                extraAst.symbol(visitOperator(extraCalculateStatementContext.operator()));
                 extraAst.right(visitCalculatableResultPresenting(extraCalculateStatementContext.calculatableResultPresenting()));
 
                 ast = extraAst;
@@ -496,13 +559,13 @@ public class ApsarsTreeVisitor extends ApsarsBaseVisitor<ApsAst> {
         ApsCalculateAst ast = new ApsCalculateAst(this.current);
 
         ast.left(visitCalculateLeft(ctx.calculateLeft()));
-        ast.symbol(ctx.operator().getText());
+        ast.symbol(visitOperator(ctx.operator()));
         ast.right(visitCalculateRight(ctx.calculateRight()));
         if (ctx.extraCalculateStatement() != null) {
             for (ApsarsParser.ExtraCalculateStatementContext extraCalculateStatementContext : ctx.extraCalculateStatement()) {
                 ApsCalculateAst extraAst = new ApsCalculateAst(this.current);
                 extraAst.left(new ApsResultPresentingAst(ast).resultingStatement(ast));
-                extraAst.symbol(extraCalculateStatementContext.operator().getText());
+                extraAst.symbol(visitOperator(extraCalculateStatementContext.operator()));
                 extraAst.right(visitCalculatableResultPresenting(extraCalculateStatementContext.calculatableResultPresenting()));
 
                 ast = extraAst;
@@ -530,9 +593,13 @@ public class ApsarsTreeVisitor extends ApsarsBaseVisitor<ApsAst> {
         } else if (ctx.newInstanceStatement() != null) {
             ast.resultingStatement(visitNewInstanceStatement(ctx.newInstanceStatement()));
         } else if (ctx.constant() != null) {
-            ast.constantLiteral(visitConstant(ctx.constant()));
+            ast.constant(visitConstant(ctx.constant()));
         } else if (ctx.calculateStatementWithParen() != null) {
             ast.resultingStatement(visitCalculateStatementWithParen(ctx.calculateStatementWithParen()));
+        } else if (ctx.identifier() != null) {
+            ast.refToken(ctx.identifier().getText());
+        } else if (ctx.fullName() != null) {
+            ast.refToken(ctx.fullName().getText());
         }
         return ast;
     }
@@ -543,10 +610,103 @@ public class ApsarsTreeVisitor extends ApsarsBaseVisitor<ApsAst> {
         ast.leftWithParen(true);
         ast.left(visitCalculateLeftStatementWithParen(ctx.calculateLeftStatementWithParen()));
         if (ctx.operator() != null) {
-            ast.symbol(ctx.operator().getText());
+            ast.symbol(visitOperator(ctx.operator()));
             ast.right(visitCalculateRightStatementWithParen(ctx.calculateRightStatementWithParen()));
         }
         return ast;
+    }
+
+    @Override
+    public ApsSymbolAst visitOperator(ApsarsParser.OperatorContext ctx) {
+        if (ctx.arithmetic() != null) {
+            return visitArithmetic(ctx.arithmetic());
+        }
+
+        if (ctx.comparing() != null) {
+            return visitComparing(ctx.comparing());
+        }
+
+        if (ctx.not() != null) {
+            return ApsOperators.NOT;
+        }
+
+        return null;
+    }
+
+    @Override
+    public ApsSymbolAst visitComparing(ApsarsParser.ComparingContext ctx) {
+        if (ctx.comparingOr() != null) {
+            return visitComparingOr(ctx.comparingOr());
+        }
+
+        if (ctx.comparingAnd() != null) {
+            return visitComparingAnd(ctx.comparingAnd());
+        }
+
+        if (ctx.moreThan() != null) {
+            return ApsOperators.MORE_THAN;
+        }
+
+        if (ctx.lessThan() != null) {
+            return ApsOperators.LESS_THAN;
+        }
+
+        if (ctx.Equals() != null) {
+            return ApsOperators.EQUALS;
+        }
+
+        return null;
+    }
+
+    @Override
+    public ApsSymbolAst visitComparingAnd(ApsarsParser.ComparingAndContext ctx) {
+        if (ctx.and() != null) {
+            return ApsOperators.AND;
+        }
+
+        if (ctx.breakingAnd() != null) {
+            return ApsOperators.BREAKING_AND;
+        }
+
+        return null;
+    }
+
+    @Override
+    public ApsSymbolAst visitComparingOr(ApsarsParser.ComparingOrContext ctx) {
+        if (ctx.or() != null) {
+            return ApsOperators.OR;
+        }
+
+        if (ctx.breakingOr() != null) {
+            return ApsOperators.BREAKING_OR;
+        }
+
+        return null;
+    }
+
+    @Override
+    public ApsSymbolAst visitArithmetic(ApsarsParser.ArithmeticContext ctx) {
+        if (ctx.Plus() != null) {
+            return ApsOperators.PLUS;
+        }
+
+        if (ctx.Minus() != null) {
+            return ApsOperators.MINUS;
+        }
+
+        if (ctx.Multiply() != null) {
+            return ApsOperators.MULTIPLY;
+        }
+
+        if (ctx.Divide() != null) {
+            return ApsOperators.DIVIDE;
+        }
+
+        if (ctx.Pow() != null) {
+            return ApsOperators.POW;
+        }
+
+        return null;
     }
 
     @Override
@@ -572,10 +732,11 @@ public class ApsarsTreeVisitor extends ApsarsBaseVisitor<ApsAst> {
         if (ctx.resultPresenting() != null) {
             ast = visitResultPresenting(ctx.resultPresenting());
         } else if (ctx.validToken() != null) {
-            ast.constantLiteral(null);
+            ast.constant(null);
+            ast.literal(null);
             ast.resultingStatement(null);
             if (ctx.validToken().constant() != null) {
-                ast.constantLiteral(visitConstant(ctx.validToken().constant()));
+                ast.constant(visitConstant(ctx.validToken().constant()));
             } else if (ctx.validToken().identifier() != null) {
                 ast.refToken(ctx.validToken().identifier().getText());
             }
@@ -590,13 +751,17 @@ public class ApsarsTreeVisitor extends ApsarsBaseVisitor<ApsAst> {
         if (ctx.resultingStatement() != null) {
             ast.resultingStatement(visitResultingStatement(ctx.resultingStatement()));
         } else if (ctx.constant() != null) {
-            ast.constantLiteral(visitConstant(ctx.constant()));
+            ast.constant(visitConstant(ctx.constant()));
+        } else if (ctx.identifier() != null) {
+            ast.refToken(ctx.identifier().getText());
+        } else if (ctx.fullName() != null) {
+            ast.refToken(ctx.fullName().getText());
         }
         return ast;
     }
 
     @Override
-    public ApsLiteralStatementAst visitConstant(ApsarsParser.ConstantContext ctx) {
+    public ApsConstantAst visitConstant(ApsarsParser.ConstantContext ctx) {
         if (ctx.string() != null) {
             StringBuilder builder = new StringBuilder();
             builder.append("\"");
@@ -617,17 +782,36 @@ public class ApsarsTreeVisitor extends ApsarsBaseVisitor<ApsAst> {
                 }
             }
             builder.append("\"");
-            return new ApsLiteralStatementAst(this.current, builder.toString());
+            return new ApsStringAst(this.current).value(builder.toString());
         } else if (ctx.null_() != null) {
-            return new ApsLiteralStatementAst(this.current, "null");
-        } else {
-            return new ApsLiteralStatementAst(this.current, ctx.getText());
+            return new ApsNullAst(this.current);
+        } else if (ctx.number() != null) {
+            return new ApsIntAst(this.current).value(Integer.parseInt(ctx.getText()));
+        } else if (ctx.bool() != null) {
+            return new ApsBooleanAst(this.current).value(Boolean.parseBoolean(ctx.getText()));
         }
+        return new ApsStringAst(this.current).value(ctx.getText());
     }
 
     @Override
     public ApsVariableAst visitDefineVariableStatement(ApsarsParser.DefineVariableStatementContext ctx) {
         ApsVariableAst ast = new ApsVariableAst(this.current);
+
+        ifValid(
+                ctx.variableModifiers(),
+                modifiers -> {
+                    ifValid(
+                            modifiers.fieldFinal(),
+                            isFinal -> ast.addModifier(ApsLocalVariableModifierType.IS_FINAL.modifier())
+                    );
+
+                    ifValid(
+                            modifiers.sync(),
+                            isFinal -> ast.addModifier(ApsLocalVariableModifierType.SYNCHRONIZED.modifier())
+                    );
+                }
+        );
+
         if (ctx.argType() != null) {
             ast.type(visitArgType(ctx.argType()));
         } else {
@@ -734,8 +918,14 @@ public class ApsarsTreeVisitor extends ApsarsBaseVisitor<ApsAst> {
         if (this.current instanceof ApsFileAst fileAst) {
             ApsClassAst ast = new ApsClassAst(fileAst);
             this.current = ast;
+            ast.nameIdentity(ctx.identifier().getText());
 
             ifPermission(ctx.permissionModifiers(), ast);
+
+            ifValid(
+                    ctx.annotation(),
+                    annotation -> ast.addAnnotation(visitAnnotation(annotation))
+            );
 
             if (ctx.classFinal() != null) {
                 ast.addModifier(ApsClassModifier.create(ApsClassKeyword.of(ctx.classFinal().getText())));
@@ -758,12 +948,24 @@ public class ApsarsTreeVisitor extends ApsarsBaseVisitor<ApsAst> {
                     }
                 }
             }
-            ast.nameIdentity(ctx.identifier().getText());
 
             fileAst.addClass(ast);
             this.current = ast;
         }
         return this.current;
+    }
+
+    @Override
+    public ApsAnnotationAst visitAnnotation(ApsarsParser.AnnotationContext ctx) {
+        String annotationFullName = this.current.findAst(ApsFileAst.class).packageAt() + "." + ctx.identifier().getText();
+
+        ApsAnnotationAst annotation = ApsarsClassPool.annotation(annotationFullName);
+
+        if (annotation == null) {
+            annotation = new ApsAnnotationAst(this.current, ctx.identifier().getText());
+            ApsarsClassPool.registerAnnotation(annotationFullName, annotation);
+        }
+        return annotation;
     }
 
     @Override
@@ -806,8 +1008,8 @@ public class ApsarsTreeVisitor extends ApsarsBaseVisitor<ApsAst> {
         ApsIfStatementAst ast = new ApsIfStatementAst(this.current);
         if (ctx.resultPresenting() != null) {
             ast.predicate(visitResultPresenting(ctx.resultPresenting()));
-        } else if (ctx.comparingStatement() != null) {
-            ast.predicate(visitComparingStatement(ctx.comparingStatement()));
+        } else if (ctx.calculateStatement() != null) {
+            ast.predicate(new ApsResultPresentingAst(ast).resultingStatement(visitCalculateStatement(ctx.calculateStatement())));
         }
 
         if (ctx.statementBlock() != null) {
@@ -833,13 +1035,6 @@ public class ApsarsTreeVisitor extends ApsarsBaseVisitor<ApsAst> {
     @Override
     public ApsMethodBodyAst visitElseStatement(ApsarsParser.ElseStatementContext ctx) {
         return visitStatementBlock(ctx.statementBlock());
-    }
-
-    @Override
-    public ApsResultPresentingAst visitComparingStatement(ApsarsParser.ComparingStatementContext ctx) {
-        ApsResultPresentingAst ast = new ApsResultPresentingAst(this.current);
-
-        return ast;
     }
 
     @Override

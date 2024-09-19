@@ -7,6 +7,10 @@ import com.github.cao.awa.apsars.tree.aps.ApsFileAst;
 public class ApsFileJavaTranslator extends ApsJavaTranslator<ApsFileAst> implements ApsFileElementTranslator {
     @Override
     public void translate(StringBuilder builder, ApsFileAst ast) {
+        if (ast.packageAt() != null) {
+            builder.append("package ").append(ast.packageAt()).append(";");
+        }
+
         translateEach(this);
     }
 }

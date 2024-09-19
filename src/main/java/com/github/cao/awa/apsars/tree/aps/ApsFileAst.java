@@ -59,6 +59,26 @@ public class ApsFileAst extends ApsAst {
         addImport(importAst);
     }
 
+    @Override
+    public void postprocess() {
+        for (ApsClassAst classAst : this.classes) {
+            classAst.postprocess();
+        }
+        for (ApsImportAst importAst : this.imports) {
+            importAst.postprocess();
+        }
+    }
+
+    @Override
+    public void finalProcess() {
+        for (ApsClassAst classAst : this.classes) {
+            classAst.finalProcess();
+        }
+        for (ApsImportAst importAst : this.imports) {
+            importAst.finalProcess();
+        }
+    }
+
     public ApsArgTypeAst findValidArgType(String name) {
         for (ApsImportAst anImport : this.imports) {
             if (anImport.argType().nameIdentity().equals(name)) {

@@ -8,6 +8,8 @@ import com.github.cao.awa.apsars.tree.clazz.inherit.ApsBinderAst;
 public class ApsClassJavaTranslator extends ApsJavaTranslator<ApsClassAst> implements ApsClassElementTranslator {
     @Override
     public void translate(StringBuilder builder, ApsClassAst ast) {
+        translateAnnotations(this);
+
         translateAccessible(this);
 
         splitModifiersBySpace(this);

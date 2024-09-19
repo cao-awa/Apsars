@@ -3,30 +3,45 @@ grammar ApsarsMethod;
 import ApsarsRules, ArgType, ApsarsStatement;
 
 defineMethodUsingTemplate: template
-                            identifier
-                            // The method body.
-                            leftBrace (
-                                defineMethodBody                      ?
-                            ) rightBrace
+                           identifier
+                           // The method body.
+                           leftBrace (
+                               defineMethodBody ?
+                           ) rightBrace
 ;
 
-defineMethod: permissionModifiers                       ?
-              alternateStaticAndFinalAndSync            ?
+defineMethod: permissionModifiers            ?
+              alternateMethodModifiers        ?
               identifier
               leftParen (
                   // No params, direct done.
-                  rightParen                            |
+                  rightParen                 |
                   // Processes params, with right paren when ending params definition.
                   (
-                   methodParamListDefinition rightParen
+                   methodParamListDefinition
+                   rightParen
                   )
               )
               // Return type.
               methodReturnType?
-              // The method body.
-              leftBrace (
-                  defineMethodBody                      ?
-              ) rightBrace
+              (
+               (
+                (
+                 Equal | RightPointing
+                )
+                (
+                 resultPresenting            |
+                 defineVariableStatement
+                )
+                semicolon
+               )                             |
+               (
+                // The method body.
+                leftBrace (
+                    defineMethodBody         ?
+                ) rightBrace
+               )
+              )
 ;
 
 defineLetMethod: identifier
@@ -39,18 +54,20 @@ defineLetMethod: identifier
                      )
                  )
                  // Return type.
-                 methodReturnType?
-                 // The method body.
-                 leftBrace (
-                     defineMethodBody                      ?
-                 ) rightBrace
+                 methodReturnType                          ?
+                 (
+                  // The method body.
+                  leftBrace (
+                      defineMethodBody                     ?
+                  ) rightBrace
+                 )
 ;
 
 methodReturnType: (
  colon argType
 ) ;
 
-alternateStaticAndFinalAndSync: ( isFinal | isStatic | isInline | sync ) + ;
+alternateMethodModifiers: ( isFinal | isStatic | isInline | sync ) + ;
 
 defineMethodBody: defineStatement* ;
 

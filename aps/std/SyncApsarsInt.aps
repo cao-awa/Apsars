@@ -1,0 +1,14 @@
+package com.github.cao.awa.apsars.std;
+
+@DoNotRefPrimary
+public unique class SyncApsarsInt {
+    private delegate: int;
+
+    public sync delegate(): int -> this.delegate;
+
+    public sync delegate(updatingValue: int): int -> this.delegate = updatingValue;
+
+    public isMoreThan(comparingTarget: int): boolean -> this.delegate > comparingTarget;
+
+    public isMoreThan(comparingTarget: long): boolean -> this.delegate > comparingTarget;
+}

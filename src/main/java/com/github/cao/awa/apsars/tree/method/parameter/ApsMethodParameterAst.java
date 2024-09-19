@@ -31,8 +31,26 @@ public class ApsMethodParameterAst extends ApsAst {
 
     @Override
     public void preprocess() {
+        ApsMethodAst method = findAst(ApsMethodAst.class);
+
         for (ApsMethodParamElementAst methodParamElementAst : this.params.values()) {
             methodParamElementAst.preprocess();
+
+            method.methodBody().addPresentingFieldVariable(methodParamElementAst.toLocalVariable());
+        }
+    }
+
+    @Override
+    public void postprocess() {
+        for (ApsMethodParamElementAst methodParamElementAst : this.params.values()) {
+            methodParamElementAst.postprocess();
+        }
+    }
+
+    @Override
+    public void finalProcess() {
+        for (ApsMethodParamElementAst methodParamElementAst : this.params.values()) {
+            methodParamElementAst.finalProcess();
         }
     }
 

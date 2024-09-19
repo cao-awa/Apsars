@@ -1,0 +1,12 @@
+package com.github.cao.awa.apsars.translate.java.file.constant.primary;
+
+import com.github.cao.awa.apsars.translate.base.file.constant.primary.ApsFloatConstantStatementElementTranslator;
+import com.github.cao.awa.apsars.translate.java.ApsJavaTranslator;
+import com.github.cao.awa.apsars.tree.statement.constant.primary.ApsFloatAst;
+
+public class ApsFloatConstantStatementJavaTranslator extends ApsJavaTranslator<ApsFloatAst> implements ApsFloatConstantStatementElementTranslator {
+    @Override
+    public void translate(StringBuilder builder, ApsFloatAst ast) {
+        builder.append(ast.value()).append("F");
+    }
+}

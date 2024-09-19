@@ -108,8 +108,6 @@ LeftAngleBracket  : '<'               ;
 RightAngleBracket : '>'               ;
 leftAngleBracket  : LeftAngleBracket  ;
 rightAngleBracket : RightAngleBracket ;
-lessThan          : LeftAngleBracket  ;
-moreThan          : RightAngleBracket ;
 
 LeftBracket  : '['          ;
 RightBracket : ']'          ;
@@ -132,10 +130,11 @@ colon      : Colon     ;
 semicolon  : Semicolon ;
 comma      : Comma     ;
 
-Equals   : '=='   ;
-Equal     : '='    ;
-LeftEquals : '<-'   ;
-As         : ' as ' ;
+Equals        : '=='   ;
+Equal         : '='    ;
+LeftPointing  : '<-'   ;
+RightPointing : '->'   ;
+As            : ' as ' ;
 
 // Connect sign(s).
 AndSign : '&'     ;
@@ -155,19 +154,40 @@ wordOr  : WordOr  ;
 Plus     : '+'                                    ;
 Minus    : '-'                                    ;
 Multiply : '*'                                    ;
-Devide   : '/'                                    ;
+Divide   : '/'                                    ;
 Pow      : '^'                                    ;
 plus     : Plus                                   ;
 minus    : Minus                                  ;
 multiply : Multiply                               ;
-devide   : Devide                                 ;
+divide   : Divide                                 ;
 pow      : Pow                                    ;
-operator : Plus | Minus | Multiply | Devide | Pow ;
+operator : arithmetic | comparing | not           ;
 
-//
+arithmetic : Plus | Minus | Multiply | Divide | Pow ;
+
+// Comparator sign(s).
+BreakingAndSign : '&&'              ;
+BreakingOrSign  : '||'              ;
+Not             : '!'               ;
+breakingAnd     : BreakingAndSign   ;
+breakingOr      : BreakingOrSign    ;
+not             : Not               ;
+lessThan        : LeftAngleBracket  ;
+moreThan        : RightAngleBracket ;
+
+comparingAnd : and | breakingAnd ;
+comparingOr  : or  | breakingOr  ;
+
+comparing : ( comparingAnd | comparingOr | moreThan | lessThan | Equals ) ;
+
+// At.
+AtSign : '@'    ;
+atSign : AtSign ;
+
+// Qoutation.
 Quotation : '"' ;
 
-// Null
+// Null.
 Null : ' null' | ' null ' | 'null ' ;
 null : Null                         ;
 
@@ -176,7 +196,7 @@ True  : 'true'       ;
 False : 'false'      ;
 bool  : True | False ;
 
-assignment: Equal | LeftEquals | As ;
+assignment: Equal | LeftPointing | As ;
 
 isEquals : Equals ;
 
@@ -234,3 +254,5 @@ methodFinal : isFinal ;
 classFinal: isUnique | isFinal ;
 
 assignmentIdentifier: identifier ;
+
+variableModifiers: ( fieldFinal | sync ) + ;

@@ -9,7 +9,7 @@ import kotlin.jvm.internal.Ref;
 
 public interface ApsInvokeStatementElementTranslator<T extends ApsInvokeAst> extends ApsResultingStatementElementTranslator<T> {
     default void translateParams(ApsTranslator<T> translator) {
-        ApsInvokeAst ast = translator.ast();
+        T ast = translator.ast();
         StringBuilder builder = translator.builder();
 
         int edge = ast.params().size() - 1;
@@ -28,15 +28,13 @@ public interface ApsInvokeStatementElementTranslator<T extends ApsInvokeAst> ext
     }
 
     default void translateFluents(ApsTranslator<T> translator) {
-        ApsInvokeAst ast = translator.ast();
+        T ast = translator.ast();
         StringBuilder builder = translator.builder();
 
-        if (!ast.fluentInvoke().isEmpty()) {
-            translator.translator(TranslateElement.INVOKE_STATEMENT, next -> {
-                for (ApsInvokeAst fluent : ast.fluentInvoke()) {
-                    next.postTranslate(builder, fluent);
-                }
-            });
-        }
+        translator.translator(TranslateElement.INVOKE_STATEMENT, next -> {
+            for (ApsInvokeAst fluent : ast.fluentInvoke()) {
+                next.postTranslate(builder, fluent);
+            }
+        });
     }
 }

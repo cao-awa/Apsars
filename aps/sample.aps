@@ -8,13 +8,11 @@ public class Sample2 {
     public static Logger field2 = LogManager.getLogger("Sample2");
 
     template main {
-        int x = (1 + 1);
-        int y = (1 + 100) + (1 + 456);
-        int z = 1 + (1 + 123 + 567);
-        int awa = (1 + 1) + (1234) + 456 + ((((((789))))));
-    }
+        int a = 5;
+        int b = 100;
 
-    static handleErr(err: Throwable) {
-        System.out.println("Call\{}handling");
+        int x = (a * a) * b + b;
+
+        System.out.println(x);
     }
 }

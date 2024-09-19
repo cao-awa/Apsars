@@ -10,6 +10,7 @@ import com.github.cao.awa.apsars.translate.lang.element.TranslateElement;
 import com.github.cao.awa.apsars.tree.ApsAst;
 import com.github.cao.awa.apsars.tree.method.ApsMethodAst;
 import com.github.cao.awa.apsars.tree.method.parameter.preset.ApsMethodParameterDefaultValueAst;
+import com.github.cao.awa.apsars.tree.statement.variable.ApsVariableAst;
 import com.github.cao.awa.apsars.tree.vararg.ApsArgTypeAst;
 import com.github.cao.awa.sinuatum.manipulate.Manipulate;
 import lombok.Getter;
@@ -68,6 +69,16 @@ public class ApsMethodParamElementAst extends ApsAst {
         }
     }
 
+    public ApsVariableAst toLocalVariable() {
+        ApsVariableAst variable = new ApsVariableAst(this);
+
+        variable.nameIdentity(nameIdentity());
+        variable.defining(false);
+        variable.type(argType());
+
+        return variable;
+    }
+
     @Override
     public void preprocess() {
         if (this.modifiers.get(ApsMethodParamModifierType.DEFAULT_VALUE) != null) {
@@ -85,5 +96,23 @@ public class ApsMethodParamElementAst extends ApsAst {
                 findAst(ApsMethodAst.class).addCompilerFlag("parameters-has-default-value");
             }
         }
+
+        if (!this.argType.isRefPrimary()) {
+            this.argType = this.argType.varyPrimary();
+
+            if (this.argType.isRefPrimary()) {
+                addModifier(ApsMethodParamModifierType.IS_FINAL.modifier());
+            }
+        }
+    }
+
+    @Override
+    public void postprocess() {
+
+    }
+
+    @Override
+    public void finalProcess() {
+
     }
 }

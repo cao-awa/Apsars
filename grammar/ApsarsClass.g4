@@ -2,7 +2,8 @@ grammar ApsarsClass;
 
 import ApsarsRules, ApsarsMethod;
 
-defineClass: permissionModifiers                    ?
+defineClass: annotation                             *
+             permissionModifiers                    ?
              classFinal                             ?
              classKeyword identifier
              leftBrace

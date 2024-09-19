@@ -738,42 +738,6 @@ public class ApsarsBaseListener implements ApsarsListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void enterLessThan(ApsarsParser.LessThanContext ctx) {
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
-     */
-    @Override
-    public void exitLessThan(ApsarsParser.LessThanContext ctx) {
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
-     */
-    @Override
-    public void enterMoreThan(ApsarsParser.MoreThanContext ctx) {
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
-     */
-    @Override
-    public void exitMoreThan(ApsarsParser.MoreThanContext ctx) {
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
-     */
-    @Override
     public void enterLeftBracket(ApsarsParser.LeftBracketContext ctx) {
     }
 
@@ -1098,7 +1062,7 @@ public class ApsarsBaseListener implements ApsarsListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void enterDevide(ApsarsParser.DevideContext ctx) {
+    public void enterDivide(ApsarsParser.DivideContext ctx) {
     }
 
     /**
@@ -1107,7 +1071,7 @@ public class ApsarsBaseListener implements ApsarsListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void exitDevide(ApsarsParser.DevideContext ctx) {
+    public void exitDivide(ApsarsParser.DivideContext ctx) {
     }
 
     /**
@@ -1144,6 +1108,186 @@ public class ApsarsBaseListener implements ApsarsListener {
      */
     @Override
     public void exitOperator(ApsarsParser.OperatorContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void enterArithmetic(ApsarsParser.ArithmeticContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void exitArithmetic(ApsarsParser.ArithmeticContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void enterBreakingAnd(ApsarsParser.BreakingAndContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void exitBreakingAnd(ApsarsParser.BreakingAndContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void enterBreakingOr(ApsarsParser.BreakingOrContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void exitBreakingOr(ApsarsParser.BreakingOrContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void enterNot(ApsarsParser.NotContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void exitNot(ApsarsParser.NotContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void enterLessThan(ApsarsParser.LessThanContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void exitLessThan(ApsarsParser.LessThanContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void enterMoreThan(ApsarsParser.MoreThanContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void exitMoreThan(ApsarsParser.MoreThanContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void enterComparingAnd(ApsarsParser.ComparingAndContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void exitComparingAnd(ApsarsParser.ComparingAndContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void enterComparingOr(ApsarsParser.ComparingOrContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void exitComparingOr(ApsarsParser.ComparingOrContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void enterComparing(ApsarsParser.ComparingContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void exitComparing(ApsarsParser.ComparingContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void enterAtSign(ApsarsParser.AtSignContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void exitAtSign(ApsarsParser.AtSignContext ctx) {
     }
 
     /**
@@ -1530,6 +1674,24 @@ public class ApsarsBaseListener implements ApsarsListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
+    public void enterVariableModifiers(ApsarsParser.VariableModifiersContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void exitVariableModifiers(ApsarsParser.VariableModifiersContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
     public void enterDefineMethodUsingTemplate(ApsarsParser.DefineMethodUsingTemplateContext ctx) {
     }
 
@@ -1602,7 +1764,7 @@ public class ApsarsBaseListener implements ApsarsListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void enterAlternateStaticAndFinalAndSync(ApsarsParser.AlternateStaticAndFinalAndSyncContext ctx) {
+    public void enterAlternateMethodModifiers(ApsarsParser.AlternateMethodModifiersContext ctx) {
     }
 
     /**
@@ -1611,7 +1773,7 @@ public class ApsarsBaseListener implements ApsarsListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void exitAlternateStaticAndFinalAndSync(ApsarsParser.AlternateStaticAndFinalAndSyncContext ctx) {
+    public void exitAlternateMethodModifiers(ApsarsParser.AlternateMethodModifiersContext ctx) {
     }
 
     /**
@@ -1882,6 +2044,24 @@ public class ApsarsBaseListener implements ApsarsListener {
      */
     @Override
     public void exitSpacing(ApsarsParser.SpacingContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void enterAnnotation(ApsarsParser.AnnotationContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void exitAnnotation(ApsarsParser.AnnotationContext ctx) {
     }
 
     /**
@@ -2296,24 +2476,6 @@ public class ApsarsBaseListener implements ApsarsListener {
      */
     @Override
     public void exitTryStatement(ApsarsParser.TryStatementContext ctx) {
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
-     */
-    @Override
-    public void enterComparingStatement(ApsarsParser.ComparingStatementContext ctx) {
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
-     */
-    @Override
-    public void exitComparingStatement(ApsarsParser.ComparingStatementContext ctx) {
     }
 
     /**

@@ -14,6 +14,7 @@ public class ApsReturnAst extends ApsStatementAst {
 
     public ApsReturnAst(ApsAst ast) {
         super(ast);
+        withEnd(true);
     }
 
     @Override

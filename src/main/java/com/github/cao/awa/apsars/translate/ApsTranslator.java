@@ -64,6 +64,12 @@ public abstract class ApsTranslator<T extends ApsAst> implements ApsElementTrans
         translate(builder, ast);
     }
 
+    public String postTranslateToString(T ast) {
+        StringBuilder builder = new StringBuilder();
+        postTranslate(builder, ast);
+        return builder.toString();
+    }
+
     public <X extends ApsAst> void postTranslate(TranslateElementData<X> element, X ast) {
         T recovery = this.ast;
         translator(element).postTranslate(this.builder, ast);
@@ -74,15 +80,21 @@ public abstract class ApsTranslator<T extends ApsAst> implements ApsElementTrans
         postTranslate(element, nextAst.apply(this.ast));
     }
 
+    public static <X extends ApsAst> ApsTranslator<X> translator(TranslateTarget target, TranslateElementData<X> element) {
+        return Manipulate.cast(translators.get(target).get(element.elementType()));
+    }
+
     public <X extends ApsAst> ApsTranslator<X> translator(TranslateElementData<X> element) {
         return Manipulate.cast(translators.get(target()).get(element.elementType()));
     }
 
     public <X extends ApsAst> void translator(TranslateElementData<X> element, Consumer<ApsTranslator<X>> action) {
+        T recovery = this.ast;
         ApsTranslator<X> ast = Manipulate.cast(translators.get(target()).get(element.elementType()));
         if (ast == null) {
             return;
         }
         action.accept(ast);
+        this.ast = recovery;
     }
 }
