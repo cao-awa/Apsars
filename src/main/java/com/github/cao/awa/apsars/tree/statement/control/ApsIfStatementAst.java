@@ -1,5 +1,6 @@
 package com.github.cao.awa.apsars.tree.statement.control;
 
+import com.alibaba.fastjson2.JSONObject;
 import com.github.cao.awa.apsars.tree.ApsAst;
 import com.github.cao.awa.apsars.tree.annotation.ApsAnnotationAst;
 import com.github.cao.awa.apsars.tree.clazz.ApsClassAst;
@@ -28,6 +29,31 @@ public class ApsIfStatementAst extends ApsResultingStatementAst {
     }
 
     @Override
+    public void generateStructure(JSONObject json) {
+        json.put("statement_type", "if");
+
+        if (this.predicate != null) {
+            JSONObject thePredicate = new JSONObject();
+            this.predicate.generateStructure(thePredicate);
+            json.put("predicate", thePredicate);
+        }
+
+        this.statements.generateStructure(json);
+
+        if (this.elseIfStatement != null) {
+            JSONObject theElse = new JSONObject();
+            this.elseIfStatement.generateStructure(theElse);
+            json.put("else_if", theElse);
+        }
+
+        if (this.elseStatements != null) {
+            JSONObject theElse = new JSONObject();
+            this.elseStatements.generateStructure(theElse);
+            json.put("else", theElse);
+        }
+    }
+
+    @Override
     public ApsArgTypeAst resultingType() {
         return ApsArgTypeAst.UNKNOWN;
     }
@@ -45,11 +71,46 @@ public class ApsIfStatementAst extends ApsResultingStatementAst {
         this.statements.preprocess();
         this.predicate.preprocess();
 
+        if (this.elseStatements != null) {
+            this.elseStatements.preprocess();
+        }
+        if (this.elseIfStatement != null) {
+            this.elseIfStatement.preprocess();
+        }
+
         if (!findAst(ApsClassAst.class).isAnnotationPresent(ApsAnnotationAst.DO_NOT_REF_PRIMARY)) {
             if (this.predicate.resultingStatement() instanceof ApsCalculateAst calculateAst) {
-                this.predicate = calculateAst.convertInvoke(false);
+                calculateAst.prepares();
+
+                this.predicate = calculateAst.convertSymbol(false);
                 this.predicate.preprocess();
             }
+        }
+    }
+
+    @Override
+    public void postprocess() {
+        this.statements.postprocess();
+        this.predicate.postprocess();
+
+        if (this.elseStatements != null) {
+            this.elseStatements.postprocess();
+        }
+        if (this.elseIfStatement != null) {
+            this.elseIfStatement.postprocess();
+        }
+    }
+
+    @Override
+    public void consequence() {
+        this.statements.consequence();
+        this.predicate.consequence();
+
+        if (this.elseStatements != null) {
+            this.elseStatements.consequence();
+        }
+        if (this.elseIfStatement != null) {
+            this.elseIfStatement.consequence();
         }
     }
 

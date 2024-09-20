@@ -17,9 +17,4 @@ public class ApsOrSymbol extends ApsSymbolAst {
     public String name() {
         return "or";
     }
-
-    @Override
-    public void preprocess() {
-
-    }
 }

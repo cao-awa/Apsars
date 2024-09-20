@@ -1,5 +1,6 @@
 package com.github.cao.awa.apsars.tree.annotation;
 
+import com.alibaba.fastjson2.JSONObject;
 import com.github.cao.awa.apsars.tree.ApsAst;
 import com.github.cao.awa.apsars.tree.statement.ApsStatementAst;
 import lombok.Getter;
@@ -17,12 +18,27 @@ public class ApsAnnotationAst extends ApsStatementAst {
         this.nameIdentity = nameIdentity;
     }
 
+    @Override
+    public void generateStructure(JSONObject json) {
+        json.put("name", this.nameIdentity);
+    }
+
     public void print(String ident) {
         System.out.println(ident + "|_ Aps annotation: @" + this.nameIdentity);
     }
 
     @Override
     public void preprocess() {
+
+    }
+
+    @Override
+    public void postprocess() {
+
+    }
+
+    @Override
+    public void consequence() {
 
     }
 }

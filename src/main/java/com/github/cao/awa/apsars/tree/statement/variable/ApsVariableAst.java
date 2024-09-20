@@ -1,5 +1,7 @@
 package com.github.cao.awa.apsars.tree.statement.variable;
 
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 import com.github.cao.awa.apricot.util.collection.ApricotCollectionFactor;
 import com.github.cao.awa.apsars.element.modifier.statement.ApsLocalVariableModifier;
 import com.github.cao.awa.apsars.element.statement.ApsLocalVariableModifierType;
@@ -13,6 +15,8 @@ import com.github.cao.awa.apsars.tree.method.ApsMethodBodyAst;
 import com.github.cao.awa.apsars.tree.statement.ApsStatementAst;
 import com.github.cao.awa.apsars.tree.statement.calculate.ApsCalculateAst;
 import com.github.cao.awa.apsars.tree.statement.control.ApsIfStatementAst;
+import com.github.cao.awa.apsars.tree.statement.invoke.ApsInvokeObjectAst;
+import com.github.cao.awa.apsars.tree.statement.result.ApsRefReferenceAst;
 import com.github.cao.awa.apsars.tree.statement.result.ApsResultPresentingAst;
 import com.github.cao.awa.apsars.tree.statement.result.instance.ApsNewInstanceStatementAst;
 import com.github.cao.awa.apsars.tree.vararg.ApsArgTypeAst;
@@ -22,27 +26,64 @@ import lombok.experimental.Accessors;
 
 import java.util.Map;
 
+@Getter
 @Accessors(fluent = true)
 public class ApsVariableAst extends ApsStatementAst {
-    @Getter
     @Setter
     private ApsArgTypeAst type;
-    @Getter
     @Setter
-    private String nameIdentity;
-    @Getter
+    private ApsRefReferenceAst reference;
     @Setter
     private ApsResultPresentingAst assignment;
-    @Getter
     @Setter
-    private boolean defining = true;
-    @Getter
+    private boolean defining = false;
     private boolean isAlternate = false;
+    @Setter
+    private boolean instanceReference = false;
+    @Setter
+    private boolean doNotProcess = false;
     private final Map<ApsLocalVariableModifierType, ApsLocalVariableModifier> modifiers = ApricotCollectionFactor.hashMap();
 
     public ApsVariableAst(ApsAst ast) {
         super(ast);
         withEnd(true);
+    }
+
+    @Override
+    public void generateStructure(JSONObject json) {
+        json.put("statement_type", "variable");
+
+        JSONObject reference = new JSONObject();
+        this.reference.generateStructure(reference);
+        json.put("reference", reference);
+
+        if (this.defining) {
+            json.put("is_defining", true);
+        }
+
+        if (this.isAlternate) {
+            json.put("is_alternate", true);
+        }
+
+        json.put("is_instance_reference", this.instanceReference);
+
+        if (!this.modifiers.isEmpty()) {
+            JSONArray modifiers = new JSONArray();
+            for (ApsLocalVariableModifier modifier : this.modifiers.values()) {
+                modifiers.add(modifier.literal());
+            }
+            json.put("modifiers", modifiers);
+        }
+
+        if (this.assignment != null) {
+            JSONObject theAssignment = new JSONObject();
+            this.assignment.generateStructure(theAssignment);
+            json.put("assignment", theAssignment);
+        }
+
+        JSONObject type = new JSONObject();
+        this.type.generateStructure(type);
+        json.put("type", type);
     }
 
     public void addModifier(ApsLocalVariableModifier modifier) {
@@ -56,9 +97,9 @@ public class ApsVariableAst extends ApsStatementAst {
     @Override
     public void print(String ident) {
         if (this.defining) {
-            System.out.println("Local variable (" + ApsTranslator.translate(TranslateTarget.JAVA, TranslateElement.ARG_TYPE, this.type) + ") ‘" + this.nameIdentity + "': ");
+            System.out.println("Local variable (" + ApsTranslator.translate(TranslateTarget.JAVA, TranslateElement.ARG_TYPE, this.type) + ") ‘" + this.reference + "': ");
         } else {
-            System.out.println("Reassignment local variable ‘" + this.nameIdentity + "': ");
+            System.out.println("Reassignment local variable ‘" + this.reference + "': ");
         }
         if (this.assignment.resultingStatement() instanceof ApsCalculateAst) {
             System.out.print(ident);
@@ -68,8 +109,29 @@ public class ApsVariableAst extends ApsStatementAst {
 
     @Override
     public void preprocess() {
-        if (this.type == null) {
-            this.defining = false;
+        if (this.doNotProcess) {
+            return;
+        }
+
+        if (this.reference != null) {
+            this.reference.parent(this);
+            this.reference.preprocess();
+
+            if (this.type == null && !this.reference.doNotProcess()) {
+                this.defining = false;
+
+                ApsVariableAst variable = findAst(ApsMethodBodyAst.class).fieldVariable(this.reference.nameIdentity());
+
+                System.out.println("NULL WHEN: " + this.reference.nameIdentity());
+
+                this.type = variable.type();
+            }
+        }
+
+        this.type.preprocess();
+
+        if (this.reference != null) {
+            this.reference.type(this.type);
         }
 
         if (this.assignment != null) {
@@ -79,16 +141,39 @@ public class ApsVariableAst extends ApsStatementAst {
         if (this.assignment != null && this.assignment.resultingStatement() instanceof ApsIfStatementAst ifStatementAst) {
             this.isAlternate = true;
 
-            ifStatementAst.preprocess();
-
             ifStatementAst.requestAssigment(this);
         }
 
-        if (!findAst(ApsClassAst.class).isAnnotationPresent(ApsAnnotationAst.DO_NOT_REF_PRIMARY)) {
+        if (this.type != null && this.type.referencePrimary() == null && this.defining) {
+            this.type = this.type.varyPrimary(this.modifiers.get(ApsLocalVariableModifierType.SYNCHRONIZED) != null);
+
+            if (this.type.referencePrimary() != null) {
+                assertPrimaryAssigment();
+            }
+
+            addModifier(ApsLocalVariableModifierType.IS_FINAL.modifier());
+
+            this.type.preprocess();
+        }
+    }
+
+    @Override
+    public void postprocess() {
+        if (this.doNotProcess) {
+            return;
+        }
+
+        if (this.assignment != null) {
+            this.assignment.postprocess();
+        }
+
+        this.type.postprocess();
+
+        if (this.type.referencePrimary() == null && !findAst(ApsClassAst.class).isAnnotationPresent(ApsAnnotationAst.DO_NOT_REF_PRIMARY)) {
             if (this.assignment != null && this.assignment.resultingStatement() instanceof ApsCalculateAst calculateAst) {
                 calculateAst.preprocess();
 
-                ApsResultPresentingAst ast = calculateAst.convertInvoke(true);
+                ApsResultPresentingAst ast = calculateAst.convertSymbol(true);
                 if (ast != null) {
                     this.assignment = ast;
                     this.assignment.preprocess();
@@ -96,69 +181,61 @@ public class ApsVariableAst extends ApsStatementAst {
             }
         }
 
-        try {
-            if (this.type != null && !this.type.isRefPrimary() && this.defining) {
-                this.type = this.type.varyPrimary(this.modifiers.get(ApsLocalVariableModifierType.SYNCHRONIZED) != null);
-
-                if (this.type.isRefPrimary()) {
-                    assertPrimaryAssigment();
-                }
-
-                addModifier(ApsLocalVariableModifierType.IS_FINAL.modifier());
-
-                this.type.preprocess();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        this.reference.postprocess();
     }
 
     @Override
-    public void postprocess() {
-        for (ApsVariableAst variableAst : findAst(ApsMethodBodyAst.class).fieldVariables()) {
-            if (variableAst != this && variableAst.nameIdentity().equals(this.nameIdentity) && variableAst.type().isRefPrimary()) {
-                this.nameIdentity = this.nameIdentity + ".delegate";
-            }
+    public void consequence() {
+        if (this.doNotProcess) {
+            return;
         }
-    }
 
-    public void primary(ApsVariableAst source) {
-        if (source != this && source.nameIdentity().equals(this.nameIdentity) && source.type().isRefPrimary()) {
-            this.nameIdentity = this.nameIdentity + ".delegate";
-        }
-    }
+        this.type.consequence();
 
-    public String primaryTo() {
-        if (nameIdentity().equals(this.nameIdentity) && type().isRefPrimary()) {
-            return this.nameIdentity + ".delegate";
+        this.reference.consequence();
+
+        if (this.assignment != null) {
+            this.assignment.consequence();
         }
-        return this.nameIdentity;
     }
 
     public void assertPrimaryAssigment() {
-        System.out.println(this.assignment + " ///");
-
         if (this.assignment != null) {
             ApsMethodBodyAst body = findAst(ApsMethodBodyAst.class);
             int index = body.searchHere(this);
 
-            ApsVariableAst assigment = new ApsVariableAst(body);
-            assigment.nameIdentity(this.nameIdentity);
-            assigment.defining(false);
-            assigment.assignment(this.assignment);
+            if (this.type.referencePrimary().sync()) {
+                ApsInvokeObjectAst invoke = new ApsInvokeObjectAst(body);
 
-            body.insertStatement(index + 1, assigment);
+                invoke.objectName(this.reference.dump(invoke));
+                invoke.reference(new ApsRefReferenceAst(invoke).nameIdentity("delegate").doNotProcess(true));
+                invoke.addParam(this.assignment);
+                invoke.withEnd(true);
+                body.insertStatement(index + 1, invoke);
+
+                invoke.preprocess();
+            } else {
+                ApsVariableAst assignment = new ApsVariableAst(body);
+
+                assignment.reference(this.reference.dump(assignment));
+                assignment.defining(false);
+                assignment.assignment(this.assignment);
+
+                body.insertStatement(index + 1, assignment);
+                assignment.preprocess();
+            }
 
             ApsNewInstanceStatementAst newApsarsPrimary = new ApsNewInstanceStatementAst(body);
-            newApsarsPrimary.nameIdentity(this.type.nameIdentity());
+            newApsarsPrimary.reference(new ApsRefReferenceAst(newApsarsPrimary).type(this.type).doNotProcess(true));
 
             this.assignment = ApsResultPresentingAst.statement(this, newApsarsPrimary);
+            this.assignment.preprocess();
         }
     }
 
     public ApsVariableAst assignmentToSelf(ApsResultPresentingAst assignment) {
         return new ApsVariableAst(parent())
-                .nameIdentity(this.nameIdentity)
+                .reference(this.reference)
                 .assignment(assignment)
                 .withEnd(true)
                 .defining(false);

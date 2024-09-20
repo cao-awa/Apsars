@@ -17,9 +17,4 @@ public class ApsPlusSymbol extends ApsSymbolAst {
     public String name() {
         return "plus";
     }
-
-    @Override
-    public void preprocess() {
-
-    }
 }

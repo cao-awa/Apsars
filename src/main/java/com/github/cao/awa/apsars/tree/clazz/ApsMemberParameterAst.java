@@ -1,5 +1,6 @@
 package com.github.cao.awa.apsars.tree.clazz;
 
+import com.alibaba.fastjson2.JSONObject;
 import com.github.cao.awa.apricot.util.collection.ApricotCollectionFactor;
 import com.github.cao.awa.apsars.element.ApsAccessibleType;
 import com.github.cao.awa.apsars.element.clazz.ApsMemberParameterModifierType;
@@ -9,7 +10,9 @@ import com.github.cao.awa.apsars.element.modifier.method.ApsMethodModifier;
 import com.github.cao.awa.apsars.element.modifier.parameter.ApsMemberParameterModifier;
 import com.github.cao.awa.apsars.parser.token.keyword.method.ApsMethodKeyword;
 import com.github.cao.awa.apsars.tree.method.ApsMethodAst;
+import com.github.cao.awa.apsars.tree.statement.result.ApsRefReferenceAst;
 import com.github.cao.awa.apsars.tree.statement.result.ApsResultPresentingAst;
+import com.github.cao.awa.apsars.tree.statement.variable.ApsVariableAst;
 import com.github.cao.awa.apsars.tree.vararg.ApsStatementWithVarargs;
 import com.github.cao.awa.sinuatum.manipulate.Manipulate;
 import lombok.Getter;
@@ -26,6 +29,8 @@ import java.util.Map;
 @Accessors(fluent = true)
 public class ApsMemberParameterAst extends ApsStatementWithVarargs implements ApsModifierRequiredAst<ApsMemberParameterModifier> {
     private static final Logger LOGGER = LogManager.getLogger("ApsMemberParameterAst");
+    @Getter
+    private ApsVariableAst variable;
     @Setter
     private String nameIdentity;
     @Setter
@@ -66,6 +71,23 @@ public class ApsMemberParameterAst extends ApsStatementWithVarargs implements Ap
     }
 
     @Override
+    public void generateStructure(JSONObject json) {
+        json.put("name", this.nameIdentity);
+
+        JSONObject theArgType = new JSONObject();
+        argType().generateStructure(theArgType);
+        json.put("type", theArgType);
+
+        json.put("accessible", this.accessible.getAccessibleType().literal());
+
+        if (this.value != null) {
+            JSONObject theValue = new JSONObject();
+            this.value.generateStructure(theValue);
+            json.put("value", theValue);
+        }
+    }
+
+    @Override
     public void print(String ident) {
         System.out.println(ident + "|_ Aps member parameter: " + this.nameIdentity);
         System.out.println(ident + ".   |_ type: ");
@@ -90,6 +112,17 @@ public class ApsMemberParameterAst extends ApsStatementWithVarargs implements Ap
             this.modifiers.remove(ApsMemberParameterModifierType.HOLDER_SET);
         }
 
+        this.variable = new ApsVariableAst(this)
+                .reference(new ApsRefReferenceAst(this).nameIdentity(
+                                this.nameIdentity
+                        ).type(argType())
+                )
+                .type(argType())
+                .defining(true)
+                .assignment(this.value)
+                .instanceReference(true)
+                .doNotProcess(true);
+
         for (ApsMemberParameterModifierType modifierType : List.of(ApsMemberParameterModifierType.HOLDER, ApsMemberParameterModifierType.HOLDER_GET, ApsMemberParameterModifierType.HOLDER_SET)) {
             Manipulate.notNull(this.modifiers.get(modifierType), modifier -> {
                 switch (modifierType) {
@@ -101,6 +134,24 @@ public class ApsMemberParameterAst extends ApsStatementWithVarargs implements Ap
                     case HOLDER_SET -> appendSetHolder();
                 }
             });
+        }
+
+        if (this.value != null) {
+            this.value.preprocess();
+        }
+    }
+
+    @Override
+    public void postprocess() {
+        if (this.value != null) {
+            this.value.postprocess();
+        }
+    }
+
+    @Override
+    public void consequence() {
+        if (this.value != null) {
+            this.value.consequence();
         }
     }
 

@@ -1,5 +1,7 @@
 package com.github.cao.awa.apsars;
 
+import com.alibaba.fastjson2.JSONObject;
+import com.alibaba.fastjson2.JSONWriter;
 import com.github.cao.awa.apricot.util.io.IOUtil;
 import com.github.cao.awa.apsars.builtin.ApsarsBuiltin;
 import com.github.cao.awa.apsars.translate.ApsTranslator;
@@ -30,10 +32,16 @@ public class Main {
 
             System.out.println(ast);
 
+            System.out.println("-- Struct ");
+            JSONObject struct = new JSONObject();
+            ast.generateStructure(struct);
+            System.out.println(struct.toString(JSONWriter.Feature.PrettyFormat));
+
             System.out.println("-- Generate java");
 
             String generatedJava = ApsTranslator.translate(TranslateTarget.JAVA, TranslateElement.FILE, ast);
             System.out.println(generatedJava);
+
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -1,5 +1,7 @@
 package com.github.cao.awa.apsars.tree.clazz;
 
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 import com.github.cao.awa.apricot.util.collection.ApricotCollectionFactor;
 import com.github.cao.awa.apsars.element.ApsAccessibleType;
 import com.github.cao.awa.apsars.element.clazz.ApsClassModifierType;
@@ -13,6 +15,8 @@ import com.github.cao.awa.apsars.tree.clazz.inherit.ApsBinderAst;
 import com.github.cao.awa.apsars.tree.clazz.inherit.ApsBindingParameterAst;
 import com.github.cao.awa.apsars.tree.method.ApsMethodAst;
 import com.github.cao.awa.apsars.tree.method.ApsMethodBodyAst;
+import com.github.cao.awa.apsars.tree.method.parameter.ApsMethodParamElementAst;
+import com.github.cao.awa.apsars.tree.vararg.ApsArgTypeAst;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -39,6 +43,70 @@ public class ApsClassAst extends ApsAst implements ApsModifierRequiredAst<ApsCla
 
     public ApsClassAst(ApsAst parent) {
         super(parent);
+    }
+
+    @Override
+    public void generateStructure(JSONObject json) {
+        json.put("name", this.nameIdentity);
+        json.put("accessible", this.accessible.getAccessibleType().literal());
+
+        if (!this.modifiers.isEmpty()) {
+            JSONArray modifiers = new JSONArray();
+            for (ApsClassModifier modifier : this.modifiers.values()) {
+                modifiers.add(modifier.literal());
+            }
+            json.put("modifiers", modifiers);
+        }
+
+        if (!this.parameters.isEmpty()) {
+            JSONObject parameters = new JSONObject();
+            for (ApsMemberParameterAst parameter : this.parameters) {
+                JSONObject theParameter = new JSONObject();
+                parameter.generateStructure(theParameter);
+                parameters.put(parameter.nameIdentity(), theParameter);
+            }
+            json.put("parameters", parameters);
+        }
+
+        if (!this.methods.isEmpty()) {
+            JSONObject methods = new JSONObject();
+            for (ApsMethodAst method : this.methods) {
+                JSONObject theMethod = new JSONObject();
+                method.generateStructure(theMethod);
+                methods.put(method.formatCompletedName(), theMethod);
+            }
+            json.put("methods", methods);
+        }
+
+        if (!this.binders.isEmpty()) {
+            JSONObject binders = new JSONObject();
+            for (ApsBinderAst binder : this.binders) {
+                JSONObject theBinder = new JSONObject();
+                binder.generateStructure(theBinder);
+                binders.put(binder.nameIdentity(), theBinder);
+            }
+            json.put("binders", binders);
+        }
+
+        if (!this.lets.isEmpty()) {
+            JSONArray lets = new JSONArray();
+            for (ApsLetAst let : this.lets) {
+                JSONObject theLet = new JSONObject();
+                let.generateStructure(theLet);
+                lets.add(theLet);
+            }
+            json.put("lets", lets);
+        }
+
+        if (!this.annotations.isEmpty()) {
+            JSONObject annotations = new JSONObject();
+            for (ApsAnnotationAst annotation : this.annotations) {
+                JSONObject theAnnotation = new JSONObject();
+                annotation.generateStructure(theAnnotation);
+                annotations.put(annotation.nameIdentity(), theAnnotation);
+            }
+            json.put("annotations", annotations);
+        }
     }
 
     public boolean isAnnotationPresent(String fullName) {
@@ -69,6 +137,25 @@ public class ApsClassAst extends ApsAst implements ApsModifierRequiredAst<ApsCla
         this.lets.add(letAst);
     }
 
+    public ApsMethodAst findMethod(String name, Collection<ApsArgTypeAst> args) {
+        for (ApsMethodAst method : this.methods) {
+            if (!method.nameIdentity().equals(name)) {
+                continue;
+            }
+
+            for (ApsMethodParamElementAst value : method.param().params().values()) {
+                if (!value.argType().equals(args)) {
+                    break;
+                }
+            }
+
+            return method;
+        }
+
+        return null;
+    }
+
+
     @Override
     public Collection<ApsClassModifier> modifierValues() {
         return this.modifiers.values();
@@ -91,6 +178,10 @@ public class ApsClassAst extends ApsAst implements ApsModifierRequiredAst<ApsCla
         return this.modifiers.get(ApsClassModifierType.IS_FINAL) != null;
     }
 
+    public String formatCompletedName() {
+        return this.nameIdentity;
+    }
+
     @Override
     public void print(String ident, boolean endElement) {
         String concat = endElement ? " " : ".";
@@ -111,7 +202,7 @@ public class ApsClassAst extends ApsAst implements ApsModifierRequiredAst<ApsCla
             System.out.println(ident + concat + "   |_ binders: " + this.binders);
         }
         if (!this.annotations.isEmpty()) {
-            System.out.println(ident + concat + "   |_ binders: " + this.annotations);
+            System.out.println(ident + concat + "   |_ annotations: " + this.annotations);
         }
         System.out.println(ident + concat + "   |_ methods: ");
         int i = 1;
@@ -122,19 +213,23 @@ public class ApsClassAst extends ApsAst implements ApsModifierRequiredAst<ApsCla
 
     @Override
     public void preprocess() {
+        for (ApsMemberParameterAst parameterAst : this.parameters) {
+            parameterAst.parent(this);
+            parameterAst.preprocess();
+        }
+
         for (ApsAnnotationAst annotation : this.annotations) {
+            annotation.parent(this);
             annotation.preprocess();
         }
 
         for (ApsLetAst let : this.lets) {
+            let.parent(this);
             let.preprocess();
         }
 
-        for (ApsMemberParameterAst parameterAst : this.parameters) {
-            parameterAst.preprocess();
-        }
-
         for (ApsMethodAst methodAst : this.methods) {
+            methodAst.parent(this);
             methodAst.preprocess();
         }
 
@@ -156,16 +251,16 @@ public class ApsClassAst extends ApsAst implements ApsModifierRequiredAst<ApsCla
 
     @Override
     public void postprocess() {
+        for (ApsMemberParameterAst parameterAst : this.parameters) {
+            parameterAst.postprocess();
+        }
+
         for (ApsAnnotationAst annotation : this.annotations) {
             annotation.postprocess();
         }
 
         for (ApsLetAst let : this.lets) {
             let.postprocess();
-        }
-
-        for (ApsMemberParameterAst parameterAst : this.parameters) {
-            parameterAst.postprocess();
         }
 
         for (ApsMethodAst methodAst : this.methods) {
@@ -176,6 +271,33 @@ public class ApsClassAst extends ApsAst implements ApsModifierRequiredAst<ApsCla
             for (ApsBinderAst binder : findAst(ApsClassAst.class).binders()) {
                 for (ApsBindingParameterAst parameter : binder.parameters()) {
                     parameter.postprocess();
+                }
+            }
+        }
+    }
+
+    @Override
+    public void consequence() {
+        for (ApsMemberParameterAst parameterAst : this.parameters) {
+            parameterAst.consequence();
+        }
+
+        for (ApsAnnotationAst annotation : this.annotations) {
+            annotation.consequence();
+        }
+
+        for (ApsLetAst let : this.lets) {
+            let.consequence();
+        }
+
+        for (ApsMethodAst methodAst : this.methods) {
+            methodAst.consequence();
+        }
+
+        if (!this.binders.isEmpty()) {
+            for (ApsBinderAst binder : findAst(ApsClassAst.class).binders()) {
+                for (ApsBindingParameterAst parameter : binder.parameters()) {
+                    parameter.consequence();
                 }
             }
         }

@@ -15,12 +15,12 @@ public class ApsNewInstanceStatementAst extends ApsInvokeAst {
 
     @Override
     public ApsArgTypeAst resultingType() {
-        return findAst(ApsFileAst.class).findValidArgType(nameIdentity());
+        return findAst(ApsFileAst.class).findValidArgType(reference().nameIdentity());
     }
 
     @Override
     public void print(String ident) {
-        System.out.println(ident + "New '" + nameIdentity() + "' instance");
+        System.out.println(ident + "New '" + reference().type().nameIdentity() + "' instance");
 
         if (!params().isEmpty()) {
             System.out.println(ident + "    |_ params: ");

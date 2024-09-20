@@ -19,7 +19,7 @@ public class ApsEqualsSymbol extends ApsSymbolAst {
     }
 
     @Override
-    public void preprocess() {
-
+    public boolean leftPrimary() {
+        return true;
     }
 }

@@ -1,9 +1,11 @@
 package com.github.cao.awa.apsars.tree.statement.calculate;
 
+import com.alibaba.fastjson2.JSONObject;
 import com.github.cao.awa.apsars.tree.ApsAst;
 import com.github.cao.awa.apsars.tree.statement.calculate.symbol.ApsSymbolAst;
 import com.github.cao.awa.apsars.tree.statement.invoke.ApsInvokeAst;
 import com.github.cao.awa.apsars.tree.statement.invoke.ApsInvokeObjectAst;
+import com.github.cao.awa.apsars.tree.statement.result.ApsRefReferenceAst;
 import com.github.cao.awa.apsars.tree.statement.result.ApsResultPresentingAst;
 import com.github.cao.awa.apsars.tree.statement.result.ApsResultingStatementAst;
 import com.github.cao.awa.apsars.tree.vararg.ApsArgTypeAst;
@@ -27,6 +29,11 @@ public class ApsCalculateAst extends ApsResultingStatementAst {
     }
 
     @Override
+    public void generateStructure(JSONObject json) {
+        // TODO
+    }
+
+    @Override
     public ApsArgTypeAst resultingType() {
         return ApsArgTypeAst.UNKNOWN;
     }
@@ -45,75 +52,161 @@ public class ApsCalculateAst extends ApsResultingStatementAst {
         }
     }
 
-    public ApsResultPresentingAst convertInvoke(boolean appendDelegateAccessor) {
+    public ApsResultPresentingAst convertSymbol(boolean appendDelegateAccessor) {
         ApsResultPresentingAst ast = deepCalculate(
-                left(),
-                symbol(),
-                right()
+                true,
+                this.left,
+                this.symbol,
+                this.right
         );
 
-        if (appendDelegateAccessor) {
-            ApsInvokeAst invoke = ((ApsInvokeAst) ast.resultingStatement());
+        if (ast.resultingStatement() instanceof ApsCalculateAst calculate) {
+            calculate.totalWithParen(true);
+        }
+
+        if (appendDelegateAccessor && ast.resultingStatement() instanceof ApsInvokeAst invoke) {
             invoke.addFluentInvoke(
                     new ApsInvokeAst(this)
                             .accessingPublicField(true)
                             .isFluent(true)
-                            .nameIdentity("delegate")
+                            .reference(
+                                    new ApsRefReferenceAst(invoke)
+                                            .nameIdentity("delegate")
+                                            .doNotProcess(true)
+                            )
             );
         }
         return ast;
     }
 
-    public ApsResultPresentingAst deepCalculate(ApsResultPresentingAst left, ApsSymbolAst symbol, ApsResultPresentingAst right) {
+    public ApsResultPresentingAst deepCalculate(boolean totalWithParen, ApsResultPresentingAst left, ApsSymbolAst symbol, ApsResultPresentingAst right) {
         if (symbol == null) {
             if (left.resultingStatement() instanceof ApsCalculateAst calculateAst) {
-                return calculateAst.convertInvoke(false);
+                return calculateAst.convertSymbol(false);
             } else {
                 return ApsResultPresentingAst.statement(this, left.resultingStatement());
             }
         }
 
-        ApsInvokeAst invoke = null;
-
-        if (left.resultingStatement() instanceof ApsCalculateAst calculateAst) {
-            left = calculateAst.convertInvoke(false);
-            invoke = (ApsInvokeAst) left.resultingStatement();
-        } else if (left.resultingStatement() != null) {
-            invoke = (ApsInvokeAst) left.resultingStatement();
-        } else if (left.refToken() != null) {
-            invoke = new ApsInvokeObjectAst(this).objectName(left.refToken());
+        if (left.resultingStatement() instanceof ApsCalculateAst leftCalculate && right.resultingStatement() instanceof ApsCalculateAst rightCalculate) {
+            ApsCalculateAst calculate = new ApsCalculateAst(this);
+            calculate.left(leftCalculate.convertSymbol(false));
+            calculate.symbol(symbol);
+            calculate.right(rightCalculate.convertSymbol(false));
+            return ApsResultPresentingAst.statement(this, calculate);
         }
 
-        if (right.resultingStatement() instanceof ApsCalculateAst calculateAst) {
-            right = calculateAst.convertInvoke(false);
-
-            invoke.nameIdentity(this.symbol.name());
-
-            invoke.addParam(right);
-        } else if (right.refToken() != null) {
-            if (left.resultingStatement() != null) {
-                ApsInvokeAst fluentInvoke = new ApsInvokeAst(invoke).isFluent(true);
-
-                fluentInvoke.nameIdentity(this.symbol.name());
-
-                fluentInvoke.addParam(right);
-
-                invoke.addFluentInvoke(fluentInvoke);
-
+        if (left.resultingType() != ApsArgTypeAst.UNKNOWN) {
+            if (right.resultingType() != ApsArgTypeAst.UNKNOWN) {
+                return deepNoCalculateNode(left, symbol, right);
+            } else if (right.resultingStatement() instanceof ApsCalculateAst rightCalculate) {
+                return deepNoCalculateNode(left, symbol, rightCalculate.convertSymbol(false));
+            }
+        } else if (right.resultingType() != ApsArgTypeAst.UNKNOWN) {
+            if (left.resultingStatement() instanceof ApsCalculateAst leftCalculate) {
+                return deepNoCalculateNode(leftCalculate.convertSymbol(false), symbol, right);
             } else {
-                invoke.nameIdentity(this.symbol.name());
-
-                invoke.addParam(right);
-
-                ((ApsInvokeObjectAst) invoke).objectName(left.refToken());
-
+                return deepNoCalculateNode(left, symbol, right);
             }
         }
-        return ApsResultPresentingAst.statement(this, invoke);
+        return null;
+    }
+
+    private ApsResultPresentingAst deepNoCalculateNode(ApsResultPresentingAst left, ApsSymbolAst symbol, ApsResultPresentingAst right) {
+        if (left.reference() != null && left.resultingType().referencePrimary() == null) {
+            ApsInvokeObjectAst invoke = new ApsInvokeObjectAst(this);
+            invoke.objectName(left.reference().dump(invoke).doNotProcess(true));
+            invoke.reference(new ApsRefReferenceAst(invoke).nameIdentity(symbol.name()).doNotProcess(true));
+            invoke.addParam(right);
+            return ApsResultPresentingAst.statement(this, invoke);
+        }
+
+        if (symbol != null) {
+            if (right.reference() != null && (symbol.leftPrimary() || right.resultingType().referencePrimary() == null)) {
+                ApsInvokeObjectAst invoke = new ApsInvokeObjectAst(this);
+                invoke.objectName(right.reference().dump(invoke).doNotProcess(true));
+                invoke.reference(new ApsRefReferenceAst(invoke).nameIdentity(symbol.oppositeName()).doNotProcess(true));
+                invoke.addParam(left);
+                return ApsResultPresentingAst.statement(this, invoke);
+            }
+
+            if (right.resultingStatement() instanceof ApsCalculateAst rightCalculate) {
+                ApsCalculateAst calculate = new ApsCalculateAst(this);
+                calculate.left(left);
+                calculate.symbol(symbol);
+                calculate.right(rightCalculate.convertSymbol(false));
+                calculate.totalWithParen(totalWithParen);
+                return ApsResultPresentingAst.statement(this, calculate);
+            }
+
+            if (left.resultingStatement() instanceof ApsCalculateAst leftCalculate) {
+                ApsCalculateAst calculate = new ApsCalculateAst(this);
+                calculate.left(leftCalculate.convertSymbol(false));
+                calculate.symbol(symbol);
+                calculate.right(right);
+                calculate.totalWithParen(totalWithParen);
+                return ApsResultPresentingAst.statement(this, calculate);
+            } else {
+                return calculateNoCalculatingNode(left, symbol, right);
+            }
+        }
+
+        System.out.println("???");
+        return null;
+    }
+
+    private ApsResultPresentingAst calculateNoCalculatingNode(ApsResultPresentingAst left, ApsSymbolAst symbol, ApsResultPresentingAst right) {
+        if (right.reference() != null || right.constant() != null || right.resultingStatement() != null) {
+            ApsCalculateAst calculate = new ApsCalculateAst(this);
+            calculate.left(left);
+            calculate.symbol(symbol);
+            calculate.right(right);
+            calculate.totalWithParen(totalWithParen);
+            return ApsResultPresentingAst.statement(this, calculate);
+        }
+
+        return null;
     }
 
     @Override
     public void preprocess() {
+        if (this.left != null) {
+            this.left.parent(this);
+            this.left.preprocess();
+        }
+        if (this.symbol != null) {
+            this.symbol.parent(this);
+            this.symbol.preprocess();
+        }
+        if (this.right != null) {
+            this.right.parent(this);
+            this.right.preprocess();
+        }
+    }
 
+    @Override
+    public void postprocess() {
+        if (this.left != null) {
+            this.left.postprocess();
+        }
+        if (this.symbol != null) {
+            this.symbol.postprocess();
+        }
+        if (this.right != null) {
+            this.right.postprocess();
+        }
+    }
+
+    @Override
+    public void consequence() {
+        if (this.left != null) {
+            this.left.consequence();
+        }
+        if (this.symbol != null) {
+            this.symbol.consequence();
+        }
+        if (this.right != null) {
+            this.right.consequence();
+        }
     }
 }

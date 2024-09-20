@@ -1,5 +1,6 @@
 package com.github.cao.awa.apsars.tree.method.parameter;
 
+import com.alibaba.fastjson2.JSONObject;
 import com.github.cao.awa.apricot.util.collection.ApricotCollectionFactor;
 import com.github.cao.awa.apsars.tree.ApsAst;
 import com.github.cao.awa.apsars.tree.method.ApsMethodAst;
@@ -20,6 +21,11 @@ public class ApsMethodParameterAst extends ApsAst {
 
     public void addParam(ApsMethodParamElementAst param) {
         this.params.put(param.nameIdentity(), param);
+    }
+
+    @Override
+    public void generateStructure(JSONObject json) {
+        // TODO
     }
 
     @Override
@@ -48,10 +54,14 @@ public class ApsMethodParameterAst extends ApsAst {
     }
 
     @Override
-    public void finalProcess() {
+    public void consequence() {
         for (ApsMethodParamElementAst methodParamElementAst : this.params.values()) {
-            methodParamElementAst.finalProcess();
+            methodParamElementAst.consequence();
         }
+    }
+
+    public boolean isEmpty() {
+        return this.params.isEmpty();
     }
 
     public static ApsMethodParameterAst empty(ApsMethodAst parent) {

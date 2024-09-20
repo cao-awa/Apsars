@@ -31,6 +31,7 @@ import com.github.cao.awa.apsars.translate.java.file.method.extra.ApsMethodExtra
 import com.github.cao.awa.apsars.translate.java.file.method.param.ApsMethodParameterDefaultJavaTranslator;
 import com.github.cao.awa.apsars.translate.java.file.method.param.ApsMethodParameterJavaTranslator;
 import com.github.cao.awa.apsars.translate.java.file.method.param.ApsMethodParameterListJavaTranslator;
+import com.github.cao.awa.apsars.translate.java.file.reference.ApsReferenceStatementJavaTranslator;
 import com.github.cao.awa.apsars.translate.java.file.type.ApsArgTypeJavaTranslator;
 import com.github.cao.awa.apsars.translate.java.file.type.ApsAstWithVarargsJavaTranslator;
 import com.github.cao.awa.apsars.translate.java.file.type.ApsStatementWithVarargsJavaTranslator;
@@ -73,6 +74,7 @@ public abstract class ApsJavaTranslator<T extends ApsAst> extends ApsTranslator<
         registerJava(TranslateElementEnum.INVOKE_OBJECT_STATEMENT, new ApsInvokeObjectStatementJavaTranslator());
         registerJava(TranslateElementEnum.NEW_INSTANCE_STATEMENT, new ApsNewInstanceStatementJavaTranslator());
         registerJava(TranslateElementEnum.LITERAL_STATEMENT, new ApsLiteralStatementJavaTranslator());
+        registerJava(TranslateElementEnum.REFERENCE, new ApsReferenceStatementJavaTranslator());
         registerJava(TranslateElementEnum.CONSTANT, new ApsConstantStatementJavaTranslator());
         registerJava(TranslateElementEnum.CONSTANT_SHORT, new ApsShortConstantStatementJavaTranslator());
         registerJava(TranslateElementEnum.CONSTANT_INT, new ApsIntConstantStatementJavaTranslator());

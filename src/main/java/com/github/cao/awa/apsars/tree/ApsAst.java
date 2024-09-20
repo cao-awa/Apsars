@@ -1,18 +1,21 @@
 package com.github.cao.awa.apsars.tree;
 
+import com.alibaba.fastjson2.JSONObject;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
+@Setter
+@Getter
 @Accessors(fluent = true)
 public abstract class ApsAst {
-    @Getter
-    @Setter
     private ApsAst parent;
 
     public ApsAst(ApsAst parent) {
         this.parent = parent;
     }
+
+    public abstract void generateStructure(JSONObject json);
 
     public void print() {
         print("");
@@ -29,18 +32,14 @@ public abstract class ApsAst {
     public void prepares() {
         preprocess();
         postprocess();
-        finalProcess();
+        consequence();
     }
 
     public abstract void preprocess();
 
-    public void postprocess() {
+    public abstract void postprocess();
 
-    }
-
-    public void finalProcess() {
-
-    }
+    public abstract void consequence();
 
     @SuppressWarnings("all")
     public <T extends ApsAst> T findAst(Class<T> target) {

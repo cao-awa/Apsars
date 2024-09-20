@@ -19,7 +19,7 @@ public class ApsDivideSymbol extends ApsSymbolAst {
     }
 
     @Override
-    public void preprocess() {
-
+    public String oppositeName() {
+        return "divideBy";
     }
 }

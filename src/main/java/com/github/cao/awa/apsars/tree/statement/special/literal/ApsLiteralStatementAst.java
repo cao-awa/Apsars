@@ -1,5 +1,6 @@
 package com.github.cao.awa.apsars.tree.statement.special.literal;
 
+import com.alibaba.fastjson2.JSONObject;
 import com.github.cao.awa.apsars.tree.ApsAst;
 import com.github.cao.awa.apsars.tree.statement.ApsStatementAst;
 import lombok.Getter;
@@ -16,12 +17,27 @@ public class ApsLiteralStatementAst extends ApsStatementAst {
     }
 
     @Override
+    public void generateStructure(JSONObject json) {
+        json.put("literal", this.statement);
+    }
+
+    @Override
     public void print(String ident) {
         System.out.println("Literal: " + this.statement);
     }
 
     @Override
     public void preprocess() {
+
+    }
+
+    @Override
+    public void postprocess() {
+
+    }
+
+    @Override
+    public void consequence() {
 
     }
 }

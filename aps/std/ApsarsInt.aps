@@ -27,14 +27,4 @@ public unique class ApsarsInt {
     public inline isEquals(comparingTarget: double): boolean -> this.delegate == comparingTarget;
     public inline isEquals(comparingTarget: byte): boolean -> this.delegate == comparingTarget;
     public inline isEquals(comparingTarget: char): boolean -> this.delegate == comparingTarget;
-
-    public inline plus(target: int): ApsarsInt -> this.delegate = this.delegate + target;
-    public inline minus(target: int): ApsarsInt -> this.delegate = this.delegate - target;
-    public inline multiply(target: int): ApsarsInt -> this.delegate = this.delegate * target;
-    public inline divide(target: int): ApsarsInt -> this.delegate = this.delegate / target;
-
-    public inline plus(target: ApsarsInt): ApsarsInt -> this.delegate = this.delegate + target.delegate;
-    public inline minus(target: ApsarsInt): ApsarsInt -> this.delegate = this.delegate - target.delegate;
-    public inline multiply(target: ApsarsInt): ApsarsInt -> this.delegate = this.delegate * target.delegate;
-    public inline divide(target: ApsarsInt): ApsarsInt -> this.delegate = this.delegate / target.delegate;
 }

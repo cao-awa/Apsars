@@ -12,4 +12,9 @@ public class ApsLocalVariableSynchronizedModifier extends ApsLocalVariableModifi
     public String literal() {
         return "synchronized";
     }
+
+    @Override
+    public boolean isLiteral() {
+        return false;
+    }
 }

@@ -16,6 +16,7 @@ import java.io.IOException;
 
 public class ApsarsBuiltin {
     public static void generateBuiltin(String stdPath, String stdSourcePath, String packageAt) throws IOException {
+        ApsarsClassPool.registerDefaultClasses();
         ApsarsClassPool.registerDefaultAnnotations();
 
         ApsBasicType.generateBuiltin(stdPath, stdSourcePath, packageAt);
@@ -38,12 +39,6 @@ public class ApsarsBuiltin {
         });
 
         printTree("", programContext);
-
-        System.out.println("---------");
-
-        System.out.println(programContext.getText());
-
-        System.out.println("-- Visiting");
 
         ApsarsTreeVisitor visitor = new ApsarsTreeVisitor();
         return visitor.visitProgram(programContext);

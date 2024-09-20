@@ -202,7 +202,7 @@ isEquals : Equals ;
 
 Identifier : [a-zA-Z_][a-zA-Z_0-9]*           ;
 FullName   : (Identifier '.')+ (Identifier)   ;
-Number     : [0-9]+                           ;
+Number     : [0-9]+('.'[0-9]+)?               ;
 
 fullNameOrIdentifier : FullName | Identifier ;
 identifier           : Identifier            ;

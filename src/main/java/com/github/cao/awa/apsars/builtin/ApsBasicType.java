@@ -24,6 +24,10 @@ public abstract class ApsBasicType {
         }
 
         for (File file : files) {
+            if (!file.isFile()) {
+                continue;
+            }
+
             ApsFileAst apsars = ApsarsBuiltin.readApsars(IOUtil.read(new FileReader(file, StandardCharsets.UTF_8)));
 
             apsars.prepares();
@@ -35,6 +39,8 @@ public abstract class ApsBasicType {
             } else {
                 fileName = fileName + ".java";
             }
+
+            apsars.print("");
 
             ApsarsBuiltin.writeTo(stdPath, fileName, translator.postTranslateToString(apsars));
         }

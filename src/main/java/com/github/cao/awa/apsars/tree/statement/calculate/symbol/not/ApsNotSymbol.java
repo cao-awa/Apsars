@@ -17,9 +17,4 @@ public class ApsNotSymbol extends ApsSymbolAst {
     public String name() {
         return "isNot";
     }
-
-    @Override
-    public void preprocess() {
-
-    }
 }

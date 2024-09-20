@@ -1,5 +1,6 @@
 package com.github.cao.awa.apsars.tree.clazz.inherit;
 
+import com.alibaba.fastjson2.JSONObject;
 import com.github.cao.awa.apricot.util.collection.ApricotCollectionFactor;
 import com.github.cao.awa.apsars.element.clazz.ApsMemberParameterModifierType;
 import com.github.cao.awa.apsars.element.modifier.parameter.ApsMemberParameterModifier;
@@ -43,6 +44,11 @@ public class ApsBindingParameterAst extends ApsStatementWithVarargs {
     }
 
     @Override
+    public void generateStructure(JSONObject json) {
+        // TODO
+    }
+
+    @Override
     public void print(String ident) {
         System.out.println(ident + "|_ Aps member parameter: " + this.nameIdentity);
         System.out.println(ident + "    |_ type: ");
@@ -57,7 +63,17 @@ public class ApsBindingParameterAst extends ApsStatementWithVarargs {
 
     @Override
     public void preprocess() {
+        this.value.preprocess();
+    }
 
+    @Override
+    public void postprocess() {
+        this.value.postprocess();
+    }
+
+    @Override
+    public void consequence() {
+        this.value.consequence();
     }
 
     public boolean isStatic() {

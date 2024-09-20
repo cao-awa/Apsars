@@ -1,5 +1,7 @@
 package com.github.cao.awa.apsars.tree.clazz;
 
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 import com.github.cao.awa.apricot.util.collection.ApricotCollectionFactor;
 import com.github.cao.awa.apsars.element.modifier.ApsAccessibleModifier;
 import com.github.cao.awa.apsars.element.modifier.ApsModifier;
@@ -51,6 +53,31 @@ public class ApsLetAst extends ApsAst implements ApsModifierRequiredAst<ApsModif
     }
 
     @Override
+    public void generateStructure(JSONObject json) {
+        JSONObject methods = new JSONObject();
+        for (ApsMethodAst method : this.methods) {
+            JSONObject theMethod = new JSONObject();
+            method.generateStructure(theMethod);
+            methods.put(method.formatCompletedName(), theMethod);
+        }
+        json.put("methods", methods);
+
+        JSONObject parameters = new JSONObject();
+        for (ApsMemberParameterAst parameter : this.parameters) {
+            JSONObject theParameter = new JSONObject();
+            parameter.generateStructure(theParameter);
+            methods.put(parameter.nameIdentity(), theParameter);
+        }
+        json.put("parameters", parameters);
+
+        JSONArray modifiers = new JSONArray();
+        for (ApsModifier<?> modifier : this.modifiers) {
+            modifiers.add(modifier.literal());
+        }
+        json.put("apply_modifiers", modifiers);
+    }
+
+    @Override
     public void print(String ident) {
         System.out.println();
     }
@@ -81,6 +108,7 @@ public class ApsLetAst extends ApsAst implements ApsModifierRequiredAst<ApsModif
         for (ApsMethodAst method : methods()) {
             method.accessible(this.accessible);
             classAst.addMethod(method);
+            method.prepares();
         }
 
         // Extract fields to class.
@@ -88,5 +116,15 @@ public class ApsLetAst extends ApsAst implements ApsModifierRequiredAst<ApsModif
             parameter.accessible(this.accessible);
             classAst.addMemberParameter(parameter);
         }
+    }
+
+    @Override
+    public void postprocess() {
+
+    }
+
+    @Override
+    public void consequence() {
+
     }
 }

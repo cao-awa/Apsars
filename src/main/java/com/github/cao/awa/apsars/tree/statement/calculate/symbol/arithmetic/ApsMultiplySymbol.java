@@ -17,9 +17,4 @@ public class ApsMultiplySymbol extends ApsSymbolAst {
     public String name() {
         return "multiply";
     }
-
-    @Override
-    public void preprocess() {
-
-    }
 }

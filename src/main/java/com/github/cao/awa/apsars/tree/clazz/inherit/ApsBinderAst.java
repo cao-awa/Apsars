@@ -1,5 +1,7 @@
 package com.github.cao.awa.apsars.tree.clazz.inherit;
 
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 import com.github.cao.awa.apricot.util.collection.ApricotCollectionFactor;
 import com.github.cao.awa.apsars.element.ApsAccessibleType;
 import com.github.cao.awa.apsars.element.clazz.inherit.ApsBinderModifierType;
@@ -29,6 +31,22 @@ public class ApsBinderAst extends ApsAst implements ApsModifierRequiredAst<ApsBi
 
     public ApsBinderAst(ApsAst parent) {
         super(parent);
+    }
+
+    @Override
+    public void generateStructure(JSONObject json) {
+        json.put("name", this.nameIdentity);
+        json.put("accessible", this.accessible);
+
+        JSONArray parameters = new JSONArray();
+        for (ApsBindingParameterAst parameter : this.parameters) {
+            JSONObject theParameter = new JSONObject();
+            parameter.generateStructure(theParameter);
+            parameters.add(theParameter);
+        }
+        json.put("parameters", parameters);
+
+        // TODO
     }
 
     public void addMemberParameter(ApsBindingParameterAst parameterAst) {
@@ -91,6 +109,28 @@ public class ApsBinderAst extends ApsAst implements ApsModifierRequiredAst<ApsBi
         for (ApsMethodAst methodAst : this.methods) {
             methodAst.isBinder(true);
             methodAst.preprocess();
+        }
+    }
+
+    @Override
+    public void postprocess() {
+        for (ApsBindingParameterAst parameterAst : this.parameters) {
+            parameterAst.postprocess();
+        }
+
+        for (ApsMethodAst methodAst : this.methods) {
+            methodAst.postprocess();
+        }
+    }
+
+    @Override
+    public void consequence() {
+        for (ApsBindingParameterAst parameterAst : this.parameters) {
+            parameterAst.consequence();
+        }
+
+        for (ApsMethodAst methodAst : this.methods) {
+            methodAst.consequence();
         }
     }
 }

@@ -19,7 +19,12 @@ public class ApsLessThanSymbol extends ApsSymbolAst {
     }
 
     @Override
-    public void preprocess() {
+    public String oppositeName() {
+        return "isMoreThan";
+    }
 
+    @Override
+    public boolean leftPrimary() {
+        return true;
     }
 }

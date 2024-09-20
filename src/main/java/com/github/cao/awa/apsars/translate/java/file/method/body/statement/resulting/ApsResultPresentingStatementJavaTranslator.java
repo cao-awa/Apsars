@@ -8,8 +8,8 @@ import com.github.cao.awa.apsars.tree.statement.result.ApsResultPresentingAst;
 public class ApsResultPresentingStatementJavaTranslator extends ApsJavaTranslator<ApsResultPresentingAst> implements ApsResultPresentingStatementElementTranslator {
     @Override
     public void translate(StringBuilder builder, ApsResultPresentingAst ast) {
-        if (ast.refToken() != null) {
-            builder.append(ast.refToken());
+        if (ast.reference() != null) {
+            postTranslate(TranslateElement.REFERENCE, ast.reference());
         } else if (ast.resultingStatement() != null) {
             postTranslate(TranslateElement.RESULTING_STATEMENT, ast.resultingStatement());
         } else if (ast.literal() != null) {

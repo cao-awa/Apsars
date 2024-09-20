@@ -1,5 +1,7 @@
 package com.github.cao.awa.apsars.tree.aps;
 
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 import com.github.cao.awa.apricot.util.collection.ApricotCollectionFactor;
 import com.github.cao.awa.apsars.tree.ApsAst;
 import com.github.cao.awa.apsars.tree.clazz.ApsClassAst;
@@ -30,6 +32,31 @@ public class ApsFileAst extends ApsAst {
         this.classes.add(classAst);
     }
 
+    @Override
+    public void generateStructure(JSONObject json) {
+        json.put("package_at", this.packageAt);
+
+        if (!this.imports.isEmpty()) {
+            JSONArray imports = new JSONArray();
+            for (ApsImportAst anImport : this.imports) {
+                JSONObject theImport = new JSONObject();
+                anImport.generateStructure(theImport);
+                imports.add(theImport);
+            }
+            json.put("imports", imports);
+        }
+
+        if (!this.classes.isEmpty()) {
+            JSONObject classes = new JSONObject();
+            for (ApsClassAst anClass : this.classes) {
+                JSONObject theClass = new JSONObject();
+                anClass.generateStructure(theClass);
+                classes.put(anClass.formatCompletedName(), theClass);
+            }
+            json.put("classes", classes);
+        }
+    }
+
     public void print(String ident) {
         System.out.println("--Aps file");
         System.out.println("    |_ package at: " + this.packageAt);
@@ -54,6 +81,7 @@ public class ApsFileAst extends ApsAst {
 
         ApsImportAst importAst = new ApsImportAst(this);
         importAst.fullName("com.github.cao.awa.apsars.ApsGlobal");
+        importAst.argType(new ApsArgTypeAst(importAst).nameIdentity("ApsGlobal"));
         importAst.importStatic(true);
         importAst.importAll(true);
         addImport(importAst);
@@ -70,12 +98,12 @@ public class ApsFileAst extends ApsAst {
     }
 
     @Override
-    public void finalProcess() {
+    public void consequence() {
         for (ApsClassAst classAst : this.classes) {
-            classAst.finalProcess();
+            classAst.consequence();
         }
         for (ApsImportAst importAst : this.imports) {
-            importAst.finalProcess();
+            importAst.consequence();
         }
     }
 

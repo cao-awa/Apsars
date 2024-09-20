@@ -1,5 +1,6 @@
 package com.github.cao.awa.apsars.tree.method;
 
+import com.alibaba.fastjson2.JSONObject;
 import com.github.cao.awa.apricot.util.collection.ApricotCollectionFactor;
 import com.github.cao.awa.apsars.element.ApsAccessibleType;
 import com.github.cao.awa.apsars.element.method.ApsMethodModifierType;
@@ -18,6 +19,7 @@ import com.github.cao.awa.apsars.tree.annotation.ApsAnnotationAst;
 import com.github.cao.awa.apsars.tree.clazz.ApsClassAst;
 import com.github.cao.awa.apsars.tree.method.parameter.ApsMethodParamElementAst;
 import com.github.cao.awa.apsars.tree.method.parameter.ApsMethodParameterAst;
+import com.github.cao.awa.apsars.tree.statement.result.ApsRefReferenceAst;
 import com.github.cao.awa.apsars.tree.statement.result.ApsResultPresentingAst;
 import com.github.cao.awa.apsars.tree.statement.result.ApsReturnAst;
 import com.github.cao.awa.apsars.tree.statement.special.literal.ApsLiteralStatementAst;
@@ -66,6 +68,53 @@ public class ApsMethodAst extends ApsAst implements ApsModifierRequiredAst<ApsMe
     }
 
     @Override
+    public void generateStructure(JSONObject json) {
+        json.put("name", this.nameIdentity);
+
+        if (!this.param.isEmpty()) {
+            JSONObject parameters = new JSONObject();
+            this.param.params().forEach((name, param) -> {
+                JSONObject theParameter = new JSONObject();
+                param.generateStructure(theParameter);
+                parameters.put(name, theParameter);
+            });
+            json.put("parameters", parameters);
+        }
+
+        json.put("accessible", this.accessible.getAccessibleType().literal());
+
+        if (this.isVirtual) {
+            json.put("is_virtual", true);
+        }
+
+        if (this.isBinder) {
+            json.put("is_binder", true);
+        }
+
+        if (this.returnType != null) {
+            JSONObject theReturn = new JSONObject();
+            this.returnType.generateStructure(theReturn);
+            json.put("return_type", theReturn);
+        }
+
+        if (!this.methodBody.isEmpty()) {
+            JSONObject theBody = new JSONObject();
+            this.methodBody.generateStructure(theBody);
+            json.put("method_body", theBody);
+        }
+
+        if (this.extraCatch != null) {
+            JSONObject theExtraCatch = new JSONObject();
+            this.extraCatch.generateStructure(theExtraCatch);
+            json.put("extra_catch", theExtraCatch);
+        }
+
+        if (!this.compilerFlags.isEmpty()) {
+            json.put("compiler_flags", this.compilerFlags);
+        }
+    }
+
+    @Override
     public Collection<ApsMethodModifier> modifierValues() {
         return this.modifiers.values();
     }
@@ -106,6 +155,25 @@ public class ApsMethodAst extends ApsAst implements ApsModifierRequiredAst<ApsMe
         return this.extraCatch != null;
     }
 
+    public String formatCompletedName() {
+        StringBuilder builder = new StringBuilder();
+        builder.append(this.nameIdentity);
+        if (!this.param.isEmpty()) {
+            builder.append("(");
+            int index = 0;
+            int edge = this.param.params().size() - 1;
+            for (ApsMethodParamElementAst value : this.param.params().values()) {
+                builder.append(value.argType().formatCompletedName());
+                if (edge != index) {
+                    builder.append(",");
+                }
+                index++;
+            }
+            builder.append(")");
+        }
+        return builder.toString();
+    }
+
     @Override
     public void print(String ident, boolean endElement) {
         String concat = endElement ? " " : "|";
@@ -143,7 +211,7 @@ public class ApsMethodAst extends ApsAst implements ApsModifierRequiredAst<ApsMe
             }
         }
         if (!this.annotations.isEmpty()) {
-            System.out.println(ident + "|_ compiler flags: ");
+            System.out.println(ident + "|_ annotations: ");
             for (ApsAnnotationAst annotationAst : this.annotations) {
                 System.out.println(ident + "    |_ " + annotationAst.nameIdentity());
             }
@@ -152,10 +220,18 @@ public class ApsMethodAst extends ApsAst implements ApsModifierRequiredAst<ApsMe
 
     @Override
     public void preprocess() {
-        Manipulate.notNull(this.methodBody, ApsMethodBodyAst::preprocess);
+        if (this.param != null) {
+            this.param.parent(this);
+            this.param.preprocess();
+        }
+        if (this.methodBody != null) {
+            this.methodBody.parent(this);
+            this.methodBody.preprocess();
+        }
 
-        for (ApsAnnotationAst value : this.annotations) {
-            value.preprocess();
+        for (ApsAnnotationAst annotation : this.annotations) {
+            annotation.parent(this);
+            annotation.preprocess();
         }
 
         if (this.compilerFlags.contains("virtual-method")) {
@@ -241,20 +317,38 @@ public class ApsMethodAst extends ApsAst implements ApsModifierRequiredAst<ApsMe
             addCompilerFlag("null-safe");
         }
 
-        Manipulate.notNull(this.param, ApsMethodParameterAst::preprocess);
-        Manipulate.notNull(this.extraCatch, ApsMethodExtraCatchAst::preprocess);
-        Manipulate.notNull(this.returnType, ApsArgTypeAst::preprocess);
+        if (this.extraCatch != null) {
+            this.extraCatch.parent(this);
+            this.extraCatch.preprocess();
+        }
+
+        if (this.returnType != null) {
+            this.returnType.parent(this);
+            this.returnType.preprocess();
+        }
     }
 
     @Override
     public void postprocess() {
-        Manipulate.notNull(this.methodBody, ApsMethodBodyAst::postprocess);
         Manipulate.notNull(this.param, ApsMethodParameterAst::postprocess);
+        Manipulate.notNull(this.methodBody, ApsMethodBodyAst::postprocess);
         Manipulate.notNull(this.extraCatch, ApsMethodExtraCatchAst::postprocess);
         Manipulate.notNull(this.returnType, ApsArgTypeAst::postprocess);
 
         for (ApsAnnotationAst value : this.annotations) {
             value.postprocess();
+        }
+    }
+
+    @Override
+    public void consequence() {
+        Manipulate.notNull(this.param, ApsMethodParameterAst::consequence);
+        Manipulate.notNull(this.methodBody, ApsMethodBodyAst::consequence);
+        Manipulate.notNull(this.extraCatch, ApsMethodExtraCatchAst::consequence);
+        Manipulate.notNull(this.returnType, ApsArgTypeAst::consequence);
+
+        for (ApsAnnotationAst value : this.annotations) {
+            value.consequence();
         }
     }
 
@@ -282,8 +376,10 @@ public class ApsMethodAst extends ApsAst implements ApsModifierRequiredAst<ApsMe
             ApsMethodBodyAst methodBodyAst = new ApsMethodBodyAst(methodAst, null);
             ApsReturnAst returnAst = new ApsReturnAst(methodBodyAst);
             returnAst.result(
-                    new ApsResultPresentingAst(returnAst).refToken(
-                            (isStatic ? "" : "this.") + nameIdentity
+                    new ApsResultPresentingAst(returnAst).reference(
+                            new ApsRefReferenceAst(returnAst).nameIdentity(
+                                    nameIdentity
+                            ).instanceReference(!isStatic)
                     )
             ).withEnd(true);
             methodBodyAst.addStatement(returnAst);
@@ -297,12 +393,17 @@ public class ApsMethodAst extends ApsAst implements ApsModifierRequiredAst<ApsMe
             methodAst.addAccessible(isPublic ? ApsAccessibleType.PUBLIC : ApsAccessibleType.PRIVATE);
             ApsMethodBodyAst methodBodyAst = new ApsMethodBodyAst(methodAst, null);
             ApsVariableAst variableAst = new ApsVariableAst(methodAst);
-            variableAst.nameIdentity(
-                            (isStatic ? "" : "this.") + nameIdentity
+            variableAst.reference(
+                            new ApsRefReferenceAst(variableAst).nameIdentity(nameIdentity)
                     )
+                    .instanceReference(!isStatic)
                     .defining(false)
                     .assignment(
-                            new ApsResultPresentingAst(variableAst).refToken(nameIdentity + "_")
+                            new ApsResultPresentingAst(variableAst).reference(
+                                    new ApsRefReferenceAst(variableAst).nameIdentity(
+                                            nameIdentity + "_"
+                                    )
+                            )
                     )
                     .withEnd(true);
             ApsMethodParameterAst methodParamAst = new ApsMethodParameterAst(methodAst);

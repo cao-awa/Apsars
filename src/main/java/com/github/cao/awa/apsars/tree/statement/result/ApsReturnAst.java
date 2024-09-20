@@ -1,5 +1,6 @@
 package com.github.cao.awa.apsars.tree.statement.result;
 
+import com.alibaba.fastjson2.JSONObject;
 import com.github.cao.awa.apsars.tree.ApsAst;
 import com.github.cao.awa.apsars.tree.statement.ApsStatementAst;
 import lombok.Getter;
@@ -18,6 +19,13 @@ public class ApsReturnAst extends ApsStatementAst {
     }
 
     @Override
+    public void generateStructure(JSONObject json) {
+        JSONObject theReturn = new JSONObject();
+        this.result.generateStructure(theReturn);
+        json.put("return_value", theReturn);
+    }
+
+    @Override
     public void print(String ident) {
         System.out.print("Return value: ");
         this.result.print(ident);
@@ -25,6 +33,17 @@ public class ApsReturnAst extends ApsStatementAst {
 
     @Override
     public void preprocess() {
+        this.result.parent(this);
+        this.result.preprocess();
+    }
 
+    @Override
+    public void postprocess() {
+        this.result.postprocess();
+    }
+
+    @Override
+    public void consequence() {
+        this.result.consequence();
     }
 }

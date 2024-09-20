@@ -19,7 +19,7 @@ public class ApsPowSymbol extends ApsSymbolAst {
     }
 
     @Override
-    public void preprocess() {
-
+    public String oppositeName() {
+        return "powBy";
     }
 }

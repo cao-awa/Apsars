@@ -19,7 +19,7 @@ public class ApsMinusSymbol extends ApsSymbolAst {
     }
 
     @Override
-    public void preprocess() {
-
+    public String oppositeName() {
+        return "minusBy";
     }
 }

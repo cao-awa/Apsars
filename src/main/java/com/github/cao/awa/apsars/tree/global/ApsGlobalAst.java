@@ -1,5 +1,6 @@
 package com.github.cao.awa.apsars.tree.global;
 
+import com.alibaba.fastjson2.JSONObject;
 import com.github.cao.awa.apricot.util.collection.ApricotCollectionFactor;
 import com.github.cao.awa.apsars.tree.ApsAst;
 import com.github.cao.awa.apsars.tree.method.ApsMethodAst;
@@ -31,6 +32,11 @@ public class ApsGlobalAst extends ApsAst {
     }
 
     @Override
+    public void generateStructure(JSONObject json) {
+        // TODO
+    }
+
+    @Override
     public void print(String ident) {
 
     }
@@ -39,6 +45,20 @@ public class ApsGlobalAst extends ApsAst {
     public void preprocess() {
         this.aliasMethods.forEach((name, method) -> {
             method.preprocess();
+        });
+    }
+
+    @Override
+    public void postprocess() {
+        this.aliasMethods.forEach((name, method) -> {
+            method.postprocess();
+        });
+    }
+
+    @Override
+    public void consequence() {
+        this.aliasMethods.forEach((name, method) -> {
+            method.consequence();
         });
     }
 }

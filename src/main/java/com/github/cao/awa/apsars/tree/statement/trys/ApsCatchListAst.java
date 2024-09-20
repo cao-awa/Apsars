@@ -1,5 +1,6 @@
 package com.github.cao.awa.apsars.tree.statement.trys;
 
+import com.alibaba.fastjson2.JSONObject;
 import com.github.cao.awa.apricot.util.collection.ApricotCollectionFactor;
 import com.github.cao.awa.apsars.translate.ApsTranslator;
 import com.github.cao.awa.apsars.translate.lang.TranslateTarget;
@@ -23,6 +24,11 @@ public class ApsCatchListAst extends ApsAst {
         super(parent);
     }
 
+    @Override
+    public void generateStructure(JSONObject json) {
+        // TODO
+    }
+
     public void addCatchTarget(ApsArgTypeAst target) {
         target.parent(this);
         this.catchTargets.add(target);
@@ -44,6 +50,22 @@ public class ApsCatchListAst extends ApsAst {
 
     @Override
     public void preprocess() {
+        for (ApsArgTypeAst catchTarget : this.catchTargets) {
+            catchTarget.preprocess();
+        }
+    }
 
+    @Override
+    public void postprocess() {
+        for (ApsArgTypeAst catchTarget : this.catchTargets) {
+            catchTarget.postprocess();
+        }
+    }
+
+    @Override
+    public void consequence() {
+        for (ApsArgTypeAst catchTarget : this.catchTargets) {
+            catchTarget.consequence();
+        }
     }
 }

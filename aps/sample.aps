@@ -1,4 +1,4 @@
-package com.github.cao.awa.apsars;
+package com.github.cao.awa.apsars.std;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -8,11 +8,23 @@ public class Sample2 {
     public static Logger field2 = LogManager.getLogger("Sample2");
 
     template main {
-        int a = 5;
-        int b = 100;
+        sync int a = 1;
+        int b = 10;
 
-        int x = (a * a) * b + b;
+        int c = 50;
+        int d = 100;
+        int e = 200;
 
-        System.out.println(x);
-    }
+        if ((a * b) < c) {
+            System.out.println("a\{}is\{}more\{}than\{}b");
+        }
+
+        if (c < (a * b)) {
+            System.out.println("a\{}is\{}more\{}than\{}b");
+        }
+
+        if (a < b == c == d < e) {
+            System.out.println("a\{}is\{}more\{}than\{}b");
+        }
+    };
 }

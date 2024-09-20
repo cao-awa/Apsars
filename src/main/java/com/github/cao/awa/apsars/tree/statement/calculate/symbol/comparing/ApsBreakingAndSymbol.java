@@ -17,9 +17,4 @@ public class ApsBreakingAndSymbol extends ApsSymbolAst {
     public String name() {
         return "breakingAnd";
     }
-
-    @Override
-    public void preprocess() {
-
-    }
 }

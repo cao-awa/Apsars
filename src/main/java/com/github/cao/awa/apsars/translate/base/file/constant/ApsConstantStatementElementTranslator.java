@@ -6,9 +6,9 @@ import com.github.cao.awa.apsars.translate.lang.element.TranslateElement;
 import com.github.cao.awa.apsars.tree.statement.constant.ApsConstantAst;
 import com.github.cao.awa.sinuatum.manipulate.Manipulate;
 
-public interface ApsConstantStatementElementTranslator<T extends ApsConstantAst> extends ApsStatementElementTranslator<T> {
+public interface ApsConstantStatementElementTranslator<T extends ApsConstantAst<?>> extends ApsStatementElementTranslator<T> {
     default void translateConstant(ApsTranslator<T> translator) {
-        ApsConstantAst ast = translator.ast();
+        ApsConstantAst<?> ast = translator.ast();
         StringBuilder builder = translator.builder();
 
         translator.translator(TranslateElement.byType(ast.getClass()), next -> {

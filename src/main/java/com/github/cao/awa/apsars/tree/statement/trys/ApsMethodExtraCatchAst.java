@@ -1,5 +1,6 @@
 package com.github.cao.awa.apsars.tree.statement.trys;
 
+import com.alibaba.fastjson2.JSONObject;
 import com.github.cao.awa.apsars.tree.ApsAst;
 import com.github.cao.awa.apsars.tree.method.ApsMethodBodyAst;
 import lombok.Getter;
@@ -19,6 +20,11 @@ public class ApsMethodExtraCatchAst extends ApsAst {
     }
 
     @Override
+    public void generateStructure(JSONObject json) {
+        // TODO
+    }
+
+    @Override
     public void print(String ident) {
         System.out.println(ident + "|_ Aps extra catch");
         ident += "    ";
@@ -30,7 +36,22 @@ public class ApsMethodExtraCatchAst extends ApsAst {
 
     @Override
     public void preprocess() {
+        this.methodBody.preprocess();
         this.catchingMethodBody.preprocess();
         this.catchList.preprocess();
+    }
+
+    @Override
+    public void postprocess() {
+        this.methodBody.postprocess();
+        this.catchingMethodBody.postprocess();
+        this.catchList.postprocess();
+    }
+
+    @Override
+    public void consequence() {
+        this.methodBody.consequence();
+        this.catchingMethodBody.consequence();
+        this.catchList.consequence();
     }
 }

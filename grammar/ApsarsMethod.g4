@@ -8,10 +8,12 @@ defineMethodUsingTemplate: template
                            leftBrace (
                                defineMethodBody ?
                            ) rightBrace
+                           // Someone would like follow the semicolon wieh ending method defines.
+                           semicolon            ?
 ;
 
 defineMethod: permissionModifiers            ?
-              alternateMethodModifiers        ?
+              alternateMethodModifiers       ?
               identifier
               leftParen (
                   // No params, direct done.
@@ -42,6 +44,8 @@ defineMethod: permissionModifiers            ?
                 ) rightBrace
                )
               )
+              // Someone would like follow the semicolon wieh ending method defines.
+              semicolon                      ?
 ;
 
 defineLetMethod: identifier
@@ -61,6 +65,8 @@ defineLetMethod: identifier
                       defineMethodBody                     ?
                   ) rightBrace
                  )
+                 // Someone would like follow the semicolon wieh ending method defines.
+                 semicolon                                 ?
 ;
 
 methodReturnType: (

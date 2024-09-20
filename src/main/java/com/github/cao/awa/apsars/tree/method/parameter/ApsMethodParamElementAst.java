@@ -1,5 +1,6 @@
 package com.github.cao.awa.apsars.tree.method.parameter;
 
+import com.alibaba.fastjson2.JSONObject;
 import com.github.cao.awa.apricot.util.collection.ApricotCollectionFactor;
 import com.github.cao.awa.apsars.element.method.parameter.ApsMethodParamModifierType;
 import com.github.cao.awa.apsars.element.modifier.method.parameter.ApsMethodParamDefaultValueModifier;
@@ -10,6 +11,7 @@ import com.github.cao.awa.apsars.translate.lang.element.TranslateElement;
 import com.github.cao.awa.apsars.tree.ApsAst;
 import com.github.cao.awa.apsars.tree.method.ApsMethodAst;
 import com.github.cao.awa.apsars.tree.method.parameter.preset.ApsMethodParameterDefaultValueAst;
+import com.github.cao.awa.apsars.tree.statement.result.ApsRefReferenceAst;
 import com.github.cao.awa.apsars.tree.statement.variable.ApsVariableAst;
 import com.github.cao.awa.apsars.tree.vararg.ApsArgTypeAst;
 import com.github.cao.awa.sinuatum.manipulate.Manipulate;
@@ -33,6 +35,15 @@ public class ApsMethodParamElementAst extends ApsAst {
 
     public ApsMethodParamElementAst(ApsAst parent) {
         super(parent);
+    }
+
+    @Override
+    public void generateStructure(JSONObject json) {
+        json.put("name", this.nameIdentity);
+
+        JSONObject theArgType = new JSONObject();
+        this.argType.generateStructure(theArgType);
+        json.put("type", theArgType);
     }
 
     public void addModifier(ApsMethodParamModifier modifier) {
@@ -72,7 +83,7 @@ public class ApsMethodParamElementAst extends ApsAst {
     public ApsVariableAst toLocalVariable() {
         ApsVariableAst variable = new ApsVariableAst(this);
 
-        variable.nameIdentity(nameIdentity());
+        variable.reference(new ApsRefReferenceAst(variable).nameIdentity(this.nameIdentity));
         variable.defining(false);
         variable.type(argType());
 
@@ -97,10 +108,10 @@ public class ApsMethodParamElementAst extends ApsAst {
             }
         }
 
-        if (!this.argType.isRefPrimary()) {
+        if (this.argType.referencePrimary() == null) {
             this.argType = this.argType.varyPrimary();
 
-            if (this.argType.isRefPrimary()) {
+            if (this.argType.referencePrimary() != null) {
                 addModifier(ApsMethodParamModifierType.IS_FINAL.modifier());
             }
         }
@@ -112,7 +123,7 @@ public class ApsMethodParamElementAst extends ApsAst {
     }
 
     @Override
-    public void finalProcess() {
+    public void consequence() {
 
     }
 }

@@ -1,7 +1,10 @@
 package com.github.cao.awa.apsars.tree.statement.invoke;
 
 import com.github.cao.awa.apsars.tree.ApsAst;
+import com.github.cao.awa.apsars.tree.method.ApsMethodBodyAst;
+import com.github.cao.awa.apsars.tree.statement.result.ApsRefReferenceAst;
 import com.github.cao.awa.apsars.tree.statement.result.ApsResultPresentingAst;
+import com.github.cao.awa.apsars.tree.statement.variable.ApsVariableAst;
 import com.github.cao.awa.apsars.tree.vararg.ApsArgTypeAst;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,7 +14,7 @@ import lombok.experimental.Accessors;
 @Getter
 @Accessors(fluent = true)
 public class ApsInvokeObjectAst extends ApsInvokeAst {
-    private String objectName;
+    private ApsRefReferenceAst objectName;
 
     public ApsInvokeObjectAst addParam(ApsResultPresentingAst param) {
         params().add(param);
@@ -24,12 +27,18 @@ public class ApsInvokeObjectAst extends ApsInvokeAst {
 
     @Override
     public ApsArgTypeAst resultingType() {
+        ApsVariableAst variable = findAst(ApsMethodBodyAst.class).fieldVariable(this.objectName.nameIdentity());
+
+        if (variable != null) {
+            return variable.type();
+        }
+
         return ApsArgTypeAst.UNKNOWN;
     }
 
     @Override
     public void print(String ident, boolean endElement) {
-        System.out.println("Aps invoke: " + objectName() + "." + nameIdentity() + (fluentInvoke().isEmpty() ? "" : " (fluent" + (withEnd() ? "/end" : "") + ")"));
+        System.out.println("Aps invoke: " + objectName() + "." + reference() + (fluentInvoke().isEmpty() ? "" : " (fluent" + (withEnd() ? "/end" : "") + ")"));
         System.out.println(ident + "|_ params: ");
         if (!params().isEmpty()) {
             int i = 0;
