@@ -5,10 +5,21 @@
       <list>
         <PerGrammarGenerationSettings>
           <option name="fileName" value="$PROJECT_DIR$/grammar/Apsars.g4" />
+          <option name="autoGen" value="true" />
           <option name="outputDir" value="D:\Codes\Java\Apsars\src\main\java\" />
           <option name="libDir" value="" />
           <option name="encoding" value="" />
           <option name="pkg" value="com.github.cao.awa.apsars.antlr" />
+          <option name="language" value="" />
+          <option name="generateVisitor" value="true" />
+        </PerGrammarGenerationSettings>
+        <PerGrammarGenerationSettings>
+          <option name="fileName" value="$PROJECT_DIR$/grammar/pure/PureApsars.g4" />
+          <option name="autoGen" value="true" />
+          <option name="outputDir" value="D:\Codes\Java\Apsars\src\main\java\" />
+          <option name="libDir" value="" />
+          <option name="encoding" value="" />
+          <option name="pkg" value="com.github.cao.awa.apsars.antlr.pure" />
           <option name="language" value="" />
           <option name="generateVisitor" value="true" />
         </PerGrammarGenerationSettings>
