@@ -2,7 +2,7 @@ grammar ArgType;
 
 import ApsarsRules;
 
-paramType: identifier colon argType ;
+paramType: ( identifier colon argType ) | ( argType identifier ) ;
 
 argType: identifier typedArgType? arrayArgType? ;
 

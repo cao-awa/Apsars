@@ -17,4 +17,9 @@ public class ApsBreakingAndSymbol extends ApsSymbolAst {
     public String name() {
         return "breakingAnd";
     }
+
+    @Override
+    public boolean notBinary() {
+        return false;
+    }
 }

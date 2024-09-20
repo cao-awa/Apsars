@@ -3,6 +3,7 @@ package com.github.cao.awa.apsars.std;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+@DoNotRefPrimary
 public class Sample2 {
     static LOGGER: Logger = LogManager.getLogger("Sample2");
     public static Logger field2 = LogManager.getLogger("Sample2");

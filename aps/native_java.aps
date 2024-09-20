@@ -1,0 +1,28 @@
+package com.github.cao.awa.apsars.std;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import com.github.cao.awa.apsars.std.DoNotPrimary;
+
+public class Sample2 {
+    private static Logger LOGGER = LogManager.getLogger("Sample2");
+    public static Logger field2 = LogManager.getLogger("Sample2");
+
+    public static void main(String[] args) {
+        final int a = 1;
+        final int b = 10;
+        final int c = 50;
+        final int d = 100;
+        final int e = 200;
+        if ((a * b) < c) {
+            System.out.println("a is more than b");
+        }
+        if (c < (a * b)) {
+            System.out.println("a is more than b");
+        }
+        if (a < b && b == c && c == d && d < e) {
+            System.out.println("a is more than b");
+        }
+    }
+}

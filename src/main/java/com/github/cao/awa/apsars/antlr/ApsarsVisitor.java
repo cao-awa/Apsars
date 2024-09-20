@@ -771,6 +771,14 @@ public interface ApsarsVisitor<T> extends ParseTreeVisitor<T> {
     T visitDefineMethod(ApsarsParser.DefineMethodContext ctx);
 
     /**
+     * Visit a parse tree produced by {@link ApsarsParser#defineJavaMethod}.
+     *
+     * @param ctx the parse tree
+     * @return the visitor result
+     */
+    T visitDefineJavaMethod(ApsarsParser.DefineJavaMethodContext ctx);
+
+    /**
      * Visit a parse tree produced by {@link ApsarsParser#defineLetMethod}.
      *
      * @param ctx the parse tree

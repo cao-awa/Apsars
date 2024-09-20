@@ -30,6 +30,10 @@ public abstract class ApsSymbolAst extends ApsStatementAst {
         return false;
     }
 
+    public boolean notBinary() {
+        return true;
+    }
+
     public boolean oppositePresent() {
         return !oppositeName().equals(name());
     }

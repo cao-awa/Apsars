@@ -15,7 +15,7 @@ defineClass: annotation                             *
 
 makeAlternateLetAndContent: ( defineLet | defineClassContent) +;
 
-defineClassContent: ( defineMethodUsingTemplate | defineMemberField | defineMethod ) + ;
+defineClassContent: ( defineMethodUsingTemplate | defineMemberField | defineMethod | defineJavaMethod ) + ;
 
 defineLetClassContent: ( defineLetMemberField | defineLetMethod ) + ;
 

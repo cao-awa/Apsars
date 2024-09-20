@@ -30,7 +30,19 @@ public class ApsCalculateAst extends ApsResultingStatementAst {
 
     @Override
     public void generateStructure(JSONObject json) {
-        // TODO
+        json.put("statement_type", "calculate");
+
+        JSONObject left = new JSONObject();
+        this.left.generateStructure(left);
+        json.put("left", left);
+
+        if (this.symbol != null) {
+            json.put("symbol", this.symbol.symbol());
+
+            JSONObject right = new JSONObject();
+            this.right.generateStructure(right);
+            json.put("right", right);
+        }
     }
 
     @Override
@@ -54,7 +66,6 @@ public class ApsCalculateAst extends ApsResultingStatementAst {
 
     public ApsResultPresentingAst convertSymbol(boolean appendDelegateAccessor) {
         ApsResultPresentingAst ast = deepCalculate(
-                true,
                 this.left,
                 this.symbol,
                 this.right
@@ -79,7 +90,7 @@ public class ApsCalculateAst extends ApsResultingStatementAst {
         return ast;
     }
 
-    public ApsResultPresentingAst deepCalculate(boolean totalWithParen, ApsResultPresentingAst left, ApsSymbolAst symbol, ApsResultPresentingAst right) {
+    public ApsResultPresentingAst deepCalculate(ApsResultPresentingAst left, ApsSymbolAst symbol, ApsResultPresentingAst right) {
         if (symbol == null) {
             if (left.resultingStatement() instanceof ApsCalculateAst calculateAst) {
                 return calculateAst.convertSymbol(false);
@@ -151,7 +162,6 @@ public class ApsCalculateAst extends ApsResultingStatementAst {
             }
         }
 
-        System.out.println("???");
         return null;
     }
 

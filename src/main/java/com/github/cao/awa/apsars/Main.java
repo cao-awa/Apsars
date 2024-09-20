@@ -23,10 +23,13 @@ public class Main {
             );
 
             String aps = IOUtil.read(new FileReader("aps/sample.aps"));
+            String nativeJava = IOUtil.read(new FileReader("aps/native_java.aps"));
 
             ApsFileAst ast = ApsarsBuiltin.readApsars(aps);
+            ApsFileAst nativeJavaAst = ApsarsBuiltin.readApsars(nativeJava);
 
             ast.prepares();
+            nativeJavaAst.prepares();
             
             ast.print();
 
@@ -42,6 +45,10 @@ public class Main {
             String generatedJava = ApsTranslator.translate(TranslateTarget.JAVA, TranslateElement.FILE, ast);
             System.out.println(generatedJava);
 
+            System.out.println("-- Native java");
+
+            generatedJava = ApsTranslator.translate(TranslateTarget.JAVA, TranslateElement.FILE, nativeJavaAst);
+            System.out.println(generatedJava);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -1338,6 +1338,20 @@ public interface ApsarsListener extends ParseTreeListener {
     void exitDefineMethod(ApsarsParser.DefineMethodContext ctx);
 
     /**
+     * Enter a parse tree produced by {@link ApsarsParser#defineJavaMethod}.
+     *
+     * @param ctx the parse tree
+     */
+    void enterDefineJavaMethod(ApsarsParser.DefineJavaMethodContext ctx);
+
+    /**
+     * Exit a parse tree produced by {@link ApsarsParser#defineJavaMethod}.
+     *
+     * @param ctx the parse tree
+     */
+    void exitDefineJavaMethod(ApsarsParser.DefineJavaMethodContext ctx);
+
+    /**
      * Enter a parse tree produced by {@link ApsarsParser#defineLetMethod}.
      *
      * @param ctx the parse tree

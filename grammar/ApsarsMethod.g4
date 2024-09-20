@@ -48,6 +48,41 @@ defineMethod: permissionModifiers            ?
               semicolon                      ?
 ;
 
+defineJavaMethod: permissionModifiers            ?
+                  alternateMethodModifiers       ?
+                  argType
+                  identifier
+                  leftParen (
+                      // No params, direct done.
+                      rightParen                 |
+                      // Processes params, with right paren when ending params definition.
+                      (
+                       methodParamListDefinition
+                       rightParen
+                      )
+                  )
+                  (
+                   (
+                    (
+                     Equal | RightPointing
+                    )
+                    (
+                     resultPresenting            |
+                     defineVariableStatement
+                    )
+                    semicolon
+                   )                             |
+                   (
+                    // The method body.
+                    leftBrace (
+                        defineMethodBody         ?
+                    ) rightBrace
+                   )
+                  )
+                  // Someone would like follow the semicolon wieh ending method defines.
+                  semicolon                      ?
+;
+
 defineLetMethod: identifier
                  leftParen (
                      // No params, direct done.

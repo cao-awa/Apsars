@@ -211,6 +211,7 @@ public class ApsVariableAst extends ApsStatementAst {
                 invoke.reference(new ApsRefReferenceAst(invoke).nameIdentity("delegate").doNotProcess(true));
                 invoke.addParam(this.assignment);
                 invoke.withEnd(true);
+
                 body.insertStatement(index + 1, invoke);
 
                 invoke.preprocess();
