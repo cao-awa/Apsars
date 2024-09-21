@@ -72,38 +72,38 @@ public class ApsFileAst extends ApsAst {
 
     @Override
     public void preprocess() {
-        for (ApsClassAst classAst : this.classes) {
-            classAst.preprocess();
-        }
+        ApsImportAst globalImportAst = new ApsImportAst(this);
+        globalImportAst.fullName("com.github.cao.awa.apsars.ApsGlobal");
+        globalImportAst.argType(new ApsArgTypeAst(globalImportAst).nameIdentity("ApsGlobal"));
+        globalImportAst.importStatic(true);
+        globalImportAst.importAll(true);
+        addImport(globalImportAst);
+
         for (ApsImportAst importAst : this.imports) {
             importAst.preprocess();
         }
-
-        ApsImportAst importAst = new ApsImportAst(this);
-        importAst.fullName("com.github.cao.awa.apsars.ApsGlobal");
-        importAst.argType(new ApsArgTypeAst(importAst).nameIdentity("ApsGlobal"));
-        importAst.importStatic(true);
-        importAst.importAll(true);
-        addImport(importAst);
+        for (ApsClassAst classAst : this.classes) {
+            classAst.preprocess();
+        }
     }
 
     @Override
     public void postprocess() {
-        for (ApsClassAst classAst : this.classes) {
-            classAst.postprocess();
-        }
         for (ApsImportAst importAst : this.imports) {
             importAst.postprocess();
+        }
+        for (ApsClassAst classAst : this.classes) {
+            classAst.postprocess();
         }
     }
 
     @Override
     public void consequence() {
-        for (ApsClassAst classAst : this.classes) {
-            classAst.consequence();
-        }
         for (ApsImportAst importAst : this.imports) {
             importAst.consequence();
+        }
+        for (ApsClassAst classAst : this.classes) {
+            classAst.consequence();
         }
     }
 

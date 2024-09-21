@@ -87,7 +87,13 @@ isSynchronized : Synchronized ;
 sync : isSync | isSynchronized ;
 
 // Template keyword.
-template : 'template' ;
+Template : 'template' ;
+template : Template   ;
+
+
+// Constructor keyword.
+Constructor : 'constructor' ;
+constructor : Constructor   ;
 
 // Control statement.
 newKeyword  : 'new'      ;

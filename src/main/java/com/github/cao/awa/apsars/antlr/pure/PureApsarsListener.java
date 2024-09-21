@@ -1,6 +1,5 @@
 // Generated from D:/Codes/Java/Apsars/grammar/pure/PureApsars.g4 by ANTLR 4.13.1
 package com.github.cao.awa.apsars.antlr.pure;
-
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
 /**
@@ -455,6 +454,20 @@ public interface PureApsarsListener extends ParseTreeListener {
      * @param ctx the parse tree
      */
     void exitTemplate(PureApsarsParser.TemplateContext ctx);
+
+    /**
+     * Enter a parse tree produced by {@link PureApsarsParser#constructor}.
+     *
+     * @param ctx the parse tree
+     */
+    void enterConstructor(PureApsarsParser.ConstructorContext ctx);
+
+    /**
+     * Exit a parse tree produced by {@link PureApsarsParser#constructor}.
+     *
+     * @param ctx the parse tree
+     */
+    void exitConstructor(PureApsarsParser.ConstructorContext ctx);
 
     /**
      * Enter a parse tree produced by {@link PureApsarsParser#newKeyword}.
@@ -1339,6 +1352,20 @@ public interface PureApsarsListener extends ParseTreeListener {
     void exitDefineMethod(PureApsarsParser.DefineMethodContext ctx);
 
     /**
+     * Enter a parse tree produced by {@link PureApsarsParser#defineConstructor}.
+     *
+     * @param ctx the parse tree
+     */
+    void enterDefineConstructor(PureApsarsParser.DefineConstructorContext ctx);
+
+    /**
+     * Exit a parse tree produced by {@link PureApsarsParser#defineConstructor}.
+     *
+     * @param ctx the parse tree
+     */
+    void exitDefineConstructor(PureApsarsParser.DefineConstructorContext ctx);
+
+    /**
      * Enter a parse tree produced by {@link PureApsarsParser#defineLetMethod}.
      *
      * @param ctx the parse tree
@@ -1759,20 +1786,6 @@ public interface PureApsarsListener extends ParseTreeListener {
     void exitCalculateLeftStatementWithParen(PureApsarsParser.CalculateLeftStatementWithParenContext ctx);
 
     /**
-     * Enter a parse tree produced by {@link PureApsarsParser#calculateRightStatementWithParen}.
-     *
-     * @param ctx the parse tree
-     */
-    void enterCalculateRightStatementWithParen(PureApsarsParser.CalculateRightStatementWithParenContext ctx);
-
-    /**
-     * Exit a parse tree produced by {@link PureApsarsParser#calculateRightStatementWithParen}.
-     *
-     * @param ctx the parse tree
-     */
-    void exitCalculateRightStatementWithParen(PureApsarsParser.CalculateRightStatementWithParenContext ctx);
-
-    /**
      * Enter a parse tree produced by {@link PureApsarsParser#calculateStatement}.
      *
      * @param ctx the parse tree
@@ -1813,20 +1826,6 @@ public interface PureApsarsListener extends ParseTreeListener {
      * @param ctx the parse tree
      */
     void exitCalculateLeft(PureApsarsParser.CalculateLeftContext ctx);
-
-    /**
-     * Enter a parse tree produced by {@link PureApsarsParser#calculateRight}.
-     *
-     * @param ctx the parse tree
-     */
-    void enterCalculateRight(PureApsarsParser.CalculateRightContext ctx);
-
-    /**
-     * Exit a parse tree produced by {@link PureApsarsParser#calculateRight}.
-     *
-     * @param ctx the parse tree
-     */
-    void exitCalculateRight(PureApsarsParser.CalculateRightContext ctx);
 
     /**
      * Enter a parse tree produced by {@link PureApsarsParser#extraCalculateStatement}.

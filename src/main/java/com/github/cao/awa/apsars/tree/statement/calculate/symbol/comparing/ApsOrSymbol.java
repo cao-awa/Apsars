@@ -22,4 +22,9 @@ public class ApsOrSymbol extends ApsSymbolAst {
     public boolean notBinary() {
         return false;
     }
+
+    @Override
+    public int level() {
+        return 0;
+    }
 }

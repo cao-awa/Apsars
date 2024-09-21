@@ -1,6 +1,5 @@
 // Generated from D:/Codes/Java/Apsars/grammar/pure/PureApsars.g4 by ANTLR 4.13.1
 package com.github.cao.awa.apsars.antlr.pure;
-
 import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
 
 /**
@@ -9,7 +8,7 @@ import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
  * of the available methods.
  *
  * @param <T> The return type of the visit operation. Use {@link Void} for
- *            operations with no return type.
+ * operations with no return type.
  */
 @SuppressWarnings("CheckReturnValue")
 public class PureApsarsBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements PureApsarsVisitor<T> {
@@ -362,6 +361,17 @@ public class PureApsarsBaseVisitor<T> extends AbstractParseTreeVisitor<T> implem
      */
     @Override
     public T visitTemplate(PureApsarsParser.TemplateContext ctx) {
+        return visitChildren(ctx);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation returns the result of calling
+     * {@link #visitChildren} on {@code ctx}.</p>
+     */
+    @Override
+    public T visitConstructor(PureApsarsParser.ConstructorContext ctx) {
         return visitChildren(ctx);
     }
 
@@ -1065,6 +1075,17 @@ public class PureApsarsBaseVisitor<T> extends AbstractParseTreeVisitor<T> implem
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
+    public T visitDefineConstructor(PureApsarsParser.DefineConstructorContext ctx) {
+        return visitChildren(ctx);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation returns the result of calling
+     * {@link #visitChildren} on {@code ctx}.</p>
+     */
+    @Override
     public T visitDefineLetMethod(PureApsarsParser.DefineLetMethodContext ctx) {
         return visitChildren(ctx);
     }
@@ -1395,17 +1416,6 @@ public class PureApsarsBaseVisitor<T> extends AbstractParseTreeVisitor<T> implem
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public T visitCalculateRightStatementWithParen(PureApsarsParser.CalculateRightStatementWithParenContext ctx) {
-        return visitChildren(ctx);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation returns the result of calling
-     * {@link #visitChildren} on {@code ctx}.</p>
-     */
-    @Override
     public T visitCalculateStatement(PureApsarsParser.CalculateStatementContext ctx) {
         return visitChildren(ctx);
     }
@@ -1429,17 +1439,6 @@ public class PureApsarsBaseVisitor<T> extends AbstractParseTreeVisitor<T> implem
      */
     @Override
     public T visitCalculateLeft(PureApsarsParser.CalculateLeftContext ctx) {
-        return visitChildren(ctx);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation returns the result of calling
-     * {@link #visitChildren} on {@code ctx}.</p>
-     */
-    @Override
-    public T visitCalculateRight(PureApsarsParser.CalculateRightContext ctx) {
         return visitChildren(ctx);
     }
 

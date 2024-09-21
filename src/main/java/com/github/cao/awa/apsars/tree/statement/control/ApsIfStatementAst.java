@@ -82,7 +82,8 @@ public class ApsIfStatementAst extends ApsResultingStatementAst {
             if (this.predicate.resultingStatement() instanceof ApsCalculateAst calculateAst) {
                 calculateAst.prepares();
 
-                this.predicate = calculateAst.convertSymbol(false);
+                // TODO
+//                this.predicate = calculateAst.convertSymbol(false, true);
                 this.predicate.preprocess();
             }
         }

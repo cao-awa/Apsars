@@ -97,11 +97,11 @@ public class ApsVariableAst extends ApsStatementAst {
     @Override
     public void print(String ident) {
         if (this.defining) {
-            System.out.println("Local variable (" + ApsTranslator.translate(TranslateTarget.JAVA, TranslateElement.ARG_TYPE, this.type) + ") ‘" + this.reference + "': ");
+            System.out.println("Local variable (" + ApsTranslator.translate(TranslateTarget.JAVA, TranslateElement.ARG_TYPE, this.type) + ") ‘" + ApsTranslator.translate(TranslateTarget.JAVA, TranslateElement.REFERENCE, this.reference) + "': ");
         } else {
-            System.out.println("Reassignment local variable ‘" + this.reference + "': ");
+            System.out.println("Reassignment local variable ‘" + ApsTranslator.translate(TranslateTarget.JAVA, TranslateElement.ARG_TYPE, this.type) + "': ");
         }
-        if (this.assignment.resultingStatement() instanceof ApsCalculateAst) {
+        if (this.assignment != null) {
             System.out.print(ident);
             this.assignment.print(ident);
         }
@@ -173,11 +173,12 @@ public class ApsVariableAst extends ApsStatementAst {
             if (this.assignment != null && this.assignment.resultingStatement() instanceof ApsCalculateAst calculateAst) {
                 calculateAst.preprocess();
 
-                ApsResultPresentingAst ast = calculateAst.convertSymbol(true);
-                if (ast != null) {
-                    this.assignment = ast;
-                    this.assignment.preprocess();
-                }
+                // TODO
+//                ApsResultPresentingAst ast = calculateAst.convertSymbol(true, true);
+//                if (ast != null) {
+//                    this.assignment = ast;
+//                    this.assignment.preprocess();
+//                }
             }
         }
 

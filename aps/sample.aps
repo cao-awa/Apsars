@@ -3,29 +3,23 @@ package com.github.cao.awa.apsars.std;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-@DoNotRefPrimary
+import java.util.Random;
+
 public class Sample2 {
-    static LOGGER: Logger = LogManager.getLogger("Sample2");
-    public static Logger field2 = LogManager.getLogger("Sample2");
-
     template main {
-        sync int a = 1;
-        int b = 10;
+        Random rand = new Random();
 
-        int c = 50;
-        int d = 100;
-        int e = 200;
+        int a = rand.nextInt();
+        int b = rand.nextInt();
+        int c = rand.nextInt();
+        int d = rand.nextInt();
+        int e = rand.nextInt();
+        int f = rand.nextInt();
+        int g = rand.nextInt();
+        int h = rand.nextInt();
 
-        if ((a * b) < c) {
-            System.out.println("a\{}is\{}more\{}than\{}b");
-        }
-
-        if (c < (a * b)) {
-            System.out.println("a\{}is\{}more\{}than\{}b");
-        }
-
-        if (a < b == c == d < e) {
-            System.out.println("a\{}is\{}more\{}than\{}b");
+        if (a > b > c > d > e) {
+            System.out.println("www");
         }
     };
 }

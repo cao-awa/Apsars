@@ -35,7 +35,6 @@ defineMethod: permissionModifiers            ?
                  resultPresenting            |
                  defineVariableStatement
                 )
-                semicolon
                )                             |
                (
                 // The method body.
@@ -70,7 +69,6 @@ defineJavaMethod: permissionModifiers            ?
                      resultPresenting            |
                      defineVariableStatement
                     )
-                    semicolon
                    )                             |
                    (
                     // The method body.
@@ -81,6 +79,25 @@ defineJavaMethod: permissionModifiers            ?
                   )
                   // Someone would like follow the semicolon wieh ending method defines.
                   semicolon                      ?
+;
+
+defineConstructor: permissionModifiers            ?
+                   constructor
+                   leftParen (
+                       // No params, direct done.
+                       rightParen                 |
+                       // Processes params, with right paren when ending params definition.
+                       (
+                        methodParamListDefinition
+                        rightParen
+                       )
+                   )
+                   (
+                    leftBrace (
+                        defineMethodBody
+                    ) rightBrace
+                    semicolon                     ?
+                   )
 ;
 
 defineLetMethod: identifier

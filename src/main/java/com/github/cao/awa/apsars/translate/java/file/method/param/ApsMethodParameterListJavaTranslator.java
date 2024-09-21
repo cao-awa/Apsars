@@ -12,7 +12,7 @@ public class ApsMethodParameterListJavaTranslator extends ApsJavaTranslator<ApsM
     @Override
     public void translate(StringBuilder builder, ApsMethodParameterAst ast) {
         translator(TranslateElement.METHOD_PARAMETER, next -> {
-            Iterator<ApsMethodParamElementAst> params = ast.params().values().iterator();
+            Iterator<ApsMethodParamElementAst> params = ast.params().iterator();
             while (params.hasNext()) {
                 next.postTranslate(builder, params.next());
                 if (params.hasNext()) {

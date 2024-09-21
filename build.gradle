@@ -20,7 +20,7 @@ repositories {
         url = "https://maven.pkg.github.com/cao-awa/Catheter"
         credentials {
             username = "cao-awa"
-            password = "ghp_8yGFQIhfc0wz43ws" + "Orpdne0yOkzhN20XimQl"
+            password = "ghp_UgALm1Ta2ONYeNh" + "S2m0XoWSc27BcE22v4Umn"
         }
     }
     maven {
@@ -28,7 +28,7 @@ repositories {
         url = "https://maven.pkg.github.com/cao-awa/Sinuatum"
         credentials {
             username = "cao-awa"
-            password = "ghp_8yGFQIhfc0wz43ws" + "Orpdne0yOkzhN20XimQl"
+            password = "ghp_UgALm1Ta2ONYeNh" + "S2m0XoWSc27BcE22v4Umn"
         }
     }
 }
@@ -73,7 +73,7 @@ dependencies {
 
     shadow 'org.reflections:reflections:0.10.2'
 
-    shadow 'com.github.cao.awa:catheter:1.0.5'
+    shadow 'com.github.cao.awa:catheter:1.0.37'
     shadow 'com.github.cao.awa:sinuatum:1.0.10'
 
     shadow 'org.lz4:lz4-java:1.8.0'

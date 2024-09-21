@@ -17,6 +17,7 @@ import com.github.cao.awa.apsars.translate.lang.element.TranslateElement;
 import com.github.cao.awa.apsars.tree.ApsAst;
 import com.github.cao.awa.apsars.tree.annotation.ApsAnnotationAst;
 import com.github.cao.awa.apsars.tree.clazz.ApsClassAst;
+import com.github.cao.awa.apsars.tree.clazz.ApsMemberParameterAst;
 import com.github.cao.awa.apsars.tree.method.parameter.ApsMethodParamElementAst;
 import com.github.cao.awa.apsars.tree.method.parameter.ApsMethodParameterAst;
 import com.github.cao.awa.apsars.tree.statement.result.ApsRefReferenceAst;
@@ -57,6 +58,8 @@ public class ApsMethodAst extends ApsAst implements ApsModifierRequiredAst<ApsMe
     private boolean isBinder;
     @Setter
     private boolean isVirtual;
+    @Setter
+    private boolean isConstructor;
     private final Map<ApsMethodModifierType, ApsMethodModifier> modifiers = ApricotCollectionFactor.hashMap();
     @Setter
     private ApsAccessibleModifier accessible = ApsAccessibleType.PRIVATE.generic();
@@ -73,10 +76,10 @@ public class ApsMethodAst extends ApsAst implements ApsModifierRequiredAst<ApsMe
 
         if (!this.param.isEmpty()) {
             JSONObject parameters = new JSONObject();
-            this.param.params().forEach((name, param) -> {
+            this.param.params().forEach((param) -> {
                 JSONObject theParameter = new JSONObject();
                 param.generateStructure(theParameter);
-                parameters.put(name, theParameter);
+                parameters.put(param.nameIdentity(), theParameter);
             });
             json.put("parameters", parameters);
         }
@@ -162,7 +165,7 @@ public class ApsMethodAst extends ApsAst implements ApsModifierRequiredAst<ApsMe
             builder.append("(");
             int index = 0;
             int edge = this.param.params().size() - 1;
-            for (ApsMethodParamElementAst value : this.param.params().values()) {
+            for (ApsMethodParamElementAst value : this.param.params()) {
                 builder.append(value.argType().formatCompletedName());
                 if (edge != index) {
                     builder.append(",");
@@ -220,6 +223,54 @@ public class ApsMethodAst extends ApsAst implements ApsModifierRequiredAst<ApsMe
 
     @Override
     public void preprocess() {
+        ApsClassAst classAst = findAst(ApsClassAst.class);
+
+        if (this.nameIdentity.equals(classAst.nameIdentity()) || this.isConstructor) {
+            this.isConstructor = true;
+
+            if (!this.modifiers.isEmpty() || this.returnType != null) {
+                throw new IllegalArgumentException("The constructor method are not allow modifiers and return type");
+            }
+
+            if (this.methodBody == null) {
+                for (ApsMethodParamElementAst params : this.param().params()) {
+                    ApsMemberParameterAst memberParameter = classAst.findMemberParameter(params.nameIdentity(), params.argType());
+                    if (memberParameter == null || memberParameter.isStatic()) {
+                        throw new IllegalArgumentException("The direct constructor parameters must be match to class member parameters");
+                    }
+                }
+
+                ApsMethodBodyAst body = new ApsMethodBodyAst(this, null);
+                for (ApsMethodParamElementAst params : this.param().params()) {
+                    body.addPresentingFieldVariable(
+                            new ApsVariableAst(body)
+                                    .reference(new ApsRefReferenceAst(body).nameIdentity(params.nameIdentity()))
+                                    .type(params.argType())
+                                    .defining(true)
+                    );
+                    ApsVariableAst variableAst = new ApsVariableAst(body);
+                    variableAst.reference(
+                                    new ApsRefReferenceAst(variableAst)
+                                            .nameIdentity(params.nameIdentity())
+                                            .instanceReference(true)
+                            )
+                            .instanceReference(true)
+                            .type(params.argType())
+                            .defining(false)
+                            .assignment(
+                                    new ApsResultPresentingAst(variableAst).reference(
+                                            new ApsRefReferenceAst(variableAst).nameIdentity(
+                                                    params.nameIdentity()
+                                            ).instanceReference(false)
+                                    )
+                            )
+                            .withEnd(true);
+                    body.addReassignmentFieldVariable(variableAst);
+                }
+                this.methodBody = body;
+            }
+        }
+
         if (this.param != null) {
             this.param.parent(this);
             this.param.preprocess();
@@ -281,8 +332,8 @@ public class ApsMethodAst extends ApsAst implements ApsModifierRequiredAst<ApsMe
             StringBuilder paramBuilder = new StringBuilder();
             int index = 0;
             int edge = this.param.params().size() - 1;
-            for (String name : this.param.params().keySet()) {
-                paramBuilder.append(name);
+            for (ApsMethodParamElementAst param : this.param.params()) {
+                paramBuilder.append(param.nameIdentity());
                 if (index != edge) {
                     paramBuilder.append(",");
                 }

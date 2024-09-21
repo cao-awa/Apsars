@@ -27,4 +27,9 @@ public class ApsLessThanSymbol extends ApsSymbolAst {
     public boolean leftPrimary() {
         return true;
     }
+
+    @Override
+    public int level() {
+        return 1;
+    }
 }

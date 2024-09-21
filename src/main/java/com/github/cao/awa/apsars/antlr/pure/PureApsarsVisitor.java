@@ -1,6 +1,5 @@
 // Generated from D:/Codes/Java/Apsars/grammar/pure/PureApsars.g4 by ANTLR 4.13.1
 package com.github.cao.awa.apsars.antlr.pure;
-
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 
 /**
@@ -8,7 +7,7 @@ import org.antlr.v4.runtime.tree.ParseTreeVisitor;
  * by {@link PureApsarsParser}.
  *
  * @param <T> The return type of the visit operation. Use {@link Void} for
- *            operations with no return type.
+ * operations with no return type.
  */
 public interface PureApsarsVisitor<T> extends ParseTreeVisitor<T> {
     /**
@@ -266,6 +265,14 @@ public interface PureApsarsVisitor<T> extends ParseTreeVisitor<T> {
      * @return the visitor result
      */
     T visitTemplate(PureApsarsParser.TemplateContext ctx);
+
+    /**
+     * Visit a parse tree produced by {@link PureApsarsParser#constructor}.
+     *
+     * @param ctx the parse tree
+     * @return the visitor result
+     */
+    T visitConstructor(PureApsarsParser.ConstructorContext ctx);
 
     /**
      * Visit a parse tree produced by {@link PureApsarsParser#newKeyword}.
@@ -772,6 +779,14 @@ public interface PureApsarsVisitor<T> extends ParseTreeVisitor<T> {
     T visitDefineMethod(PureApsarsParser.DefineMethodContext ctx);
 
     /**
+     * Visit a parse tree produced by {@link PureApsarsParser#defineConstructor}.
+     *
+     * @param ctx the parse tree
+     * @return the visitor result
+     */
+    T visitDefineConstructor(PureApsarsParser.DefineConstructorContext ctx);
+
+    /**
      * Visit a parse tree produced by {@link PureApsarsParser#defineLetMethod}.
      *
      * @param ctx the parse tree
@@ -1012,14 +1027,6 @@ public interface PureApsarsVisitor<T> extends ParseTreeVisitor<T> {
     T visitCalculateLeftStatementWithParen(PureApsarsParser.CalculateLeftStatementWithParenContext ctx);
 
     /**
-     * Visit a parse tree produced by {@link PureApsarsParser#calculateRightStatementWithParen}.
-     *
-     * @param ctx the parse tree
-     * @return the visitor result
-     */
-    T visitCalculateRightStatementWithParen(PureApsarsParser.CalculateRightStatementWithParenContext ctx);
-
-    /**
      * Visit a parse tree produced by {@link PureApsarsParser#calculateStatement}.
      *
      * @param ctx the parse tree
@@ -1042,14 +1049,6 @@ public interface PureApsarsVisitor<T> extends ParseTreeVisitor<T> {
      * @return the visitor result
      */
     T visitCalculateLeft(PureApsarsParser.CalculateLeftContext ctx);
-
-    /**
-     * Visit a parse tree produced by {@link PureApsarsParser#calculateRight}.
-     *
-     * @param ctx the parse tree
-     * @return the visitor result
-     */
-    T visitCalculateRight(PureApsarsParser.CalculateRightContext ctx);
 
     /**
      * Visit a parse tree produced by {@link PureApsarsParser#extraCalculateStatement}.

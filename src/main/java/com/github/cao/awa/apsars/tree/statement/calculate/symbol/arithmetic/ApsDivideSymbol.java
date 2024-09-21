@@ -22,4 +22,9 @@ public class ApsDivideSymbol extends ApsSymbolAst {
     public String oppositeName() {
         return "divideBy";
     }
+
+    @Override
+    public int level() {
+        return 3;
+    }
 }

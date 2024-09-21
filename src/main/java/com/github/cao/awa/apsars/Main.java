@@ -26,29 +26,28 @@ public class Main {
             String nativeJava = IOUtil.read(new FileReader("aps/native_java.aps"));
 
             ApsFileAst ast = ApsarsBuiltin.readApsars(aps);
-            ApsFileAst nativeJavaAst = ApsarsBuiltin.readApsars(nativeJava);
+//            ApsFileAst nativeJavaAst = ApsarsBuiltin.readApsars(nativeJava);
 
             ast.prepares();
-            nativeJavaAst.prepares();
-            
-            ast.print();
-
-            System.out.println(ast);
+//            nativeJavaAst.prepares();
 
             System.out.println("-- Struct ");
             JSONObject struct = new JSONObject();
             ast.generateStructure(struct);
             System.out.println(struct.toString(JSONWriter.Feature.PrettyFormat));
 
+            System.out.println("-- Ast struct");
+            ast.print();
+
             System.out.println("-- Generate java");
 
             String generatedJava = ApsTranslator.translate(TranslateTarget.JAVA, TranslateElement.FILE, ast);
             System.out.println(generatedJava);
 
-            System.out.println("-- Native java");
+//            System.out.println("-- Native java");
 
-            generatedJava = ApsTranslator.translate(TranslateTarget.JAVA, TranslateElement.FILE, nativeJavaAst);
-            System.out.println(generatedJava);
+//            generatedJava = ApsTranslator.translate(TranslateTarget.JAVA, TranslateElement.FILE, nativeJavaAst);
+//            System.out.println(generatedJava);
         } catch (Exception e) {
             e.printStackTrace();
         }

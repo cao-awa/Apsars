@@ -267,6 +267,14 @@ public interface ApsarsVisitor<T> extends ParseTreeVisitor<T> {
     T visitTemplate(ApsarsParser.TemplateContext ctx);
 
     /**
+     * Visit a parse tree produced by {@link ApsarsParser#constructor}.
+     *
+     * @param ctx the parse tree
+     * @return the visitor result
+     */
+    T visitConstructor(ApsarsParser.ConstructorContext ctx);
+
+    /**
      * Visit a parse tree produced by {@link ApsarsParser#newKeyword}.
      *
      * @param ctx the parse tree
@@ -779,6 +787,14 @@ public interface ApsarsVisitor<T> extends ParseTreeVisitor<T> {
     T visitDefineJavaMethod(ApsarsParser.DefineJavaMethodContext ctx);
 
     /**
+     * Visit a parse tree produced by {@link ApsarsParser#defineConstructor}.
+     *
+     * @param ctx the parse tree
+     * @return the visitor result
+     */
+    T visitDefineConstructor(ApsarsParser.DefineConstructorContext ctx);
+
+    /**
      * Visit a parse tree produced by {@link ApsarsParser#defineLetMethod}.
      *
      * @param ctx the parse tree
@@ -1017,14 +1033,6 @@ public interface ApsarsVisitor<T> extends ParseTreeVisitor<T> {
      * @return the visitor result
      */
     T visitCalculateLeftStatementWithParen(ApsarsParser.CalculateLeftStatementWithParenContext ctx);
-
-    /**
-     * Visit a parse tree produced by {@link ApsarsParser#calculateRightStatementWithParen}.
-     *
-     * @param ctx the parse tree
-     * @return the visitor result
-     */
-    T visitCalculateRightStatementWithParen(ApsarsParser.CalculateRightStatementWithParenContext ctx);
 
     /**
      * Visit a parse tree produced by {@link ApsarsParser#calculateStatement}.

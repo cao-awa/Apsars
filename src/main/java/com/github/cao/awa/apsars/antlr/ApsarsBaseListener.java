@@ -594,6 +594,24 @@ public class ApsarsBaseListener implements ApsarsListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
+    public void enterConstructor(ApsarsParser.ConstructorContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void exitConstructor(ApsarsParser.ConstructorContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
     public void enterNewKeyword(ApsarsParser.NewKeywordContext ctx) {
     }
 
@@ -1746,6 +1764,24 @@ public class ApsarsBaseListener implements ApsarsListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
+    public void enterDefineConstructor(ApsarsParser.DefineConstructorContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void exitDefineConstructor(ApsarsParser.DefineConstructorContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
     public void enterDefineLetMethod(ApsarsParser.DefineLetMethodContext ctx) {
     }
 
@@ -2278,24 +2314,6 @@ public class ApsarsBaseListener implements ApsarsListener {
      */
     @Override
     public void exitCalculateLeftStatementWithParen(ApsarsParser.CalculateLeftStatementWithParenContext ctx) {
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
-     */
-    @Override
-    public void enterCalculateRightStatementWithParen(ApsarsParser.CalculateRightStatementWithParenContext ctx) {
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
-     */
-    @Override
-    public void exitCalculateRightStatementWithParen(ApsarsParser.CalculateRightStatementWithParenContext ctx) {
     }
 
     /**

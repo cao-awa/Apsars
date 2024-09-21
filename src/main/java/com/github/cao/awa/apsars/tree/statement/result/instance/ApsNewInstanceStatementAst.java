@@ -32,4 +32,16 @@ public class ApsNewInstanceStatementAst extends ApsInvokeAst {
             }
         }
     }
+
+    @Override
+    public void preprocess() {
+        super.preprocess();
+
+        ApsArgTypeAst type = findAst(ApsFileAst.class).findValidArgType(reference().nameIdentity());
+        if (type != null) {
+            reference().type(type);
+
+            System.out.println(reference().type() + " awa???");
+        }
+    }
 }

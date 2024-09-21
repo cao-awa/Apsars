@@ -6,9 +6,9 @@ annotation: atSign identifier ( leftParen rightParen ) ? ;
 
 defineStatement: theStatement+ ;
 
-theStatement: (tryStatement | resultingStatement | defineVariableStatement | returnStatement | yieldStatement ) semicolon?;
+theStatement: ( defineVariableStatement | tryStatement | returnStatement | yieldStatement | resultingStatement ) semicolon?;
 
-resultPresenting: constant | resultingStatement | identifier | fullName ;
+resultPresenting: constant | identifier | fullName | resultingStatement ;
 
 resultingStatement: invokeStatement | newInstanceStatement | ifStatement | calculateStatement ;
 
@@ -39,15 +39,13 @@ statementBlock: leftBrace (
                 ) rightBrace
 ;
 
-calculateStatementWithParen: leftParen ( calculateLeftStatementWithParen ) rightParen (operator ( calculateRightStatementWithParen ))? ;
+calculateStatementWithParen: leftParen ( calculateLeftStatementWithParen ) rightParen extraCalculateStatement* ;
 
 calculateLeftStatementWithParen: calculateStatement | calculatableResultPresenting ;
 
-calculateRightStatementWithParen: calculateStatement | calculatableResultPresenting ;
+calculateStatement: (calculateLeft extraCalculateStatement* ) | (calculateStatementWithTotalParen extraCalculateStatement*) | calculateStatementWithParen ;
 
-calculateStatement: (calculateLeft operator calculateRight extraCalculateStatement*) | (calculateStatementWithTotalParen extraCalculateStatement*) | calculateStatementWithParen ;
-
-calculateStatementWithTotalParen: leftParen calculateLeft operator calculateRight extraCalculateStatement* rightParen;
+calculateStatementWithTotalParen: leftParen calculateLeft extraCalculateStatement* rightParen;
 
 calculateLeft: calculatableResultPresenting ;
 
@@ -123,7 +121,7 @@ validExtraInvokeParam: comma validInvokeParam;
 
 // <type> <name>
 // <type> <name> = <value>
-defineVariableStatement: variableModifiers? argType? variableName (assignment ( resultPresenting | assignmentIdentifier ))? ;
+defineVariableStatement: variableModifiers? argType? variableName (assignment ( resultPresenting | assignmentIdentifier ))? semicolon ;
 
 variableName: identifier | fullName ;
 

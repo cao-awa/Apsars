@@ -143,7 +143,7 @@ public class ApsClassAst extends ApsAst implements ApsModifierRequiredAst<ApsCla
                 continue;
             }
 
-            for (ApsMethodParamElementAst value : method.param().params().values()) {
+            for (ApsMethodParamElementAst value : method.param().params()) {
                 if (!value.argType().equals(args)) {
                     break;
                 }
@@ -155,6 +155,15 @@ public class ApsClassAst extends ApsAst implements ApsModifierRequiredAst<ApsCla
         return null;
     }
 
+    public ApsMemberParameterAst findMemberParameter(String name, ApsArgTypeAst argType) {
+        for (ApsMemberParameterAst value : this.parameters) {
+            if (value.nameIdentity().equals(name) && value.argType().equals(argType)) {
+                return value;
+            }
+        }
+
+        return null;
+    }
 
     @Override
     public Collection<ApsClassModifier> modifierValues() {

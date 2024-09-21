@@ -38,7 +38,9 @@ public class ApsImportAst extends ApsAst {
     @Override
     public void preprocess() {
         this.argType = new ApsArgTypeAst(this);
-        this.argType.nameIdentity(this.fullName.substring(this.fullName.lastIndexOf('.') + 1));
+        if (this.argType.nameIdentity() == null) {
+            this.argType.nameIdentity(this.fullName.substring(this.fullName.lastIndexOf('.') + 1));
+        }
     }
 
     @Override

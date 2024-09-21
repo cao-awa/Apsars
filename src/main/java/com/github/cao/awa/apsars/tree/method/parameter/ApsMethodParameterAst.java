@@ -8,19 +8,20 @@ import com.github.cao.awa.apsars.tree.vararg.ApsArgTypeAst;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 
+import java.util.LinkedList;
 import java.util.Map;
 
 @Getter
 @Accessors(fluent = true)
 public class ApsMethodParameterAst extends ApsAst {
-    private final Map<String, ApsMethodParamElementAst> params = ApricotCollectionFactor.hashMap();
+    private final LinkedList<ApsMethodParamElementAst> params = ApricotCollectionFactor.linkedList();
 
     public ApsMethodParameterAst(ApsMethodAst parent) {
         super(parent);
     }
 
     public void addParam(ApsMethodParamElementAst param) {
-        this.params.put(param.nameIdentity(), param);
+        this.params.add(param);
     }
 
     @Override
@@ -30,16 +31,14 @@ public class ApsMethodParameterAst extends ApsAst {
 
     @Override
     public void print(String ident) {
-        this.params.forEach((key, value) -> {
-            value.print(ident);
-        });
+        this.params.forEach((value) -> value.print(ident));
     }
 
     @Override
     public void preprocess() {
         ApsMethodAst method = findAst(ApsMethodAst.class);
 
-        for (ApsMethodParamElementAst methodParamElementAst : this.params.values()) {
+        for (ApsMethodParamElementAst methodParamElementAst : this.params) {
             methodParamElementAst.preprocess();
 
             method.methodBody().addPresentingFieldVariable(methodParamElementAst.toLocalVariable());
@@ -48,14 +47,14 @@ public class ApsMethodParameterAst extends ApsAst {
 
     @Override
     public void postprocess() {
-        for (ApsMethodParamElementAst methodParamElementAst : this.params.values()) {
+        for (ApsMethodParamElementAst methodParamElementAst : this.params) {
             methodParamElementAst.postprocess();
         }
     }
 
     @Override
     public void consequence() {
-        for (ApsMethodParamElementAst methodParamElementAst : this.params.values()) {
+        for (ApsMethodParamElementAst methodParamElementAst : this.params) {
             methodParamElementAst.consequence();
         }
     }

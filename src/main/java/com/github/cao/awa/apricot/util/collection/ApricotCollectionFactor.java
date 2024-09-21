@@ -79,6 +79,10 @@ public class ApricotCollectionFactor {
         return new LinkedList<>();
     }
 
+    public static <V> LinkedList<V> linkedList(Collection<V> delegate) {
+        return new LinkedList<>(delegate);
+    }
+
     public static <V> ObjectOpenHashSet<V> hashSet() {
         return new ObjectOpenHashSet<>();
     }

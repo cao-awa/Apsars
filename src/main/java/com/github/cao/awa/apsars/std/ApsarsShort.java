@@ -1,5 +1,7 @@
 package com.github.cao.awa.apsars.std;
 
+import static com.github.cao.awa.apsars.ApsGlobal.*;
+
 @DoNotRefPrimary
 public final class ApsarsShort {
     public short delegate;

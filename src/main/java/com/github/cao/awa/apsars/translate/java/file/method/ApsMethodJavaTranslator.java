@@ -31,12 +31,12 @@ public class ApsMethodJavaTranslator extends ApsJavaTranslator<ApsMethodAst> imp
             builder.append("default ");
         }
 
-        if (ast.returnType() == null) {
-            builder.append("void");
-        } else {
+        if (ast.returnType() == null && !ast.isConstructor()) {
+            builder.append("void ");
+        } else if (ast.returnType() != null) {
             postTranslate(TranslateElement.ARG_TYPE, ast.returnType());
+            builder.append(" ");
         }
-        builder.append(" ");
 
         builder.append(ast.nameIdentity());
         paren(this, this::translateParams);

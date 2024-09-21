@@ -23,4 +23,5 @@ public class ApsOperators {
     public static final ApsOrSymbol OR = new ApsOrSymbol(null);
     public static final ApsBreakingOrSymbol BREAKING_OR = new ApsBreakingOrSymbol(null);
 
+    public static final int PAREN_LEVEL = Integer.MAX_VALUE;
 }

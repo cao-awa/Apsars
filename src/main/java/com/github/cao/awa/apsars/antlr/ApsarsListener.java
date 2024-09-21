@@ -456,6 +456,20 @@ public interface ApsarsListener extends ParseTreeListener {
     void exitTemplate(ApsarsParser.TemplateContext ctx);
 
     /**
+     * Enter a parse tree produced by {@link ApsarsParser#constructor}.
+     *
+     * @param ctx the parse tree
+     */
+    void enterConstructor(ApsarsParser.ConstructorContext ctx);
+
+    /**
+     * Exit a parse tree produced by {@link ApsarsParser#constructor}.
+     *
+     * @param ctx the parse tree
+     */
+    void exitConstructor(ApsarsParser.ConstructorContext ctx);
+
+    /**
      * Enter a parse tree produced by {@link ApsarsParser#newKeyword}.
      *
      * @param ctx the parse tree
@@ -1352,6 +1366,20 @@ public interface ApsarsListener extends ParseTreeListener {
     void exitDefineJavaMethod(ApsarsParser.DefineJavaMethodContext ctx);
 
     /**
+     * Enter a parse tree produced by {@link ApsarsParser#defineConstructor}.
+     *
+     * @param ctx the parse tree
+     */
+    void enterDefineConstructor(ApsarsParser.DefineConstructorContext ctx);
+
+    /**
+     * Exit a parse tree produced by {@link ApsarsParser#defineConstructor}.
+     *
+     * @param ctx the parse tree
+     */
+    void exitDefineConstructor(ApsarsParser.DefineConstructorContext ctx);
+
+    /**
      * Enter a parse tree produced by {@link ApsarsParser#defineLetMethod}.
      *
      * @param ctx the parse tree
@@ -1770,20 +1798,6 @@ public interface ApsarsListener extends ParseTreeListener {
      * @param ctx the parse tree
      */
     void exitCalculateLeftStatementWithParen(ApsarsParser.CalculateLeftStatementWithParenContext ctx);
-
-    /**
-     * Enter a parse tree produced by {@link ApsarsParser#calculateRightStatementWithParen}.
-     *
-     * @param ctx the parse tree
-     */
-    void enterCalculateRightStatementWithParen(ApsarsParser.CalculateRightStatementWithParenContext ctx);
-
-    /**
-     * Exit a parse tree produced by {@link ApsarsParser#calculateRightStatementWithParen}.
-     *
-     * @param ctx the parse tree
-     */
-    void exitCalculateRightStatementWithParen(ApsarsParser.CalculateRightStatementWithParenContext ctx);
 
     /**
      * Enter a parse tree produced by {@link ApsarsParser#calculateStatement}.

@@ -594,6 +594,24 @@ public class PureApsarsBaseListener implements PureApsarsListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
+    public void enterConstructor(PureApsarsParser.ConstructorContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void exitConstructor(PureApsarsParser.ConstructorContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
     public void enterNewKeyword(PureApsarsParser.NewKeywordContext ctx) {
     }
 
@@ -1728,6 +1746,24 @@ public class PureApsarsBaseListener implements PureApsarsListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
+    public void enterDefineConstructor(PureApsarsParser.DefineConstructorContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void exitDefineConstructor(PureApsarsParser.DefineConstructorContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
     public void enterDefineLetMethod(PureApsarsParser.DefineLetMethodContext ctx) {
     }
 
@@ -2268,24 +2304,6 @@ public class PureApsarsBaseListener implements PureApsarsListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void enterCalculateRightStatementWithParen(PureApsarsParser.CalculateRightStatementWithParenContext ctx) {
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
-     */
-    @Override
-    public void exitCalculateRightStatementWithParen(PureApsarsParser.CalculateRightStatementWithParenContext ctx) {
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
-     */
-    @Override
     public void enterCalculateStatement(PureApsarsParser.CalculateStatementContext ctx) {
     }
 
@@ -2332,24 +2350,6 @@ public class PureApsarsBaseListener implements PureApsarsListener {
      */
     @Override
     public void exitCalculateLeft(PureApsarsParser.CalculateLeftContext ctx) {
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
-     */
-    @Override
-    public void enterCalculateRight(PureApsarsParser.CalculateRightContext ctx) {
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
-     */
-    @Override
-    public void exitCalculateRight(PureApsarsParser.CalculateRightContext ctx) {
     }
 
     /**
@@ -2856,39 +2856,28 @@ public class PureApsarsBaseListener implements PureApsarsListener {
     public void exitFieldName(PureApsarsParser.FieldNameContext ctx) {
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
-     */
-    @Override
-    public void enterEveryRule(ParserRuleContext ctx) {
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
-     */
-    @Override
-    public void exitEveryRule(ParserRuleContext ctx) {
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
-     */
-    @Override
-    public void visitTerminal(TerminalNode node) {
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
-     */
-    @Override
-    public void visitErrorNode(ErrorNode node) {
-    }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterEveryRule(ParserRuleContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitEveryRule(ParserRuleContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void visitTerminal(TerminalNode node) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void visitErrorNode(ErrorNode node) { }
 }

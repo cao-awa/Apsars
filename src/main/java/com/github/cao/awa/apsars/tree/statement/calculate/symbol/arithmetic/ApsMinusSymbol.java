@@ -22,4 +22,9 @@ public class ApsMinusSymbol extends ApsSymbolAst {
     public String oppositeName() {
         return "minusBy";
     }
+
+    @Override
+    public int level() {
+        return 2;
+    }
 }

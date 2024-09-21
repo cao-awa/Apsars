@@ -22,4 +22,9 @@ public class ApsPowSymbol extends ApsSymbolAst {
     public String oppositeName() {
         return "powBy";
     }
+
+    @Override
+    public int level() {
+        return 4;
+    }
 }
