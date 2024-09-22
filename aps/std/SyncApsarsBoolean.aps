@@ -1,0 +1,37 @@
+package com.github.cao.awa.apsars.std;
+
+@DoNotRefPrimary
+public unique class SyncApsarsBoolean {
+    private delegate: boolean;
+
+    public sync delegate(): boolean -> this.delegate;
+
+    public sync delegate(updatingValue: boolean): boolean -> this.delegate = updatingValue;
+
+    public isMoreThan(comparingTarget: short): boolean -> false;
+    public isMoreThan(comparingTarget: int): boolean -> false;
+    public isMoreThan(comparingTarget: long): boolean -> false;
+    public isMoreThan(comparingTarget: float): boolean -> false;
+    public isMoreThan(comparingTarget: double): boolean -> false;
+    public isMoreThan(comparingTarget: byte): boolean -> false;
+    public isMoreThan(comparingTarget: char): boolean -> false;
+    public isMoreThan(comparingTarget: boolean): boolean -> false;
+
+    public isLessThan(comparingTarget: short): boolean -> false;
+    public isLessThan(comparingTarget: int): boolean -> false;
+    public isLessThan(comparingTarget: long): boolean -> false;
+    public isLessThan(comparingTarget: float): boolean -> false;
+    public isLessThan(comparingTarget: double): boolean -> false;
+    public isLessThan(comparingTarget: byte): boolean -> false;
+    public isLessThan(comparingTarget: char): boolean -> false;
+    public isLessThan(comparingTarget: boolean): boolean -> false;
+
+    public isEquals(comparingTarget: short): boolean -> false;
+    public isEquals(comparingTarget: int): boolean -> false;
+    public isEquals(comparingTarget: long): boolean -> false;
+    public isEquals(comparingTarget: float): boolean -> false;
+    public isEquals(comparingTarget: double): boolean -> false;
+    public isEquals(comparingTarget: byte): boolean -> false;
+    public isEquals(comparingTarget: char): boolean -> false;
+    public isEquals(comparingTarget: boolean): boolean -> comparingTarget && this.delegate;
+}

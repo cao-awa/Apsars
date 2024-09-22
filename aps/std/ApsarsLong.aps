@@ -11,6 +11,7 @@ public unique class ApsarsLong {
     public inline isMoreThan(comparingTarget: double): boolean -> this.delegate > comparingTarget;
     public inline isMoreThan(comparingTarget: byte): boolean -> this.delegate > comparingTarget;
     public inline isMoreThan(comparingTarget: char): boolean -> this.delegate > comparingTarget;
+    public inline isMoreThan(comparingTarget: boolean): boolean -> false;
 
     public inline isLessThan(comparingTarget: short): boolean -> this.delegate < comparingTarget;
     public inline isLessThan(comparingTarget: int): boolean -> this.delegate < comparingTarget;
@@ -19,6 +20,7 @@ public unique class ApsarsLong {
     public inline isLessThan(comparingTarget: double): boolean -> this.delegate < comparingTarget;
     public inline isLessThan(comparingTarget: byte): boolean -> this.delegate < comparingTarget;
     public inline isLessThan(comparingTarget: char): boolean -> this.delegate < comparingTarget;
+    public inline isLessThan(comparingTarget: boolean): boolean -> false;
 
     public inline isEquals(comparingTarget: short): boolean -> this.delegate == comparingTarget;
     public inline isEquals(comparingTarget: int): boolean -> this.delegate == comparingTarget;
@@ -27,4 +29,5 @@ public unique class ApsarsLong {
     public inline isEquals(comparingTarget: double): boolean -> this.delegate == comparingTarget;
     public inline isEquals(comparingTarget: byte): boolean -> this.delegate == comparingTarget;
     public inline isEquals(comparingTarget: char): boolean -> this.delegate == comparingTarget;
+    public inline isEquals(comparingTarget: boolean): boolean -> false;
 }

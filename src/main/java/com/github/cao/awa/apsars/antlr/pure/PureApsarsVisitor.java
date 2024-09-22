@@ -459,6 +459,46 @@ public interface PureApsarsVisitor<T> extends ParseTreeVisitor<T> {
     T visitWordOr(PureApsarsParser.WordOrContext ctx);
 
     /**
+     * Visit a parse tree produced by {@link PureApsarsParser#addisionAssignment}.
+     *
+     * @param ctx the parse tree
+     * @return the visitor result
+     */
+    T visitAddisionAssignment(PureApsarsParser.AddisionAssignmentContext ctx);
+
+    /**
+     * Visit a parse tree produced by {@link PureApsarsParser#subtractionAssignment}.
+     *
+     * @param ctx the parse tree
+     * @return the visitor result
+     */
+    T visitSubtractionAssignment(PureApsarsParser.SubtractionAssignmentContext ctx);
+
+    /**
+     * Visit a parse tree produced by {@link PureApsarsParser#multiplicationAssignment}.
+     *
+     * @param ctx the parse tree
+     * @return the visitor result
+     */
+    T visitMultiplicationAssignment(PureApsarsParser.MultiplicationAssignmentContext ctx);
+
+    /**
+     * Visit a parse tree produced by {@link PureApsarsParser#divisionAssignment}.
+     *
+     * @param ctx the parse tree
+     * @return the visitor result
+     */
+    T visitDivisionAssignment(PureApsarsParser.DivisionAssignmentContext ctx);
+
+    /**
+     * Visit a parse tree produced by {@link PureApsarsParser#powAssignment}.
+     *
+     * @param ctx the parse tree
+     * @return the visitor result
+     */
+    T visitPowAssignment(PureApsarsParser.PowAssignmentContext ctx);
+
+    /**
      * Visit a parse tree produced by {@link PureApsarsParser#plus}.
      *
      * @param ctx the parse tree

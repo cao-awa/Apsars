@@ -3,7 +3,6 @@ package com.github.cao.awa.apsars.tree.statement.calculate.symbol;
 import com.alibaba.fastjson2.JSONObject;
 import com.github.cao.awa.apsars.tree.ApsAst;
 import com.github.cao.awa.apsars.tree.statement.ApsStatementAst;
-import com.github.cao.awa.apsars.tree.statement.calculate.symbol.comparing.ApsOrSymbol;
 
 public abstract class ApsSymbolAst extends ApsStatementAst {
     public ApsSymbolAst(ApsAst ast) {
@@ -19,6 +18,10 @@ public abstract class ApsSymbolAst extends ApsStatementAst {
     public abstract int level();
 
     public abstract String symbol();
+
+    public ApsSymbolAst operatorSymbol() {
+        return this;
+    }
 
     public abstract String name();
 
@@ -41,6 +44,10 @@ public abstract class ApsSymbolAst extends ApsStatementAst {
 
     public boolean notBinary() {
         return true;
+    }
+
+    public boolean isAssigment() {
+        return false;
     }
 
     public boolean oppositePresent() {

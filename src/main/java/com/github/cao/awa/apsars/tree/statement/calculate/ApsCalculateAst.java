@@ -4,17 +4,20 @@ import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import com.github.cao.awa.apricot.util.collection.ApricotCollectionFactor;
 import com.github.cao.awa.apsars.tree.ApsAst;
+import com.github.cao.awa.apsars.tree.method.ApsMethodBodyAst;
 import com.github.cao.awa.apsars.tree.statement.calculate.symbol.ApsOperators;
 import com.github.cao.awa.apsars.tree.statement.calculate.symbol.ApsSymbolAst;
+import com.github.cao.awa.apsars.tree.statement.invoke.ApsInvokeObjectAst;
+import com.github.cao.awa.apsars.tree.statement.result.ApsRefReferenceAst;
 import com.github.cao.awa.apsars.tree.statement.result.ApsResultPresentingAst;
 import com.github.cao.awa.apsars.tree.statement.result.ApsResultingStatementAst;
+import com.github.cao.awa.apsars.tree.statement.result.instance.ApsNewInstanceStatementAst;
+import com.github.cao.awa.apsars.tree.statement.variable.ApsVariableAst;
 import com.github.cao.awa.apsars.tree.vararg.ApsArgTypeAst;
-import com.github.cao.awa.catheter.Catheter;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
-import javax.swing.plaf.synth.SynthOptionPaneUI;
 import java.util.LinkedList;
 
 @Setter
@@ -117,8 +120,6 @@ public class ApsCalculateAst extends ApsResultingStatementAst {
 
         deepExtractRight();
 
-        connectingSymbols();
-
         return this;
     }
 
@@ -158,8 +159,9 @@ public class ApsCalculateAst extends ApsResultingStatementAst {
                     if (shouldDeliveryRight) {
                         this.right = null;
                         this.symbol = null;
+                    } else {
+                        symbol(right.symbol());
                     }
-                    symbol(right.symbol());
                     removing.clear();
                     removing.add(right);
                     shouldRecalculateRight = true;
@@ -354,6 +356,66 @@ public class ApsCalculateAst extends ApsResultingStatementAst {
                 .totalWithParen(this.totalWithParen);
     }
 
+    public void replaceAssignment() {
+        ApsMethodBodyAst body = findAst(ApsMethodBodyAst.class);
+
+        ApsRefReferenceAst reference = this.left.reference();
+
+        ApsVariableAst variable = body.fieldVariable(reference.nameIdentity());
+
+        ApsResultPresentingAst result;
+
+        ApsCalculateAst calculate = new ApsCalculateAst(this);
+
+        calculate.left(this.left);
+        calculate.symbol(this.symbol.operatorSymbol());
+        calculate.right(this.right);
+        calculate.rights(this.rights);
+
+        if (variable.type().referencePrimary().sync()) {
+            ApsInvokeObjectAst invoke = new ApsInvokeObjectAst(body);
+
+            invoke.objectName(reference.dump(invoke));
+            invoke.reference(new ApsRefReferenceAst(invoke).nameIdentity("delegate").doNotProcess(true));
+            invoke.addParam(ApsResultPresentingAst.statement(invoke, calculate));
+            invoke.preprocess();
+
+            result = ApsResultPresentingAst.statement(calculate, invoke);
+        } else {
+            ApsVariableAst assignment = new ApsVariableAst(body);
+            assignment.reference(reference.dump(assignment));
+            assignment.defining(false);
+            assignment.assignment(ApsResultPresentingAst.statement(assignment, calculate));
+            assignment.preprocess();
+
+            ApsNewInstanceStatementAst newApsarsPrimary = new ApsNewInstanceStatementAst(body);
+            newApsarsPrimary.reference(reference.dump(newApsarsPrimary).doNotProcess(true));
+
+            body.replaceMe(
+                    this,
+                    assignment
+            );
+
+            return;
+        }
+
+        ApsNewInstanceStatementAst newApsarsPrimary = new ApsNewInstanceStatementAst(body);
+        newApsarsPrimary.reference(reference.dump(newApsarsPrimary).doNotProcess(true));
+
+        boolean replaced = body.replaceMe(
+                this,
+                result.resultingStatement()
+        );
+
+        if (!replaced) {
+            this.left = result;
+            this.symbol = null;
+            this.right = null;
+            this.rights = null;
+            withEnd(false);
+        }
+    }
+
     @Override
     public void preprocess() {
         if (this.left != null) {
@@ -367,6 +429,12 @@ public class ApsCalculateAst extends ApsResultingStatementAst {
         if (this.right != null) {
             this.right.parent(this);
             this.right.preprocess();
+
+            if (!this.symbol.isAssigment()) {
+                deepCalculate();
+            } else {
+                replaceAssignment();
+            }
         } else {
             this.symbol = null;
         }
@@ -377,8 +445,6 @@ public class ApsCalculateAst extends ApsResultingStatementAst {
                 right.preprocess();
             }
         }
-
-        deepCalculate();
 
         if (this.symbol != null && this.symbol.level() == 0) {
             if (this.left != null && this.left.resultingStatement() instanceof ApsCalculateAst leftCalculate) {

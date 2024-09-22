@@ -12,14 +12,21 @@ public class Sample2 {
         int a = rand.nextInt();
         int b = rand.nextInt();
         int c = rand.nextInt();
-        int d = rand.nextInt();
+        sync int d = rand.nextInt();
         int e = rand.nextInt();
         int f = rand.nextInt();
         int g = rand.nextInt();
         int h = rand.nextInt();
 
-        if (a > b > c > d > e) {
+        a += b + c;
+        d += e + f;
+
+        if (d > a) {
             System.out.println("www");
         }
-    };
+
+        if ((d += b) > c) {
+            System.out.println("awa");
+        }
+    }
 }

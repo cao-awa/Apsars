@@ -8,7 +8,6 @@ import com.github.cao.awa.apsars.tree.clazz.ApsMemberParameterAst;
 import com.github.cao.awa.apsars.tree.statement.ApsStatementAst;
 import com.github.cao.awa.apsars.tree.statement.invoke.ApsInvokeAst;
 import com.github.cao.awa.apsars.tree.statement.reference.ApsReferenceLocatableStatement;
-import com.github.cao.awa.apsars.tree.statement.result.ApsRefReferenceAst;
 import com.github.cao.awa.apsars.tree.statement.special.literal.ApsLiteralStatementAst;
 import com.github.cao.awa.apsars.tree.statement.variable.ApsVariableAst;
 import kotlin.Pair;
@@ -96,6 +95,24 @@ public class ApsMethodBodyAst extends ApsAst implements ApsReferenceLocatableSta
                 .filter(v -> v.reference().nameIdentity().equals(name))
                 .findFirst()
                 .orElse(null);
+    }
+
+    public boolean replaceMe(ApsStatementAst ast, ApsStatementAst newAst) {
+        int index = 0;
+        boolean isReplaceable = false;
+        for (ApsStatementAst statement : this.statements) {
+            if (statement == ast) {
+                isReplaceable = true;
+                break;
+            }
+            index++;
+        }
+
+        if (isReplaceable) {
+            this.statements.set(index, newAst);
+        }
+
+        return isReplaceable;
     }
 
     public int searchHere(ApsStatementAst ast) {
@@ -211,6 +228,7 @@ public class ApsMethodBodyAst extends ApsAst implements ApsReferenceLocatableSta
                 continue;
             }
             statement.parent(this);
+            statement.withEnd(true);
             statement.preprocess();
         }
     }

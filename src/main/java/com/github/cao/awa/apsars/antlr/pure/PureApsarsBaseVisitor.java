@@ -635,6 +635,61 @@ public class PureApsarsBaseVisitor<T> extends AbstractParseTreeVisitor<T> implem
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
+    public T visitAddisionAssignment(PureApsarsParser.AddisionAssignmentContext ctx) {
+        return visitChildren(ctx);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation returns the result of calling
+     * {@link #visitChildren} on {@code ctx}.</p>
+     */
+    @Override
+    public T visitSubtractionAssignment(PureApsarsParser.SubtractionAssignmentContext ctx) {
+        return visitChildren(ctx);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation returns the result of calling
+     * {@link #visitChildren} on {@code ctx}.</p>
+     */
+    @Override
+    public T visitMultiplicationAssignment(PureApsarsParser.MultiplicationAssignmentContext ctx) {
+        return visitChildren(ctx);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation returns the result of calling
+     * {@link #visitChildren} on {@code ctx}.</p>
+     */
+    @Override
+    public T visitDivisionAssignment(PureApsarsParser.DivisionAssignmentContext ctx) {
+        return visitChildren(ctx);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation returns the result of calling
+     * {@link #visitChildren} on {@code ctx}.</p>
+     */
+    @Override
+    public T visitPowAssignment(PureApsarsParser.PowAssignmentContext ctx) {
+        return visitChildren(ctx);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation returns the result of calling
+     * {@link #visitChildren} on {@code ctx}.</p>
+     */
+    @Override
     public T visitPlus(PureApsarsParser.PlusContext ctx) {
         return visitChildren(ctx);
     }

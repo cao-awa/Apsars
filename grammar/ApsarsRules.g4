@@ -156,19 +156,33 @@ wordAnd : WordAnd ;
 wordOr  : WordOr  ;
 
 // Operators.
-Plus     : '+'                                    ;
-Minus    : '-'                                    ;
-Multiply : '*'                                    ;
-Divide   : '/'                                    ;
-Pow      : '^'                                    ;
-plus     : Plus                                   ;
-minus    : Minus                                  ;
-multiply : Multiply                               ;
-divide   : Divide                                 ;
-pow      : Pow                                    ;
-operator : arithmetic | comparing | not           ;
+AddisionAssignment       : '+='                                   ;
+SubtractionAssignment    : '-='                                   ;
+MultiplicationAssignment : '*='                                   ;
+DivisionAssignment       : '/='                                   ;
+PowAssignment            : '^='                                   ;
+addisionAssignment       : AddisionAssignment                     ;
+subtractionAssignment    : SubtractionAssignment                  ;
+multiplicationAssignment : MultiplicationAssignment               ;
+divisionAssignment       : DivisionAssignment                     ;
+powAssignment            : PowAssignment                          ;
+Plus                     : '+'                                    ;
+Minus                    : '-'                                    ;
+Multiply                 : '*'                                    ;
+Divide                   : '/'                                    ;
+Pow                      : '^'                                    ;
+plus                     : Plus                                   ;
+minus                    : Minus                                  ;
+multiply                 : Multiply                               ;
+divide                   : Divide                                 ;
+pow                      : Pow                                    ;
+operator                 : arithmetic | comparing | not           ;
 
-arithmetic : Plus | Minus | Multiply | Divide | Pow ;
+arithmetic : AddisionAssignment       | Plus
+             SubtractionAssignment    | Minus
+             MultiplicationAssignment | Multiply
+             DivisionAssignment       | Divide
+             PowAssignment            | Pow ;
 
 // Comparator sign(s).
 BreakingAndSign : '&&'              ;

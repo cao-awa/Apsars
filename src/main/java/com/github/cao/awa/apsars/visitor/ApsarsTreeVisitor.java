@@ -808,6 +808,26 @@ public class ApsarsTreeVisitor extends ApsarsBaseVisitor<ApsAst> {
             return ApsOperators.POW;
         }
 
+        if (ctx.AddisionAssignment() != null) {
+            return ApsOperators.ADDITION_ASSIGNMENT;
+        }
+
+        if (ctx.SubtractionAssignment() != null) {
+            return ApsOperators.SUBTRACTION_ASSIGNMENT;
+        }
+
+        if (ctx.MultiplicationAssignment() != null) {
+            return ApsOperators.MULTIPLICATION_ASSIGNMENT;
+        }
+
+        if (ctx.DivisionAssignment() != null) {
+            return ApsOperators.DIVISION_ASSIGNMENT;
+        }
+
+        if (ctx.PowAssignment() != null) {
+            return ApsOperators.POW_ASSIGNMENT;
+        }
+
         return null;
     }
 

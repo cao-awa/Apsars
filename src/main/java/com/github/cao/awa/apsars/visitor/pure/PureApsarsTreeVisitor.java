@@ -1,6 +1,5 @@
 package com.github.cao.awa.apsars.visitor.pure;
 
-import com.github.cao.awa.apsars.antlr.ApsarsParser;
 import com.github.cao.awa.apsars.antlr.pure.PureApsarsBaseVisitor;
 import com.github.cao.awa.apsars.antlr.pure.PureApsarsParser;
 import com.github.cao.awa.apsars.element.ApsAccessibleType;
@@ -784,6 +783,26 @@ public class PureApsarsTreeVisitor extends PureApsarsBaseVisitor<ApsAst> {
 
         if (ctx.Pow() != null) {
             return ApsOperators.POW;
+        }
+
+        if (ctx.AddisionAssignment() != null) {
+            return ApsOperators.ADDITION_ASSIGNMENT;
+        }
+
+        if (ctx.SubtractionAssignment() != null) {
+            return ApsOperators.SUBTRACTION_ASSIGNMENT;
+        }
+
+        if (ctx.MultiplicationAssignment() != null) {
+            return ApsOperators.MULTIPLICATION_ASSIGNMENT;
+        }
+
+        if (ctx.DivisionAssignment() != null) {
+            return ApsOperators.DIVISION_ASSIGNMENT;
+        }
+
+        if (ctx.PowAssignment() != null) {
+            return ApsOperators.POW_ASSIGNMENT;
         }
 
         return null;

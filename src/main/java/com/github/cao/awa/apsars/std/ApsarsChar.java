@@ -1,7 +1,5 @@
 package com.github.cao.awa.apsars.std;
 
-import static com.github.cao.awa.apsars.ApsGlobal.*;
-
 @DoNotRefPrimary
 public final class ApsarsChar {
     public char delegate;
@@ -42,6 +40,11 @@ public final class ApsarsChar {
     }
 
     @TryInline
+    public boolean isMoreThan(boolean comparingTarget) {
+        return false;
+    }
+
+    @TryInline
     public boolean isLessThan(short comparingTarget) {
         return this.delegate < comparingTarget;
     }
@@ -77,6 +80,11 @@ public final class ApsarsChar {
     }
 
     @TryInline
+    public boolean isLessThan(boolean comparingTarget) {
+        return false;
+    }
+
+    @TryInline
     public boolean isEquals(short comparingTarget) {
         return this.delegate == comparingTarget;
     }
@@ -109,5 +117,10 @@ public final class ApsarsChar {
     @TryInline
     public boolean isEquals(char comparingTarget) {
         return this.delegate == comparingTarget;
+    }
+
+    @TryInline
+    public boolean isEquals(boolean comparingTarget) {
+        return false;
     }
 }

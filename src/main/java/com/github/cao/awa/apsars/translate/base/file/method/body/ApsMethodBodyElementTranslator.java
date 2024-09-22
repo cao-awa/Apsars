@@ -14,6 +14,9 @@ public interface ApsMethodBodyElementTranslator extends ApsElementTranslator<Aps
         translator.translator(TranslateElement.STATEMENT, next -> {
             for (ApsStatementAst importAst : ast.statements()) {
                 next.postTranslate(builder, importAst);
+                if (!importAst.withEnd()) {
+                    builder.append(";");
+                }
             }
         });
     }

@@ -1,6 +1,7 @@
 package com.github.cao.awa.apsars.tree.statement.calculate.symbol;
 
 import com.github.cao.awa.apsars.tree.statement.calculate.symbol.arithmetic.*;
+import com.github.cao.awa.apsars.tree.statement.calculate.symbol.assignment.*;
 import com.github.cao.awa.apsars.tree.statement.calculate.symbol.comparing.*;
 import com.github.cao.awa.apsars.tree.statement.calculate.symbol.not.ApsNotSymbol;
 
@@ -12,6 +13,12 @@ public class ApsOperators {
     public static final ApsMultiplySymbol MULTIPLY = new ApsMultiplySymbol(null);
     public static final ApsDivideSymbol DIVIDE = new ApsDivideSymbol(null);
     public static final ApsPowSymbol POW = new ApsPowSymbol(null);
+
+    public static final ApsSubtractionAssignmentSymbol SUBTRACTION_ASSIGNMENT = new ApsSubtractionAssignmentSymbol(null);
+    public static final ApsAdditionAssignmentSymbol ADDITION_ASSIGNMENT = new ApsAdditionAssignmentSymbol(null);
+    public static final ApsMultiplicationAssignmentSymbol MULTIPLICATION_ASSIGNMENT = new ApsMultiplicationAssignmentSymbol(null);
+    public static final ApsDivisionAssignmentSymbol DIVISION_ASSIGNMENT = new ApsDivisionAssignmentSymbol(null);
+    public static final ApsPowAssignmentSymbol POW_ASSIGNMENT = new ApsPowAssignmentSymbol(null);
 
     public static final ApsEqualsSymbol EQUALS = new ApsEqualsSymbol(null);
 

@@ -2,8 +2,6 @@ package com.github.cao.awa.apsars;
 
 import com.github.cao.awa.apsars.std.ApsarsInt;
 import com.github.cao.awa.apsars.std.SyncApsarsInt;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.util.Random;
 
@@ -16,8 +14,8 @@ public class Sample2 {
         b.delegate = rand.nextInt();
         final ApsarsInt c = new ApsarsInt();
         c.delegate = rand.nextInt();
-        final ApsarsInt d = new ApsarsInt();
-        d.delegate = rand.nextInt();
+        final SyncApsarsInt d = new SyncApsarsInt();
+        d.delegate(rand.nextInt());
         final ApsarsInt e = new ApsarsInt();
         e.delegate = rand.nextInt();
         final ApsarsInt f = new ApsarsInt();
@@ -26,13 +24,13 @@ public class Sample2 {
         g.delegate = rand.nextInt();
         final ApsarsInt h = new ApsarsInt();
         h.delegate = rand.nextInt();
-        if (
-                (a.delegate > b.delegate) &&
-                        (c.delegate > d.delegate) &&
-                        (e.delegate > f.delegate) &&
-                        (g.delegate > h.delegate)
-        ) {
+        a.delegate = a.delegate + b.delegate + c.delegate;
+        d.delegate(d.delegate() + e.delegate + f.delegate);
+        if (d.delegate() > a.delegate) {
             System.out.println("www");
+        }
+        if ((d.delegate(d.delegate() + b.delegate)) > c.delegate) {
+            System.out.println("awa");
         }
     }
 }

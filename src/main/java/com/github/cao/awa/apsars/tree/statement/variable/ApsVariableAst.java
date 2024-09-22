@@ -9,11 +9,8 @@ import com.github.cao.awa.apsars.translate.ApsTranslator;
 import com.github.cao.awa.apsars.translate.lang.TranslateTarget;
 import com.github.cao.awa.apsars.translate.lang.element.TranslateElement;
 import com.github.cao.awa.apsars.tree.ApsAst;
-import com.github.cao.awa.apsars.tree.annotation.ApsAnnotationAst;
-import com.github.cao.awa.apsars.tree.clazz.ApsClassAst;
 import com.github.cao.awa.apsars.tree.method.ApsMethodBodyAst;
 import com.github.cao.awa.apsars.tree.statement.ApsStatementAst;
-import com.github.cao.awa.apsars.tree.statement.calculate.ApsCalculateAst;
 import com.github.cao.awa.apsars.tree.statement.control.ApsIfStatementAst;
 import com.github.cao.awa.apsars.tree.statement.invoke.ApsInvokeObjectAst;
 import com.github.cao.awa.apsars.tree.statement.result.ApsRefReferenceAst;
@@ -168,19 +165,6 @@ public class ApsVariableAst extends ApsStatementAst {
         }
 
         this.type.postprocess();
-
-        if (this.type.referencePrimary() == null && !findAst(ApsClassAst.class).isAnnotationPresent(ApsAnnotationAst.DO_NOT_REF_PRIMARY)) {
-            if (this.assignment != null && this.assignment.resultingStatement() instanceof ApsCalculateAst calculateAst) {
-                calculateAst.preprocess();
-
-                // TODO
-//                ApsResultPresentingAst ast = calculateAst.convertSymbol(true, true);
-//                if (ast != null) {
-//                    this.assignment = ast;
-//                    this.assignment.preprocess();
-//                }
-            }
-        }
 
         this.reference.postprocess();
     }

@@ -8,5 +8,6 @@ public class ApsCalculateStatementJavaTranslator extends ApsJavaTranslator<ApsCa
     @Override
     public void translate(StringBuilder builder, ApsCalculateAst ast) {
         translateTotal(this);
+        translateEnding(this);
     }
 }

@@ -1026,6 +1026,96 @@ public class ApsarsBaseListener implements ApsarsListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
+    public void enterAddisionAssignment(ApsarsParser.AddisionAssignmentContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void exitAddisionAssignment(ApsarsParser.AddisionAssignmentContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void enterSubtractionAssignment(ApsarsParser.SubtractionAssignmentContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void exitSubtractionAssignment(ApsarsParser.SubtractionAssignmentContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void enterMultiplicationAssignment(ApsarsParser.MultiplicationAssignmentContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void exitMultiplicationAssignment(ApsarsParser.MultiplicationAssignmentContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void enterDivisionAssignment(ApsarsParser.DivisionAssignmentContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void exitDivisionAssignment(ApsarsParser.DivisionAssignmentContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void enterPowAssignment(ApsarsParser.PowAssignmentContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void exitPowAssignment(ApsarsParser.PowAssignmentContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
     public void enterPlus(ApsarsParser.PlusContext ctx) {
     }
 

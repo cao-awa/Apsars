@@ -792,6 +792,76 @@ public interface ApsarsListener extends ParseTreeListener {
     void exitWordOr(ApsarsParser.WordOrContext ctx);
 
     /**
+     * Enter a parse tree produced by {@link ApsarsParser#addisionAssignment}.
+     *
+     * @param ctx the parse tree
+     */
+    void enterAddisionAssignment(ApsarsParser.AddisionAssignmentContext ctx);
+
+    /**
+     * Exit a parse tree produced by {@link ApsarsParser#addisionAssignment}.
+     *
+     * @param ctx the parse tree
+     */
+    void exitAddisionAssignment(ApsarsParser.AddisionAssignmentContext ctx);
+
+    /**
+     * Enter a parse tree produced by {@link ApsarsParser#subtractionAssignment}.
+     *
+     * @param ctx the parse tree
+     */
+    void enterSubtractionAssignment(ApsarsParser.SubtractionAssignmentContext ctx);
+
+    /**
+     * Exit a parse tree produced by {@link ApsarsParser#subtractionAssignment}.
+     *
+     * @param ctx the parse tree
+     */
+    void exitSubtractionAssignment(ApsarsParser.SubtractionAssignmentContext ctx);
+
+    /**
+     * Enter a parse tree produced by {@link ApsarsParser#multiplicationAssignment}.
+     *
+     * @param ctx the parse tree
+     */
+    void enterMultiplicationAssignment(ApsarsParser.MultiplicationAssignmentContext ctx);
+
+    /**
+     * Exit a parse tree produced by {@link ApsarsParser#multiplicationAssignment}.
+     *
+     * @param ctx the parse tree
+     */
+    void exitMultiplicationAssignment(ApsarsParser.MultiplicationAssignmentContext ctx);
+
+    /**
+     * Enter a parse tree produced by {@link ApsarsParser#divisionAssignment}.
+     *
+     * @param ctx the parse tree
+     */
+    void enterDivisionAssignment(ApsarsParser.DivisionAssignmentContext ctx);
+
+    /**
+     * Exit a parse tree produced by {@link ApsarsParser#divisionAssignment}.
+     *
+     * @param ctx the parse tree
+     */
+    void exitDivisionAssignment(ApsarsParser.DivisionAssignmentContext ctx);
+
+    /**
+     * Enter a parse tree produced by {@link ApsarsParser#powAssignment}.
+     *
+     * @param ctx the parse tree
+     */
+    void enterPowAssignment(ApsarsParser.PowAssignmentContext ctx);
+
+    /**
+     * Exit a parse tree produced by {@link ApsarsParser#powAssignment}.
+     *
+     * @param ctx the parse tree
+     */
+    void exitPowAssignment(ApsarsParser.PowAssignmentContext ctx);
+
+    /**
      * Enter a parse tree produced by {@link ApsarsParser#plus}.
      *
      * @param ctx the parse tree
