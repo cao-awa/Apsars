@@ -2,7 +2,10 @@ package com.github.cao.awa.apsars.tree.method.parameter;
 
 import com.alibaba.fastjson2.JSONObject;
 import com.github.cao.awa.apricot.util.collection.ApricotCollectionFactor;
+import com.github.cao.awa.apsars.element.ApsAccessibleType;
 import com.github.cao.awa.apsars.element.method.parameter.ApsMethodParamModifierType;
+import com.github.cao.awa.apsars.element.modifier.ApsAccessibleModifier;
+import com.github.cao.awa.apsars.element.modifier.ApsModifierRequiredAst;
 import com.github.cao.awa.apsars.element.modifier.method.parameter.ApsMethodParamDefaultValueModifier;
 import com.github.cao.awa.apsars.element.modifier.method.parameter.ApsMethodParamModifier;
 import com.github.cao.awa.apsars.translate.ApsTranslator;
@@ -21,11 +24,12 @@ import lombok.experimental.Accessors;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.Collection;
 import java.util.Map;
 
 @Getter
 @Accessors(fluent = true)
-public class ApsMethodParamElementAst extends ApsAst {
+public class ApsMethodParamElementAst extends ApsAst implements ApsModifierRequiredAst<ApsMethodParamModifier> {
     private static final Logger LOGGER = LogManager.getLogger("ApsMethodParamElementAst");
     @Setter
     private String nameIdentity;
@@ -46,12 +50,27 @@ public class ApsMethodParamElementAst extends ApsAst {
         json.put("type", theArgType);
     }
 
+    @Override
+    public Collection<ApsMethodParamModifier> modifierValues() {
+        return this.modifiers.values();
+    }
+
+    @Override
+    public ApsAccessibleModifier accessible() {
+        return ApsAccessibleType.PUBLIC.generic();
+    }
+
     public void addModifier(ApsMethodParamModifier modifier) {
         ApsMethodParamModifier definedModifier = this.modifiers.get(modifier.type());
         if (definedModifier != null) {
             throw new IllegalArgumentException("The modifier type '" + definedModifier.type() + "' already defined as '" + definedModifier.literal() + "'");
         }
         this.modifiers.put(modifier.type(), modifier);
+    }
+
+    @Override
+    public void addAccessible(ApsAccessibleModifier modifier) {
+        // Do nothing.
     }
 
     @Override

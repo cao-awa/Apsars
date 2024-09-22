@@ -13,99 +13,123 @@ public final class SyncApsarsInt {
         return this.delegate;
     }
 
-    public boolean isMoreThan(short comparingTarget) {
+    @TryInline
+    public boolean isMoreThan(final short comparingTarget) {
         return this.delegate > comparingTarget;
     }
 
-    public boolean isMoreThan(int comparingTarget) {
+    @TryInline
+    public boolean isMoreThan(final int comparingTarget) {
         return this.delegate > comparingTarget;
     }
 
-    public boolean isMoreThan(long comparingTarget) {
+    @TryInline
+    public boolean isMoreThan(final long comparingTarget) {
         return this.delegate > comparingTarget;
     }
 
-    public boolean isMoreThan(float comparingTarget) {
+    @TryInline
+    public boolean isMoreThan(final float comparingTarget) {
         return this.delegate > comparingTarget;
     }
 
-    public boolean isMoreThan(double comparingTarget) {
+    @TryInline
+    public boolean isMoreThan(final double comparingTarget) {
         return this.delegate > comparingTarget;
     }
 
-    public boolean isMoreThan(byte comparingTarget) {
+    @TryInline
+    public boolean isMoreThan(final byte comparingTarget) {
         return this.delegate > comparingTarget;
     }
 
-    public boolean isMoreThan(char comparingTarget) {
+    @TryInline
+    public boolean isMoreThan(final char comparingTarget) {
         return this.delegate > comparingTarget;
     }
 
-    public boolean isMoreThan(boolean comparingTarget) {
+    @TryInline
+    public boolean isMoreThan(final boolean comparingTarget) {
         return false;
     }
 
-    public boolean isLessThan(short comparingTarget) {
+    @TryInline
+    public boolean isLessThan(final short comparingTarget) {
         return this.delegate < comparingTarget;
     }
 
-    public boolean isLessThan(int comparingTarget) {
+    @TryInline
+    public boolean isLessThan(final int comparingTarget) {
         return this.delegate < comparingTarget;
     }
 
-    public boolean isLessThan(long comparingTarget) {
+    @TryInline
+    public boolean isLessThan(final long comparingTarget) {
         return this.delegate < comparingTarget;
     }
 
-    public boolean isLessThan(float comparingTarget) {
+    @TryInline
+    public boolean isLessThan(final float comparingTarget) {
         return this.delegate < comparingTarget;
     }
 
-    public boolean isLessThan(double comparingTarget) {
+    @TryInline
+    public boolean isLessThan(final double comparingTarget) {
         return this.delegate < comparingTarget;
     }
 
-    public boolean isLessThan(byte comparingTarget) {
+    @TryInline
+    public boolean isLessThan(final byte comparingTarget) {
         return this.delegate < comparingTarget;
     }
 
-    public boolean isLessThan(char comparingTarget) {
+    @TryInline
+    public boolean isLessThan(final char comparingTarget) {
         return this.delegate < comparingTarget;
     }
 
-    public boolean isLessThan(boolean comparingTarget) {
+    @TryInline
+    public boolean isLessThan(final boolean comparingTarget) {
         return false;
     }
 
-    public boolean isEquals(short comparingTarget) {
+    @TryInline
+    public boolean isEquals(final short comparingTarget) {
         return this.delegate == comparingTarget;
     }
 
-    public boolean isEquals(int comparingTarget) {
+    @TryInline
+    public boolean isEquals(final int comparingTarget) {
         return this.delegate == comparingTarget;
     }
 
-    public boolean isEquals(long comparingTarget) {
+    @TryInline
+    public boolean isEquals(final long comparingTarget) {
         return this.delegate == comparingTarget;
     }
 
-    public boolean isEquals(float comparingTarget) {
+    @TryInline
+    public boolean isEquals(final float comparingTarget) {
         return this.delegate == comparingTarget;
     }
 
-    public boolean isEquals(double comparingTarget) {
+    @TryInline
+    public boolean isEquals(final double comparingTarget) {
         return this.delegate == comparingTarget;
     }
 
-    public boolean isEquals(byte comparingTarget) {
+    @TryInline
+    public boolean isEquals(final byte comparingTarget) {
         return this.delegate == comparingTarget;
     }
 
-    public boolean isEquals(char comparingTarget) {
+    @TryInline
+    public boolean isEquals(final char comparingTarget) {
         return this.delegate == comparingTarget;
     }
 
-    public boolean isEquals(boolean comparingTarget) {
+    @TryInline
+    public boolean isEquals(final boolean comparingTarget) {
         return false;
     }
 }

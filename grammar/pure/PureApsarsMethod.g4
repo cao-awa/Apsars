@@ -69,34 +69,46 @@ defineConstructor: permissionModifiers            ?
 defineLetMethod: identifier
                  leftParen (
                      // No params, direct done.
-                     rightParen                            |
+                     rightParen                 |
                      // Processes params, with right paren when ending params definition.
                      (
-                      methodParamListDefinition rightParen
+                      methodParamListDefinition
+                      rightParen
                      )
                  )
                  // Return type.
-                 methodReturnType                          ?
+                 methodReturnType?
                  (
-                  // The method body.
-                  leftBrace (
-                      defineMethodBody                     ?
-                  ) rightBrace
+                  (
+                   (
+                    Equal | RightPointing
+                   )
+                   (
+                    resultPresenting            |
+                    defineVariableStatement
+                   )
+                  )                             |
+                  (
+                   // The method body.
+                   leftBrace (
+                       defineMethodBody         ?
+                   ) rightBrace
+                  )
                  )
                  // Someone would like follow the semicolon wieh ending method defines.
-                 semicolon                                 ?
+                 semicolon                      ?
 ;
 
 methodReturnType: (
  colon argType
 ) ;
 
-alternateMethodModifiers: ( isFinal | isStatic | isInline | sync ) + ;
-
 defineMethodBody: defineStatement* ;
 
 methodParamListDefinition :
 // When param definition, it must have at least one param.
-paramType
+fieldFinal? paramType
 // And processes extra params.
-(comma paramType)*;
+methodExtraParamDefinition*;
+
+methodExtraParamDefinition: comma fieldFinal? paramType;

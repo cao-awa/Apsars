@@ -16,6 +16,7 @@ import lombok.experimental.Accessors;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Accessors(fluent = true)
@@ -23,6 +24,7 @@ public class ApsLetAst extends ApsAst implements ApsModifierRequiredAst<ApsModif
     private final List<ApsModifier<?>> modifiers = ApricotCollectionFactor.arrayList();
     private final List<ApsMethodAst> methods = ApricotCollectionFactor.arrayList();
     private final List<ApsMemberParameterAst> parameters = ApricotCollectionFactor.arrayList();
+    private final Set<String> compilerFlags = ApricotCollectionFactor.hashSet();
     @Setter
     private ApsAccessibleModifier accessible = null;
 
@@ -50,6 +52,10 @@ public class ApsLetAst extends ApsAst implements ApsModifierRequiredAst<ApsModif
 
     public ApsLetAst(ApsAst parent) {
         super(parent);
+    }
+
+    public void addCompilerFlag(String... flag) {
+        this.compilerFlags.addAll(List.of(flag));
     }
 
     @Override
@@ -107,6 +113,7 @@ public class ApsLetAst extends ApsAst implements ApsModifierRequiredAst<ApsModif
         // Extract methods to class.
         for (ApsMethodAst method : methods()) {
             method.accessible(this.accessible);
+            method.addCompilerFlag(this.compilerFlags);
             classAst.addMethod(method);
             method.prepares();
         }
@@ -115,6 +122,7 @@ public class ApsLetAst extends ApsAst implements ApsModifierRequiredAst<ApsModif
         for (ApsMemberParameterAst parameter : parameters()) {
             parameter.accessible(this.accessible);
             classAst.addMemberParameter(parameter);
+            parameter.preprocess();
         }
     }
 

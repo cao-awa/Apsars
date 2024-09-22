@@ -63,7 +63,7 @@ public class ApsMethodAst extends ApsAst implements ApsModifierRequiredAst<ApsMe
     private final Map<ApsMethodModifierType, ApsMethodModifier> modifiers = ApricotCollectionFactor.hashMap();
     @Setter
     private ApsAccessibleModifier accessible = ApsAccessibleType.PRIVATE.generic();
-    private final List<ApsAnnotationAst> annotations = ApricotCollectionFactor.arrayList();
+    private final Set<ApsAnnotationAst> annotations = ApricotCollectionFactor.hashSet();
     private final Set<String> compilerFlags = ApricotCollectionFactor.hashSet();
 
     public ApsMethodAst(ApsAst parent) {
@@ -152,6 +152,10 @@ public class ApsMethodAst extends ApsAst implements ApsModifierRequiredAst<ApsMe
 
     public void addCompilerFlag(String... flag) {
         this.compilerFlags.addAll(List.of(flag));
+    }
+
+    public void addCompilerFlag(Collection<String> flag) {
+        this.compilerFlags.addAll(flag);
     }
 
     public boolean hasExtraCatch() {

@@ -1566,7 +1566,7 @@ public class ApsarsBaseListener implements ApsarsListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void enterMethodModifiers(ApsarsParser.MethodModifiersContext ctx) {
+    public void enterAlternateMethodModifiers(ApsarsParser.AlternateMethodModifiersContext ctx) {
     }
 
     /**
@@ -1575,7 +1575,7 @@ public class ApsarsBaseListener implements ApsarsListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void exitMethodModifiers(ApsarsParser.MethodModifiersContext ctx) {
+    public void exitAlternateMethodModifiers(ApsarsParser.AlternateMethodModifiersContext ctx) {
     }
 
     /**
@@ -1594,24 +1594,6 @@ public class ApsarsBaseListener implements ApsarsListener {
      */
     @Override
     public void exitMakeAlternateLet(ApsarsParser.MakeAlternateLetContext ctx) {
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
-     */
-    @Override
-    public void enterOptionalFieldAndMethodModifiers(ApsarsParser.OptionalFieldAndMethodModifiersContext ctx) {
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
-     */
-    @Override
-    public void exitOptionalFieldAndMethodModifiers(ApsarsParser.OptionalFieldAndMethodModifiersContext ctx) {
     }
 
     /**
@@ -1908,24 +1890,6 @@ public class ApsarsBaseListener implements ApsarsListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void enterAlternateMethodModifiers(ApsarsParser.AlternateMethodModifiersContext ctx) {
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
-     */
-    @Override
-    public void exitAlternateMethodModifiers(ApsarsParser.AlternateMethodModifiersContext ctx) {
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
-     */
-    @Override
     public void enterDefineMethodBody(ApsarsParser.DefineMethodBodyContext ctx) {
     }
 
@@ -1954,6 +1918,24 @@ public class ApsarsBaseListener implements ApsarsListener {
      */
     @Override
     public void exitMethodParamListDefinition(ApsarsParser.MethodParamListDefinitionContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void enterMethodExtraParamDefinition(ApsarsParser.MethodExtraParamDefinitionContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void exitMethodExtraParamDefinition(ApsarsParser.MethodExtraParamDefinitionContext ctx) {
     }
 
     /**
@@ -3006,24 +2988,6 @@ public class ApsarsBaseListener implements ApsarsListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void enterDefineJavaLetMemberField(ApsarsParser.DefineJavaLetMemberFieldContext ctx) {
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
-     */
-    @Override
-    public void exitDefineJavaLetMemberField(ApsarsParser.DefineJavaLetMemberFieldContext ctx) {
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
-     */
-    @Override
     public void enterDefineApsarsLetMemberField(ApsarsParser.DefineApsarsLetMemberFieldContext ctx) {
     }
 
@@ -3034,6 +2998,24 @@ public class ApsarsBaseListener implements ApsarsListener {
      */
     @Override
     public void exitDefineApsarsLetMemberField(ApsarsParser.DefineApsarsLetMemberFieldContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void enterDefineJavaLetMemberField(ApsarsParser.DefineJavaLetMemberFieldContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void exitDefineJavaLetMemberField(ApsarsParser.DefineJavaLetMemberFieldContext ctx) {
     }
 
     /**

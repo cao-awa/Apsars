@@ -2,32 +2,34 @@ package com.github.cao.awa.apsars.std;
 
 @DoNotRefPrimary
 public unique class ApsarsBoolean {
-    public delegate: boolean;
+    let public inline {
+        public delegate: boolean;
 
-    public inline isMoreThan(comparingTarget: short): boolean -> false;
-    public inline isMoreThan(comparingTarget: int): boolean -> false;
-    public inline isMoreThan(comparingTarget: long): boolean -> false;
-    public inline isMoreThan(comparingTarget: float): boolean -> false;
-    public inline isMoreThan(comparingTarget: double): boolean -> false;
-    public inline isMoreThan(comparingTarget: byte): boolean -> false;
-    public inline isMoreThan(comparingTarget: char): boolean -> false;
-    public inline isMoreThan(comparingTarget: boolean): boolean -> false;
+        isMoreThan(comparingTarget: short): boolean -> false;
+        isMoreThan(comparingTarget: int): boolean -> false;
+        isMoreThan(comparingTarget: long): boolean -> false;
+        isMoreThan(comparingTarget: float): boolean -> false;
+        isMoreThan(comparingTarget: double): boolean -> false;
+        isMoreThan(comparingTarget: byte): boolean -> false;
+        isMoreThan(comparingTarget: char): boolean -> false;
+        isMoreThan(comparingTarget: boolean): boolean -> false;
 
-    public inline isLessThan(comparingTarget: short): boolean -> false;
-    public inline isLessThan(comparingTarget: int): boolean -> false;
-    public inline isLessThan(comparingTarget: long): boolean -> false;
-    public inline isLessThan(comparingTarget: float): boolean -> false;
-    public inline isLessThan(comparingTarget: double): boolean -> false;
-    public inline isLessThan(comparingTarget: byte): boolean -> false;
-    public inline isLessThan(comparingTarget: char): boolean -> false;
-    public inline isLessThan(comparingTarget: boolean): boolean -> false;
+        isLessThan(comparingTarget: short): boolean -> false;
+        isLessThan(comparingTarget: int): boolean -> false;
+        isLessThan(comparingTarget: long): boolean -> false;
+        isLessThan(comparingTarget: float): boolean -> false;
+        isLessThan(comparingTarget: double): boolean -> false;
+        isLessThan(comparingTarget: byte): boolean -> false;
+        isLessThan(comparingTarget: char): boolean -> false;
+        isLessThan(comparingTarget: boolean): boolean -> false;
 
-    public inline isEquals(comparingTarget: short): boolean -> false;
-    public inline isEquals(comparingTarget: int): boolean -> false;
-    public inline isEquals(comparingTarget: long): boolean -> false;
-    public inline isEquals(comparingTarget: float): boolean -> false;
-    public inline isEquals(comparingTarget: double): boolean -> false;
-    public inline isEquals(comparingTarget: byte): boolean -> false;
-    public inline isEquals(comparingTarget: char): boolean -> false;
-    public inline isEquals(comparingTarget: boolean): boolean -> comparingTarget && this.delegate;
+        isEquals(comparingTarget: short): boolean -> false;
+        isEquals(comparingTarget: int): boolean -> false;
+        isEquals(comparingTarget: long): boolean -> false;
+        isEquals(comparingTarget: float): boolean -> false;
+        isEquals(comparingTarget: double): boolean -> false;
+        isEquals(comparingTarget: byte): boolean -> false;
+        isEquals(comparingTarget: char): boolean -> false;
+        isEquals(comparingTarget: boolean): boolean -> comparingTarget && this.delegate;
+    }
 }

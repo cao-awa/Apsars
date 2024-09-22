@@ -29,9 +29,9 @@ defineApsarsMemberField: permissionModifiers? optionalFieldStaticAndFinal? field
 
 defineLetMemberField: defineApsarsLetMemberField | defineJavaLetMemberField ;
 
-defineJavaLetMemberField: fieldName colon argType (assignment (resultPresenting | assignmentIdentifier))? semicolon ;
+defineApsarsLetMemberField: fieldName colon argType (assignment (resultPresenting | assignmentIdentifier))? semicolon ;
 
-defineApsarsLetMemberField: argType fieldName (assignment (resultPresenting | assignmentIdentifier))? semicolon ;
+defineJavaLetMemberField: argType fieldName (assignment (resultPresenting | assignmentIdentifier))? semicolon ;
 
 fieldName: identifier ;
 

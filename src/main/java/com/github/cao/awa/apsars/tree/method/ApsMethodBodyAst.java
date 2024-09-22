@@ -41,13 +41,11 @@ public class ApsMethodBodyAst extends ApsAst implements ApsReferenceLocatableSta
     public ApsMethodBodyAst addPresentingFieldVariable(ApsVariableAst variableAst) {
         this.fieldVariables.stream()
                 .filter(v ->
-                        {
-                            System.out.println(v.reference() + ": " + variableAst.reference() + " / " + v.instanceReference() + ": " + variableAst.instanceReference());
-                            return v.reference().equals(
-                                    variableAst.reference()
-                            ) && (v.instanceReference() == variableAst.instanceReference());
-                        }
+                        v.reference().equals(
+                                variableAst.reference()
+                        ) && (v.instanceReference() == variableAst.instanceReference())
                 )
+                .toList()
                 .forEach(this.fieldVariables::remove);
         if (!this.fieldVariables.contains(variableAst)) {
             this.fieldVariables.add(variableAst);

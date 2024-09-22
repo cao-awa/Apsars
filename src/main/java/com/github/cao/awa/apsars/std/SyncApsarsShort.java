@@ -1,8 +1,17 @@
 package com.github.cao.awa.apsars.std;
 
 @DoNotRefPrimary
-public final class ApsarsChar {
-    public char delegate;
+public final class SyncApsarsShort {
+    private short delegate;
+
+    public synchronized short delegate() {
+        return this.delegate;
+    }
+
+    public synchronized short delegate(short updatingValue) {
+        this.delegate = updatingValue;
+        return this.delegate;
+    }
 
     @TryInline
     public boolean isMoreThan(final short comparingTarget) {

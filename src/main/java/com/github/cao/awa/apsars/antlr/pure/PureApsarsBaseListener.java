@@ -1566,7 +1566,7 @@ public class PureApsarsBaseListener implements PureApsarsListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void enterMethodModifiers(PureApsarsParser.MethodModifiersContext ctx) {
+    public void enterAlternateMethodModifiers(PureApsarsParser.AlternateMethodModifiersContext ctx) {
     }
 
     /**
@@ -1575,7 +1575,7 @@ public class PureApsarsBaseListener implements PureApsarsListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void exitMethodModifiers(PureApsarsParser.MethodModifiersContext ctx) {
+    public void exitAlternateMethodModifiers(PureApsarsParser.AlternateMethodModifiersContext ctx) {
     }
 
     /**
@@ -1594,24 +1594,6 @@ public class PureApsarsBaseListener implements PureApsarsListener {
      */
     @Override
     public void exitMakeAlternateLet(PureApsarsParser.MakeAlternateLetContext ctx) {
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
-     */
-    @Override
-    public void enterOptionalFieldAndMethodModifiers(PureApsarsParser.OptionalFieldAndMethodModifiersContext ctx) {
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
-     */
-    @Override
-    public void exitOptionalFieldAndMethodModifiers(PureApsarsParser.OptionalFieldAndMethodModifiersContext ctx) {
     }
 
     /**
@@ -1890,24 +1872,6 @@ public class PureApsarsBaseListener implements PureApsarsListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void enterAlternateMethodModifiers(PureApsarsParser.AlternateMethodModifiersContext ctx) {
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
-     */
-    @Override
-    public void exitAlternateMethodModifiers(PureApsarsParser.AlternateMethodModifiersContext ctx) {
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
-     */
-    @Override
     public void enterDefineMethodBody(PureApsarsParser.DefineMethodBodyContext ctx) {
     }
 
@@ -1936,6 +1900,24 @@ public class PureApsarsBaseListener implements PureApsarsListener {
      */
     @Override
     public void exitMethodParamListDefinition(PureApsarsParser.MethodParamListDefinitionContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void enterMethodExtraParamDefinition(PureApsarsParser.MethodExtraParamDefinitionContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void exitMethodExtraParamDefinition(PureApsarsParser.MethodExtraParamDefinitionContext ctx) {
     }
 
     /**

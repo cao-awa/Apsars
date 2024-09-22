@@ -4,34 +4,38 @@ package com.github.cao.awa.apsars.std;
 public unique class SyncApsarsByte {
     private delegate: byte;
 
-    public sync delegate(): byte -> this.delegate;
+    let public sync {
+        delegate(): byte -> this.delegate;
 
-    public sync delegate(updatingValue: byte): byte -> this.delegate = updatingValue;
+        delegate(updatingValue: byte): byte -> this.delegate = updatingValue;
+    }
 
-    public isMoreThan(comparingTarget: short): boolean -> this.delegate > comparingTarget;
-    public isMoreThan(comparingTarget: int): boolean -> this.delegate > comparingTarget;
-    public isMoreThan(comparingTarget: long): boolean -> this.delegate > comparingTarget;
-    public isMoreThan(comparingTarget: float): boolean -> this.delegate > comparingTarget;
-    public isMoreThan(comparingTarget: double): boolean -> this.delegate > comparingTarget;
-    public isMoreThan(comparingTarget: byte): boolean -> this.delegate > comparingTarget;
-    public isMoreThan(comparingTarget: char): boolean -> this.delegate > comparingTarget;
-    public isMoreThan(comparingTarget: boolean): boolean -> false;
+    let public inline {
+        isMoreThan(val comparingTarget: short): boolean -> this.delegate > comparingTarget;
+        isMoreThan(val comparingTarget: int): boolean -> this.delegate > comparingTarget;
+        isMoreThan(val comparingTarget: long): boolean -> this.delegate > comparingTarget;
+        isMoreThan(val comparingTarget: float): boolean -> this.delegate > comparingTarget;
+        isMoreThan(val comparingTarget: double): boolean -> this.delegate > comparingTarget;
+        isMoreThan(val comparingTarget: byte): boolean -> this.delegate > comparingTarget;
+        isMoreThan(val comparingTarget: char): boolean -> this.delegate > comparingTarget;
+        isMoreThan(val comparingTarget: boolean): boolean -> false;
 
-    public isLessThan(comparingTarget: short): boolean -> this.delegate < comparingTarget;
-    public isLessThan(comparingTarget: int): boolean -> this.delegate < comparingTarget;
-    public isLessThan(comparingTarget: long): boolean -> this.delegate < comparingTarget;
-    public isLessThan(comparingTarget: float): boolean -> this.delegate < comparingTarget;
-    public isLessThan(comparingTarget: double): boolean -> this.delegate < comparingTarget;
-    public isLessThan(comparingTarget: byte): boolean -> this.delegate < comparingTarget;
-    public isLessThan(comparingTarget: char): boolean -> this.delegate < comparingTarget;
-    public isLessThan(comparingTarget: boolean): boolean -> false;
+        isLessThan(val comparingTarget: short): boolean -> this.delegate < comparingTarget;
+        isLessThan(val comparingTarget: int): boolean -> this.delegate < comparingTarget;
+        isLessThan(val comparingTarget: long): boolean -> this.delegate < comparingTarget;
+        isLessThan(val comparingTarget: float): boolean -> this.delegate < comparingTarget;
+        isLessThan(val comparingTarget: double): boolean -> this.delegate < comparingTarget;
+        isLessThan(val comparingTarget: byte): boolean -> this.delegate < comparingTarget;
+        isLessThan(val comparingTarget: char): boolean -> this.delegate < comparingTarget;
+        isLessThan(val comparingTarget: boolean): boolean -> false;
 
-    public isEquals(comparingTarget: short): boolean -> this.delegate == comparingTarget;
-    public isEquals(comparingTarget: int): boolean -> this.delegate == comparingTarget;
-    public isEquals(comparingTarget: long): boolean -> this.delegate == comparingTarget;
-    public isEquals(comparingTarget: float): boolean -> this.delegate == comparingTarget;
-    public isEquals(comparingTarget: double): boolean -> this.delegate == comparingTarget;
-    public isEquals(comparingTarget: byte): boolean -> this.delegate == comparingTarget;
-    public isEquals(comparingTarget: char): boolean -> this.delegate == comparingTarget;
-    public isEquals(comparingTarget: boolean): boolean -> false;
+        isEquals(val comparingTarget: short): boolean -> this.delegate == comparingTarget;
+        isEquals(val comparingTarget: int): boolean -> this.delegate == comparingTarget;
+        isEquals(val comparingTarget: long): boolean -> this.delegate == comparingTarget;
+        isEquals(val comparingTarget: float): boolean -> this.delegate == comparingTarget;
+        isEquals(val comparingTarget: double): boolean -> this.delegate == comparingTarget;
+        isEquals(val comparingTarget: byte): boolean -> this.delegate == comparingTarget;
+        isEquals(val comparingTarget: char): boolean -> this.delegate == comparingTarget;
+        isEquals(val comparingTarget: boolean): boolean -> false;
+    }
 }

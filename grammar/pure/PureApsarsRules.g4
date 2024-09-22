@@ -179,11 +179,16 @@ divide                   : Divide                                 ;
 pow                      : Pow                                    ;
 operator                 : arithmetic | comparing | not           ;
 
-arithmetic : AddisionAssignment       | Plus
-             SubtractionAssignment    | Minus
-             MultiplicationAssignment | Multiply
-             DivisionAssignment       | Divide
-             PowAssignment            | Pow ;
+arithmetic : AddisionAssignment       |
+             SubtractionAssignment    |
+             MultiplicationAssignment |
+             DivisionAssignment       |
+             PowAssignment            |
+             Plus                     |
+             Minus                    |
+             Multiply                 |
+             Divide                   |
+             Pow                      ;
 
 // Comparator sign(s).
 BreakingAndSign : '&&'              ;
@@ -244,16 +249,14 @@ fieldModifiers: (
                  isOverridable
 ) + ;
 
-methodModifiers: isSynchronized |
-                 isSync         ;
+alternateMethodModifiers: ( isFinal | isStatic | isInline | sync ) + ;
 
-makeAlternateLet: permissionModifiers              ?
-                  (
-                   optionalFieldStaticAndFinal     |
-                   optionalFieldAndMethodModifiers
+makeAlternateLet: (
+                   permissionModifiers      |
+                   fieldModifiers           |
+                   alternateMethodModifiers |
+                   isVal
 ) + ;
-
-optionalFieldAndMethodModifiers: ( fieldModifiers | methodModifiers ) +;
 
 optionalFieldStaticAndFinal: ( fieldFinal | isStatic ) + ;
 

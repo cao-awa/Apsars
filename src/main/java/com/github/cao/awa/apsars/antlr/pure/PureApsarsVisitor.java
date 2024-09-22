@@ -699,12 +699,12 @@ public interface PureApsarsVisitor<T> extends ParseTreeVisitor<T> {
     T visitFieldModifiers(PureApsarsParser.FieldModifiersContext ctx);
 
     /**
-     * Visit a parse tree produced by {@link PureApsarsParser#methodModifiers}.
+     * Visit a parse tree produced by {@link PureApsarsParser#alternateMethodModifiers}.
      *
      * @param ctx the parse tree
      * @return the visitor result
      */
-    T visitMethodModifiers(PureApsarsParser.MethodModifiersContext ctx);
+    T visitAlternateMethodModifiers(PureApsarsParser.AlternateMethodModifiersContext ctx);
 
     /**
      * Visit a parse tree produced by {@link PureApsarsParser#makeAlternateLet}.
@@ -713,14 +713,6 @@ public interface PureApsarsVisitor<T> extends ParseTreeVisitor<T> {
      * @return the visitor result
      */
     T visitMakeAlternateLet(PureApsarsParser.MakeAlternateLetContext ctx);
-
-    /**
-     * Visit a parse tree produced by {@link PureApsarsParser#optionalFieldAndMethodModifiers}.
-     *
-     * @param ctx the parse tree
-     * @return the visitor result
-     */
-    T visitOptionalFieldAndMethodModifiers(PureApsarsParser.OptionalFieldAndMethodModifiersContext ctx);
 
     /**
      * Visit a parse tree produced by {@link PureApsarsParser#optionalFieldStaticAndFinal}.
@@ -843,14 +835,6 @@ public interface PureApsarsVisitor<T> extends ParseTreeVisitor<T> {
     T visitMethodReturnType(PureApsarsParser.MethodReturnTypeContext ctx);
 
     /**
-     * Visit a parse tree produced by {@link PureApsarsParser#alternateMethodModifiers}.
-     *
-     * @param ctx the parse tree
-     * @return the visitor result
-     */
-    T visitAlternateMethodModifiers(PureApsarsParser.AlternateMethodModifiersContext ctx);
-
-    /**
      * Visit a parse tree produced by {@link PureApsarsParser#defineMethodBody}.
      *
      * @param ctx the parse tree
@@ -865,6 +849,14 @@ public interface PureApsarsVisitor<T> extends ParseTreeVisitor<T> {
      * @return the visitor result
      */
     T visitMethodParamListDefinition(PureApsarsParser.MethodParamListDefinitionContext ctx);
+
+    /**
+     * Visit a parse tree produced by {@link PureApsarsParser#methodExtraParamDefinition}.
+     *
+     * @param ctx the parse tree
+     * @return the visitor result
+     */
+    T visitMethodExtraParamDefinition(PureApsarsParser.MethodExtraParamDefinitionContext ctx);
 
     /**
      * Visit a parse tree produced by {@link PureApsarsParser#paramType}.

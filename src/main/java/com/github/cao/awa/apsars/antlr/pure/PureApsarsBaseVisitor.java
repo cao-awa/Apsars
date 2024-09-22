@@ -965,7 +965,7 @@ public class PureApsarsBaseVisitor<T> extends AbstractParseTreeVisitor<T> implem
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public T visitMethodModifiers(PureApsarsParser.MethodModifiersContext ctx) {
+    public T visitAlternateMethodModifiers(PureApsarsParser.AlternateMethodModifiersContext ctx) {
         return visitChildren(ctx);
     }
 
@@ -977,17 +977,6 @@ public class PureApsarsBaseVisitor<T> extends AbstractParseTreeVisitor<T> implem
      */
     @Override
     public T visitMakeAlternateLet(PureApsarsParser.MakeAlternateLetContext ctx) {
-        return visitChildren(ctx);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation returns the result of calling
-     * {@link #visitChildren} on {@code ctx}.</p>
-     */
-    @Override
-    public T visitOptionalFieldAndMethodModifiers(PureApsarsParser.OptionalFieldAndMethodModifiersContext ctx) {
         return visitChildren(ctx);
     }
 
@@ -1163,17 +1152,6 @@ public class PureApsarsBaseVisitor<T> extends AbstractParseTreeVisitor<T> implem
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public T visitAlternateMethodModifiers(PureApsarsParser.AlternateMethodModifiersContext ctx) {
-        return visitChildren(ctx);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation returns the result of calling
-     * {@link #visitChildren} on {@code ctx}.</p>
-     */
-    @Override
     public T visitDefineMethodBody(PureApsarsParser.DefineMethodBodyContext ctx) {
         return visitChildren(ctx);
     }
@@ -1186,6 +1164,17 @@ public class PureApsarsBaseVisitor<T> extends AbstractParseTreeVisitor<T> implem
      */
     @Override
     public T visitMethodParamListDefinition(PureApsarsParser.MethodParamListDefinitionContext ctx) {
+        return visitChildren(ctx);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation returns the result of calling
+     * {@link #visitChildren} on {@code ctx}.</p>
+     */
+    @Override
+    public T visitMethodExtraParamDefinition(PureApsarsParser.MethodExtraParamDefinitionContext ctx) {
         return visitChildren(ctx);
     }
 

@@ -699,12 +699,12 @@ public interface ApsarsVisitor<T> extends ParseTreeVisitor<T> {
     T visitFieldModifiers(ApsarsParser.FieldModifiersContext ctx);
 
     /**
-     * Visit a parse tree produced by {@link ApsarsParser#methodModifiers}.
+     * Visit a parse tree produced by {@link ApsarsParser#alternateMethodModifiers}.
      *
      * @param ctx the parse tree
      * @return the visitor result
      */
-    T visitMethodModifiers(ApsarsParser.MethodModifiersContext ctx);
+    T visitAlternateMethodModifiers(ApsarsParser.AlternateMethodModifiersContext ctx);
 
     /**
      * Visit a parse tree produced by {@link ApsarsParser#makeAlternateLet}.
@@ -713,14 +713,6 @@ public interface ApsarsVisitor<T> extends ParseTreeVisitor<T> {
      * @return the visitor result
      */
     T visitMakeAlternateLet(ApsarsParser.MakeAlternateLetContext ctx);
-
-    /**
-     * Visit a parse tree produced by {@link ApsarsParser#optionalFieldAndMethodModifiers}.
-     *
-     * @param ctx the parse tree
-     * @return the visitor result
-     */
-    T visitOptionalFieldAndMethodModifiers(ApsarsParser.OptionalFieldAndMethodModifiersContext ctx);
 
     /**
      * Visit a parse tree produced by {@link ApsarsParser#optionalFieldStaticAndFinal}.
@@ -851,14 +843,6 @@ public interface ApsarsVisitor<T> extends ParseTreeVisitor<T> {
     T visitMethodReturnType(ApsarsParser.MethodReturnTypeContext ctx);
 
     /**
-     * Visit a parse tree produced by {@link ApsarsParser#alternateMethodModifiers}.
-     *
-     * @param ctx the parse tree
-     * @return the visitor result
-     */
-    T visitAlternateMethodModifiers(ApsarsParser.AlternateMethodModifiersContext ctx);
-
-    /**
      * Visit a parse tree produced by {@link ApsarsParser#defineMethodBody}.
      *
      * @param ctx the parse tree
@@ -873,6 +857,14 @@ public interface ApsarsVisitor<T> extends ParseTreeVisitor<T> {
      * @return the visitor result
      */
     T visitMethodParamListDefinition(ApsarsParser.MethodParamListDefinitionContext ctx);
+
+    /**
+     * Visit a parse tree produced by {@link ApsarsParser#methodExtraParamDefinition}.
+     *
+     * @param ctx the parse tree
+     * @return the visitor result
+     */
+    T visitMethodExtraParamDefinition(ApsarsParser.MethodExtraParamDefinitionContext ctx);
 
     /**
      * Visit a parse tree produced by {@link ApsarsParser#paramType}.
@@ -1339,20 +1331,20 @@ public interface ApsarsVisitor<T> extends ParseTreeVisitor<T> {
     T visitDefineLetMemberField(ApsarsParser.DefineLetMemberFieldContext ctx);
 
     /**
-     * Visit a parse tree produced by {@link ApsarsParser#defineJavaLetMemberField}.
-     *
-     * @param ctx the parse tree
-     * @return the visitor result
-     */
-    T visitDefineJavaLetMemberField(ApsarsParser.DefineJavaLetMemberFieldContext ctx);
-
-    /**
      * Visit a parse tree produced by {@link ApsarsParser#defineApsarsLetMemberField}.
      *
      * @param ctx the parse tree
      * @return the visitor result
      */
     T visitDefineApsarsLetMemberField(ApsarsParser.DefineApsarsLetMemberFieldContext ctx);
+
+    /**
+     * Visit a parse tree produced by {@link ApsarsParser#defineJavaLetMemberField}.
+     *
+     * @param ctx the parse tree
+     * @return the visitor result
+     */
+    T visitDefineJavaLetMemberField(ApsarsParser.DefineJavaLetMemberFieldContext ctx);
 
     /**
      * Visit a parse tree produced by {@link ApsarsParser#fieldName}.
