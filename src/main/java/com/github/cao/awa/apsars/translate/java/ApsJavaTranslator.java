@@ -76,6 +76,7 @@ public abstract class ApsJavaTranslator<T extends ApsAst> extends ApsTranslator<
         registerJava(TranslateElementEnum.LITERAL_STATEMENT, new ApsLiteralStatementJavaTranslator());
         registerJava(TranslateElementEnum.REFERENCE, new ApsReferenceStatementJavaTranslator());
         registerJava(TranslateElementEnum.CONSTANT, new ApsConstantStatementJavaTranslator());
+        registerJava(TranslateElementEnum.CONSTANT_NULL, new ApsNullConstantStatementJavaTranslator());
         registerJava(TranslateElementEnum.CONSTANT_SHORT, new ApsShortConstantStatementJavaTranslator());
         registerJava(TranslateElementEnum.CONSTANT_INT, new ApsIntConstantStatementJavaTranslator());
         registerJava(TranslateElementEnum.CONSTANT_LONG, new ApsLongConstantStatementJavaTranslator());

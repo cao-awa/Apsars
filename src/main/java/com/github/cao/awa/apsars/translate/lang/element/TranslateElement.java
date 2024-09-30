@@ -73,6 +73,7 @@ public class TranslateElement {
     public static TranslateElementData<ApsLiteralStatementAst> LITERAL_STATEMENT = create(ApsLiteralStatementAst.class, TranslateElementEnum.LITERAL_STATEMENT);
     public static TranslateElementData<ApsRefReferenceAst> REFERENCE = create(ApsRefReferenceAst.class, TranslateElementEnum.REFERENCE);
     public static TranslateElementData<ApsConstantAst> CONSTANT = create(ApsConstantAst.class, TranslateElementEnum.CONSTANT);
+    public static TranslateElementData<ApsNullAst> CONSTANT_NULL = create(ApsNullAst.class, TranslateElementEnum.CONSTANT_NULL);
     public static TranslateElementData<ApsShortAst> CONSTANT_SHORT = create(ApsShortAst.class, TranslateElementEnum.CONSTANT_SHORT);
     public static TranslateElementData<ApsIntAst> CONSTANT_INT = create(ApsIntAst.class, TranslateElementEnum.CONSTANT_INT);
     public static TranslateElementData<ApsLongAst> CONSTANT_LONG = create(ApsLongAst.class, TranslateElementEnum.CONSTANT_LONG);

@@ -1,36 +1,26 @@
 package com.github.cao.awa.apsars;
 
 import com.github.cao.awa.apsars.std.ApsarsInt;
-import com.github.cao.awa.apsars.std.SyncApsarsInt;
-
-import java.util.Random;
 
 public class Sample2 {
     public static void main(String[] args) {
-        final Random rand = new Random();
         final ApsarsInt a = new ApsarsInt();
-        a.delegate = rand.nextInt();
+        a.delegate = 1;
         final ApsarsInt b = new ApsarsInt();
-        b.delegate = rand.nextInt();
+        b.delegate = 1;
         final ApsarsInt c = new ApsarsInt();
-        c.delegate = rand.nextInt();
-        final SyncApsarsInt d = new SyncApsarsInt();
-        d.delegate(rand.nextInt());
+        c.delegate = 1;
+        final ApsarsInt d = new ApsarsInt();
+        d.delegate = 1;
         final ApsarsInt e = new ApsarsInt();
-        e.delegate = rand.nextInt();
+        e.delegate = 1;
         final ApsarsInt f = new ApsarsInt();
-        f.delegate = rand.nextInt();
+        f.delegate = 1;
         final ApsarsInt g = new ApsarsInt();
-        g.delegate = rand.nextInt();
-        final ApsarsInt h = new ApsarsInt();
-        h.delegate = rand.nextInt();
-        a.delegate = a.delegate + b.delegate + c.delegate;
-        d.delegate(d.delegate() + e.delegate + f.delegate);
-        if (d.delegate() > a.delegate) {
-            System.out.println("www");
-        }
-        if ((d.delegate(d.delegate() + b.delegate)) > c.delegate) {
-            System.out.println("awa");
+        g.delegate = 1;
+        final String[] array = null;
+        array[1] = "awa";
+        if ((a.delegate > b.delegate) && (b.delegate > c.delegate) && (c.delegate > d.delegate) && (d.delegate > e.delegate)) {
         }
     }
 }

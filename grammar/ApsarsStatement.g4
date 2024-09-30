@@ -121,7 +121,7 @@ validExtraInvokeParam: comma validInvokeParam;
 
 // <type> <name>
 // <type> <name> = <value>
-defineVariableStatement: variableModifiers? argType? variableName (assignment ( resultPresenting | assignmentIdentifier ))? semicolon ;
+defineVariableStatement: variableModifiers? argType? variableName (leftBracket number rightBracket)? (assignment ( resultPresenting | assignmentIdentifier ))? semicolon ;
 
 variableName: identifier | fullName ;
 

@@ -3,7 +3,7 @@ package com.github.cao.awa.apsars.std;
 @DoNotRefPrimary
 public unique class ApsarsBoolean {
     let public inline {
-        public delegate: boolean;
+        delegate: boolean;
 
         isMoreThan(comparingTarget: short): boolean -> false;
         isMoreThan(comparingTarget: int): boolean -> false;

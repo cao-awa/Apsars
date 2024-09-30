@@ -89,6 +89,9 @@ public abstract class ApsTranslator<T extends ApsAst> implements ApsElementTrans
     }
 
     public <X extends ApsAst> void translator(TranslateElementData<X> element, Consumer<ApsTranslator<X>> action) {
+        if (element == null) {
+            return;
+        }
         T recovery = this.ast;
         ApsTranslator<X> ast = Manipulate.cast(translators.get(target()).get(element.elementType()));
         if (ast == null) {

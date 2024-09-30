@@ -35,6 +35,11 @@ public class ApsVariableStatementJavaTranslator extends ApsJavaTranslator<ApsVar
                 builder.append(ApsTokens.SPACE);
             }
             postTranslate(TranslateElement.REFERENCE, ast.reference());
+            if (ast.isVisitingArray()) {
+                builder.append("[");
+                builder.append(ast.visitArrayIndex());
+                builder.append("]");
+            }
             if (autoNull) {
                 builder.append(ApsTokens.EQUAL);
                 builder.append("null");

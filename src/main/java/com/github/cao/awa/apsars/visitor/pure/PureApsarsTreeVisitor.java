@@ -908,6 +908,12 @@ public class PureApsarsTreeVisitor extends PureApsarsBaseVisitor<ApsAst> {
         } else {
             ast.defining(false);
         }
+
+        if (ctx.number() != null) {
+            ast.isVisitingArray(true);
+            ast.visitArrayIndex(Integer.parseInt(ctx.number().getText()));
+        }
+
         ast.reference(new ApsRefReferenceAst(ast).nameIdentity(ctx.variableName().getText()));
         if (ctx.assignment() != null) {
             if (ctx.resultPresenting() != null) {

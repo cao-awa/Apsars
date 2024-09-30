@@ -42,6 +42,7 @@ public enum TranslateElementEnum {
     LITERAL_STATEMENT,
     REFERENCE,
     CONSTANT,
+    CONSTANT_NULL,
     CONSTANT_SHORT,
     CONSTANT_INT,
     CONSTANT_LONG,
