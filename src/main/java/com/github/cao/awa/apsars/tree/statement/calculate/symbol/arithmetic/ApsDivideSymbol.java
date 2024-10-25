@@ -1,10 +1,10 @@
 package com.github.cao.awa.apsars.tree.statement.calculate.symbol.arithmetic;
 
-import com.github.cao.awa.apsars.tree.ApsAst;
 import com.github.cao.awa.apsars.tree.statement.calculate.symbol.ApsSymbolAst;
+import com.github.cao.awa.language.translator.translate.tree.LanguageAst;
 
 public class ApsDivideSymbol extends ApsSymbolAst {
-    public ApsDivideSymbol(ApsAst ast) {
+    public ApsDivideSymbol(LanguageAst ast) {
         super(ast);
     }
 

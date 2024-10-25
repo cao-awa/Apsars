@@ -1,11 +1,11 @@
 package com.github.cao.awa.apsars.element.method;
 
-import com.github.cao.awa.apsars.element.modifier.ApsModifierType;
 import com.github.cao.awa.apsars.element.modifier.method.*;
+import com.github.cao.awa.language.translator.translate.tree.modifier.ElementModifierType;
 
 import java.util.function.Supplier;
 
-public enum ApsMethodModifierType implements ApsModifierType {
+public enum ApsMethodModifierType implements ElementModifierType {
     IS_FINAL(ApsMethodFinalModifier::new),
 
     IS_STATIC(ApsMethodStaticModifier::new),

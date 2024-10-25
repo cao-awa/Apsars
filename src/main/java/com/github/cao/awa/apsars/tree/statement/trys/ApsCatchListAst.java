@@ -2,11 +2,11 @@ package com.github.cao.awa.apsars.tree.statement.trys;
 
 import com.alibaba.fastjson2.JSONObject;
 import com.github.cao.awa.apricot.util.collection.ApricotCollectionFactor;
-import com.github.cao.awa.apsars.translate.ApsTranslator;
-import com.github.cao.awa.apsars.translate.lang.TranslateTarget;
-import com.github.cao.awa.apsars.translate.lang.element.TranslateElement;
-import com.github.cao.awa.apsars.tree.ApsAst;
+import com.github.cao.awa.apsars.element.ApsarsTranslateElement;
 import com.github.cao.awa.apsars.tree.vararg.ApsArgTypeAst;
+import com.github.cao.awa.language.translator.translate.LanguageTranslator;
+import com.github.cao.awa.language.translator.translate.lang.TranslateTarget;
+import com.github.cao.awa.language.translator.translate.tree.LanguageAst;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -15,12 +15,12 @@ import java.util.List;
 
 @Getter
 @Accessors(fluent = true)
-public class ApsCatchListAst extends ApsAst {
+public class ApsCatchListAst extends LanguageAst {
     private final List<ApsArgTypeAst> catchTargets = ApricotCollectionFactor.arrayList();
     @Setter
     private String catchName;
 
-    public ApsCatchListAst(ApsAst parent) {
+    public ApsCatchListAst(LanguageAst parent) {
         super(parent);
     }
 
@@ -45,7 +45,7 @@ public class ApsCatchListAst extends ApsAst {
         System.out.println(ident + "|_ Aps catching: " + this.catchName);
         ident += "    ";
 
-        System.out.println(ident + "|_ catch target: " + this.catchTargets.stream().map(arg -> ApsTranslator.translate(TranslateTarget.JAVA, TranslateElement.ARG_TYPE, arg)).toList());
+        System.out.println(ident + "|_ catch target: " + this.catchTargets.stream().map(arg -> LanguageTranslator.translate(TranslateTarget.JAVA, ApsarsTranslateElement.ARG_TYPE, arg)).toList());
     }
 
     @Override

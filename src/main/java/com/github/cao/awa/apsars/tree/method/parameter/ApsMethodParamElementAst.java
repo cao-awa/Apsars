@@ -2,22 +2,22 @@ package com.github.cao.awa.apsars.tree.method.parameter;
 
 import com.alibaba.fastjson2.JSONObject;
 import com.github.cao.awa.apricot.util.collection.ApricotCollectionFactor;
-import com.github.cao.awa.apsars.element.ApsAccessibleType;
+import com.github.cao.awa.apsars.element.ApsarsTranslateElement;
 import com.github.cao.awa.apsars.element.method.parameter.ApsMethodParamModifierType;
-import com.github.cao.awa.apsars.element.modifier.ApsAccessibleModifier;
-import com.github.cao.awa.apsars.element.modifier.ApsModifierRequiredAst;
 import com.github.cao.awa.apsars.element.modifier.method.parameter.ApsMethodParamDefaultValueModifier;
 import com.github.cao.awa.apsars.element.modifier.method.parameter.ApsMethodParamModifier;
-import com.github.cao.awa.apsars.translate.ApsTranslator;
-import com.github.cao.awa.apsars.translate.lang.TranslateTarget;
-import com.github.cao.awa.apsars.translate.lang.element.TranslateElement;
-import com.github.cao.awa.apsars.tree.ApsAst;
 import com.github.cao.awa.apsars.tree.method.ApsMethodAst;
 import com.github.cao.awa.apsars.tree.method.parameter.preset.ApsMethodParameterDefaultValueAst;
 import com.github.cao.awa.apsars.tree.statement.result.ApsRefReferenceAst;
 import com.github.cao.awa.apsars.tree.statement.variable.ApsVariableAst;
 import com.github.cao.awa.apsars.tree.vararg.ApsArgTypeAst;
-import com.github.cao.awa.sinuatum.manipulate.Manipulate;
+import com.github.cao.awa.language.translator.translate.LanguageTranslator;
+import com.github.cao.awa.language.translator.translate.lang.TranslateTarget;
+import com.github.cao.awa.language.translator.translate.tree.LanguageAst;
+import com.github.cao.awa.language.translator.translate.tree.modifier.ModifierRequiredAst;
+import com.github.cao.awa.language.translator.translate.tree.modifier.accessible.AccessibleModifier;
+import com.github.cao.awa.language.translator.translate.tree.modifier.accessible.AccessibleType;
+import com.github.cao.awa.sinuatum.manipulate.QuickManipulate;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -29,7 +29,7 @@ import java.util.Map;
 
 @Getter
 @Accessors(fluent = true)
-public class ApsMethodParamElementAst extends ApsAst implements ApsModifierRequiredAst<ApsMethodParamModifier> {
+public class ApsMethodParamElementAst extends LanguageAst implements ModifierRequiredAst<ApsMethodParamModifier> {
     private static final Logger LOGGER = LogManager.getLogger("ApsMethodParamElementAst");
     @Setter
     private String nameIdentity;
@@ -37,7 +37,7 @@ public class ApsMethodParamElementAst extends ApsAst implements ApsModifierRequi
     private ApsArgTypeAst argType;
     private final Map<ApsMethodParamModifierType, ApsMethodParamModifier> modifiers = ApricotCollectionFactor.hashMap();
 
-    public ApsMethodParamElementAst(ApsAst parent) {
+    public ApsMethodParamElementAst(LanguageAst parent) {
         super(parent);
     }
 
@@ -56,8 +56,8 @@ public class ApsMethodParamElementAst extends ApsAst implements ApsModifierRequi
     }
 
     @Override
-    public ApsAccessibleModifier accessible() {
-        return ApsAccessibleType.PUBLIC.generic();
+    public AccessibleModifier accessible() {
+        return AccessibleType.PUBLIC.generic();
     }
 
     public void addModifier(ApsMethodParamModifier modifier) {
@@ -69,7 +69,7 @@ public class ApsMethodParamElementAst extends ApsAst implements ApsModifierRequi
     }
 
     @Override
-    public void addAccessible(ApsAccessibleModifier modifier) {
+    public void addAccessible(AccessibleModifier modifier) {
         // Do nothing.
     }
 
@@ -80,7 +80,7 @@ public class ApsMethodParamElementAst extends ApsAst implements ApsModifierRequi
         this.argType.print(ident + "        ");
         ApsMethodParameterDefaultValueAst presetValueAst = defaultValue();
         if (presetValueAst != null) {
-            System.out.println(ident + "    |_ default value: " + ApsTranslator.translate(TranslateTarget.JAVA, TranslateElement.METHOD_PARAMETER_DEFAULT, presetValueAst));
+            System.out.println(ident + "    |_ default value: " + LanguageTranslator.translate(TranslateTarget.JAVA, ApsarsTranslateElement.METHOD_PARAMETER_DEFAULT, presetValueAst));
         }
     }
 
@@ -112,12 +112,12 @@ public class ApsMethodParamElementAst extends ApsAst implements ApsModifierRequi
     @Override
     public void preprocess() {
         if (this.modifiers.get(ApsMethodParamModifierType.DEFAULT_VALUE) != null) {
-            Manipulate.notNull(defaultValue(), value -> {
-                if (!value.type().literal().equals(ApsTranslator.translate(TranslateTarget.JAVA, TranslateElement.ARG_TYPE, this.argType))) {
+            QuickManipulate.notNull(defaultValue(), value -> {
+                if (!value.type().literal().equals(LanguageTranslator.translate(TranslateTarget.JAVA, ApsarsTranslateElement.ARG_TYPE, this.argType))) {
                     defaultValue(null);
                     LOGGER.warn("The preset value of method parameter '{}' is not type matched to '{}', got '{}'",
                             this.nameIdentity,
-                            ApsTranslator.translate(TranslateTarget.JAVA, TranslateElement.ARG_TYPE, this.argType),
+                            LanguageTranslator.translate(TranslateTarget.JAVA, ApsarsTranslateElement.ARG_TYPE, this.argType),
                             value.type().literal()
                     );
                 }

@@ -1,8 +1,8 @@
 package com.github.cao.awa.apsars.translate.java.file.type;
 
+import com.github.cao.awa.apsars.element.ApsarsTranslateElement;
 import com.github.cao.awa.apsars.translate.base.file.type.ApsArgTypeElementTranslator;
 import com.github.cao.awa.apsars.translate.java.ApsJavaTranslator;
-import com.github.cao.awa.apsars.translate.lang.element.TranslateElement;
 import com.github.cao.awa.apsars.tree.vararg.ApsArgTypeAst;
 
 import java.util.LinkedList;
@@ -13,7 +13,7 @@ public class ApsArgTypeJavaTranslator extends ApsJavaTranslator<ApsArgTypeAst> i
         builder.append(ast.nameIdentity());
         if (!ast.args().isEmpty()) {
             builder.append("<");
-            translator(TranslateElement.ARG_TYPE, next -> {
+            translator(ApsarsTranslateElement.ARG_TYPE, next -> {
                 LinkedList<ApsArgTypeAst> args = ast.args();
                 int size = args.size();
                 int edge = size - 1;

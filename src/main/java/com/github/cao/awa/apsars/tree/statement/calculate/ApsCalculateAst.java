@@ -3,7 +3,6 @@ package com.github.cao.awa.apsars.tree.statement.calculate;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import com.github.cao.awa.apricot.util.collection.ApricotCollectionFactor;
-import com.github.cao.awa.apsars.tree.ApsAst;
 import com.github.cao.awa.apsars.tree.method.ApsMethodBodyAst;
 import com.github.cao.awa.apsars.tree.statement.calculate.symbol.ApsOperators;
 import com.github.cao.awa.apsars.tree.statement.calculate.symbol.ApsSymbolAst;
@@ -14,6 +13,7 @@ import com.github.cao.awa.apsars.tree.statement.result.ApsResultingStatementAst;
 import com.github.cao.awa.apsars.tree.statement.result.instance.ApsNewInstanceStatementAst;
 import com.github.cao.awa.apsars.tree.statement.variable.ApsVariableAst;
 import com.github.cao.awa.apsars.tree.vararg.ApsArgTypeAst;
+import com.github.cao.awa.language.translator.translate.tree.LanguageAst;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -33,7 +33,7 @@ public class ApsCalculateAst extends ApsResultingStatementAst {
     private boolean totalWithParen;
     private boolean doNotGroup;
 
-    public ApsCalculateAst(ApsAst parent) {
+    public ApsCalculateAst(LanguageAst parent) {
         super(parent);
     }
 
@@ -345,7 +345,7 @@ public class ApsCalculateAst extends ApsResultingStatementAst {
         return -1;
     }
 
-    public ApsCalculateAst dump(ApsAst parent) {
+    public ApsCalculateAst dump(LanguageAst parent) {
         return new ApsCalculateAst(parent)
                 .left(this.left)
                 .symbol(this.symbol)

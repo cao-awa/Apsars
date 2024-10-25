@@ -1,15 +1,15 @@
 package com.github.cao.awa.apsars.tree.statement.result.instance;
 
-import com.github.cao.awa.apsars.tree.ApsAst;
 import com.github.cao.awa.apsars.tree.aps.ApsFileAst;
 import com.github.cao.awa.apsars.tree.statement.invoke.ApsInvokeAst;
 import com.github.cao.awa.apsars.tree.statement.result.ApsResultPresentingAst;
 import com.github.cao.awa.apsars.tree.vararg.ApsArgTypeAst;
+import com.github.cao.awa.language.translator.translate.tree.LanguageAst;
 import lombok.experimental.Accessors;
 
 @Accessors(fluent = true)
 public class ApsNewInstanceStatementAst extends ApsInvokeAst {
-    public ApsNewInstanceStatementAst(ApsAst parent) {
+    public ApsNewInstanceStatementAst(LanguageAst parent) {
         super(parent);
     }
 

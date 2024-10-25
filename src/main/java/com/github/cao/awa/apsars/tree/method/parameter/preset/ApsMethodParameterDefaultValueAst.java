@@ -1,12 +1,12 @@
 package com.github.cao.awa.apsars.tree.method.parameter.preset;
 
 import com.alibaba.fastjson2.JSONObject;
+import com.github.cao.awa.apsars.element.ApsarsTranslateElement;
 import com.github.cao.awa.apsars.element.method.parameter.ApsMethodParamPresetValueType;
-import com.github.cao.awa.apsars.translate.ApsTranslator;
-import com.github.cao.awa.apsars.translate.lang.TranslateTarget;
-import com.github.cao.awa.apsars.translate.lang.element.TranslateElement;
-import com.github.cao.awa.apsars.tree.ApsAst;
 import com.github.cao.awa.apsars.tree.statement.result.ApsResultPresentingAst;
+import com.github.cao.awa.language.translator.translate.LanguageTranslator;
+import com.github.cao.awa.language.translator.translate.lang.TranslateTarget;
+import com.github.cao.awa.language.translator.translate.tree.LanguageAst;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -14,11 +14,11 @@ import lombok.experimental.Accessors;
 @Setter
 @Getter
 @Accessors(fluent = true)
-public class ApsMethodParameterDefaultValueAst extends ApsAst {
+public class ApsMethodParameterDefaultValueAst extends LanguageAst {
     private ApsResultPresentingAst value;
     private ApsMethodParamPresetValueType type = ApsMethodParamPresetValueType.NOTHING;
 
-    public ApsMethodParameterDefaultValueAst(ApsAst parent) {
+    public ApsMethodParameterDefaultValueAst(LanguageAst parent) {
         super(parent);
     }
 
@@ -29,7 +29,7 @@ public class ApsMethodParameterDefaultValueAst extends ApsAst {
 
     @Override
     public void print(String ident) {
-        System.out.println(ident + "|_ value: " + ApsTranslator.translate(TranslateTarget.JAVA, TranslateElement.RESULT_PRESENTING_STATEMENT, this.value));
+        System.out.println(ident + "|_ value: " + LanguageTranslator.translate(TranslateTarget.JAVA, ApsarsTranslateElement.RESULT_PRESENTING_STATEMENT, this.value));
     }
 
     @Override

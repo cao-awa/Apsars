@@ -2,10 +2,7 @@ package com.github.cao.awa.apsars.tree.clazz;
 
 import com.alibaba.fastjson2.JSONObject;
 import com.github.cao.awa.apricot.util.collection.ApricotCollectionFactor;
-import com.github.cao.awa.apsars.element.ApsAccessibleType;
 import com.github.cao.awa.apsars.element.clazz.ApsMemberParameterModifierType;
-import com.github.cao.awa.apsars.element.modifier.ApsAccessibleModifier;
-import com.github.cao.awa.apsars.element.modifier.ApsModifierRequiredAst;
 import com.github.cao.awa.apsars.element.modifier.method.ApsMethodModifier;
 import com.github.cao.awa.apsars.element.modifier.parameter.ApsMemberParameterModifier;
 import com.github.cao.awa.apsars.parser.token.keyword.method.ApsMethodKeyword;
@@ -14,7 +11,10 @@ import com.github.cao.awa.apsars.tree.statement.result.ApsRefReferenceAst;
 import com.github.cao.awa.apsars.tree.statement.result.ApsResultPresentingAst;
 import com.github.cao.awa.apsars.tree.statement.variable.ApsVariableAst;
 import com.github.cao.awa.apsars.tree.vararg.ApsStatementWithVarargs;
-import com.github.cao.awa.sinuatum.manipulate.Manipulate;
+import com.github.cao.awa.language.translator.translate.tree.modifier.ModifierRequiredAst;
+import com.github.cao.awa.language.translator.translate.tree.modifier.accessible.AccessibleModifier;
+import com.github.cao.awa.language.translator.translate.tree.modifier.accessible.AccessibleType;
+import com.github.cao.awa.sinuatum.manipulate.QuickManipulate;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -27,7 +27,7 @@ import java.util.Map;
 
 @Getter
 @Accessors(fluent = true)
-public class ApsMemberParameterAst extends ApsStatementWithVarargs implements ApsModifierRequiredAst<ApsMemberParameterModifier> {
+public class ApsMemberParameterAst extends ApsStatementWithVarargs implements ModifierRequiredAst<ApsMemberParameterModifier> {
     private static final Logger LOGGER = LogManager.getLogger("ApsMemberParameterAst");
     @Getter
     private ApsVariableAst variable;
@@ -36,7 +36,7 @@ public class ApsMemberParameterAst extends ApsStatementWithVarargs implements Ap
     @Setter
     private ApsResultPresentingAst value;
     @Setter
-    private ApsAccessibleModifier accessible = ApsAccessibleType.PRIVATE.generic();
+    private AccessibleModifier accessible = AccessibleType.PRIVATE.generic();
     private final Map<ApsMemberParameterModifierType, ApsMemberParameterModifier> modifiers = ApricotCollectionFactor.hashMap();
 
     public ApsMemberParameterAst(ApsClassAst parent) {
@@ -58,7 +58,7 @@ public class ApsMemberParameterAst extends ApsStatementWithVarargs implements Ap
     }
 
     @Override
-    public void addAccessible(ApsAccessibleModifier modifier) {
+    public void addAccessible(AccessibleModifier modifier) {
         this.accessible = modifier;
     }
 
@@ -124,7 +124,7 @@ public class ApsMemberParameterAst extends ApsStatementWithVarargs implements Ap
                 .doNotProcess(true);
 
         for (ApsMemberParameterModifierType modifierType : List.of(ApsMemberParameterModifierType.HOLDER, ApsMemberParameterModifierType.HOLDER_GET, ApsMemberParameterModifierType.HOLDER_SET)) {
-            Manipulate.notNull(this.modifiers.get(modifierType), modifier -> {
+            QuickManipulate.notNull(this.modifiers.get(modifierType), modifier -> {
                 switch (modifierType) {
                     case HOLDER -> {
                         appendGetHolder();
@@ -196,11 +196,11 @@ public class ApsMemberParameterAst extends ApsStatementWithVarargs implements Ap
     }
 
     public boolean isPublic() {
-        return this.accessible.getAccessibleType() == ApsAccessibleType.PUBLIC;
+        return this.accessible.getAccessibleType() == AccessibleType.PUBLIC;
     }
 
     public boolean isPrivate() {
-        return this.accessible.getAccessibleType() == ApsAccessibleType.PRIVATE;
+        return this.accessible.getAccessibleType() == AccessibleType.PRIVATE;
     }
 
     public boolean isHolderOverridable() {

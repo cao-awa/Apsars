@@ -1,14 +1,14 @@
 package com.github.cao.awa.apsars.element.clazz;
 
-import com.github.cao.awa.apsars.element.modifier.ApsModifierType;
 import com.github.cao.awa.apsars.element.modifier.parameter.*;
 import com.github.cao.awa.apsars.element.modifier.parameter.generator.ApsMemberParameterOverridableModifier;
 import com.github.cao.awa.apsars.element.modifier.parameter.generator.ApsMethodHolderModifier;
+import com.github.cao.awa.language.translator.translate.tree.modifier.ElementModifierType;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Supplier;
 
-public enum ApsMemberParameterModifierType implements ApsModifierType {
+public enum ApsMemberParameterModifierType implements ElementModifierType {
     IS_FINAL(ApsMemberParameterFinalModifier::new),
 
     IS_STATIC(ApsMemberParameterStaticModifier::new),

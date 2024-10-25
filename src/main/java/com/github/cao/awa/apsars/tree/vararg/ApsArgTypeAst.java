@@ -3,10 +3,10 @@ package com.github.cao.awa.apsars.tree.vararg;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import com.github.cao.awa.apricot.util.collection.ApricotCollectionFactor;
-import com.github.cao.awa.apsars.tree.ApsAst;
 import com.github.cao.awa.apsars.tree.annotation.ApsAnnotationAst;
 import com.github.cao.awa.apsars.tree.clazz.ApsClassAst;
 import com.github.cao.awa.apsars.tree.vararg.primary.ReferencePrimary;
+import com.github.cao.awa.language.translator.translate.tree.LanguageAst;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -16,7 +16,7 @@ import java.util.List;
 
 @Getter
 @Accessors(fluent = true)
-public class ApsArgTypeAst extends ApsAst {
+public class ApsArgTypeAst extends LanguageAst {
     public static final ApsArgTypeAst UNKNOWN = new ApsArgTypeAst(null);
     public static final ApsArgTypeAst STRING = new ApsArgTypeAst(null).nameIdentity("String");
     public static final ApsArgTypeAst SHORT = new ApsArgTypeAst(null).nameIdentity("short");
@@ -55,7 +55,7 @@ public class ApsArgTypeAst extends ApsAst {
     @Setter
     private ReferencePrimary referencePrimary;
 
-    public ApsArgTypeAst(ApsAst parent) {
+    public ApsArgTypeAst(LanguageAst parent) {
         super(parent);
     }
 

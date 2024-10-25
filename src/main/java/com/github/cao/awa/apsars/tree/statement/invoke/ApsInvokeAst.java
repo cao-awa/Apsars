@@ -3,13 +3,13 @@ package com.github.cao.awa.apsars.tree.statement.invoke;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import com.github.cao.awa.apricot.util.collection.ApricotCollectionFactor;
-import com.github.cao.awa.apsars.tree.ApsAst;
 import com.github.cao.awa.apsars.tree.clazz.ApsClassAst;
 import com.github.cao.awa.apsars.tree.method.ApsMethodAst;
 import com.github.cao.awa.apsars.tree.statement.result.ApsRefReferenceAst;
 import com.github.cao.awa.apsars.tree.statement.result.ApsResultPresentingAst;
 import com.github.cao.awa.apsars.tree.statement.result.ApsResultingStatementAst;
 import com.github.cao.awa.apsars.tree.vararg.ApsArgTypeAst;
+import com.github.cao.awa.language.translator.translate.tree.LanguageAst;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -41,7 +41,7 @@ public class ApsInvokeAst extends ApsResultingStatementAst {
         return this;
     }
 
-    public ApsInvokeAst(ApsAst ast) {
+    public ApsInvokeAst(LanguageAst ast) {
         super(ast);
     }
 

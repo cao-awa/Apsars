@@ -1,14 +1,13 @@
 package com.github.cao.awa.apsars.translate.base.file.method.body.statement.calculate;
 
-import com.github.cao.awa.apsars.translate.ApsTranslator;
+import com.github.cao.awa.apsars.element.ApsarsTranslateElement;
 import com.github.cao.awa.apsars.translate.base.file.method.body.statement.resulting.ApsResultingStatementElementTranslator;
-import com.github.cao.awa.apsars.translate.lang.element.TranslateElement;
 import com.github.cao.awa.apsars.tree.statement.calculate.ApsCalculateAst;
 import com.github.cao.awa.apsars.tree.statement.calculate.symbol.ApsSymbolAst;
-import com.github.cao.awa.apsars.tree.statement.result.ApsResultPresentingAst;
+import com.github.cao.awa.language.translator.translate.LanguageTranslator;
 
 public interface ApsCalculateStatementElementTranslator extends ApsResultingStatementElementTranslator<ApsCalculateAst> {
-    default void translateTotal(ApsTranslator<ApsCalculateAst> translator) {
+    default void translateTotal(LanguageTranslator<ApsCalculateAst> translator) {
         parenOr(
                 translator,
                 ApsCalculateAst::totalWithParen,
@@ -16,7 +15,7 @@ public interface ApsCalculateStatementElementTranslator extends ApsResultingStat
         );
     }
 
-    default void translateContext(ApsTranslator<ApsCalculateAst> translator) {
+    default void translateContext(LanguageTranslator<ApsCalculateAst> translator) {
         try {
             parenOr(
                     translator,
@@ -34,21 +33,21 @@ public interface ApsCalculateStatementElementTranslator extends ApsResultingStat
         }
     }
 
-    default void translateLeft(ApsTranslator<ApsCalculateAst> translator) {
+    default void translateLeft(LanguageTranslator<ApsCalculateAst> translator) {
         translator.postNextTranslate(
-                TranslateElement.RESULT_PRESENTING_STATEMENT,
+                ApsarsTranslateElement.RESULT_PRESENTING_STATEMENT,
                 ApsCalculateAst::left
         );
     }
 
-    default void translateRight(ApsTranslator<ApsCalculateAst> translator) {
+    default void translateRight(LanguageTranslator<ApsCalculateAst> translator) {
         if (translator.ast().right() != null) {
             translateSymbol(translator);
         }
 
-        translator.postTranslate(TranslateElement.RESULT_PRESENTING_STATEMENT, translator.ast().right());
+        translator.postTranslate(ApsarsTranslateElement.RESULT_PRESENTING_STATEMENT, translator.ast().right());
 
-        translator.translator(TranslateElement.CALCULATE_STATEMENT, next -> {
+        translator.translator(ApsarsTranslateElement.CALCULATE_STATEMENT, next -> {
             if (translator.ast().rights() != null) {
                 for (ApsCalculateAst right : translator.ast().rights()) {
                     next.postTranslate(translator.builder(), right);
@@ -57,7 +56,7 @@ public interface ApsCalculateStatementElementTranslator extends ApsResultingStat
         });
     }
 
-    default void translateSymbol(ApsTranslator<ApsCalculateAst> translator) {
+    default void translateSymbol(LanguageTranslator<ApsCalculateAst> translator) {
         ApsSymbolAst symbol = translator.ast().symbol();
         if (symbol != null) {
             translator.builder().append(symbol.symbol());

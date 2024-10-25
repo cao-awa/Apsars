@@ -1,10 +1,10 @@
 package com.github.cao.awa.apsars.tree.statement.calculate.symbol.not;
 
-import com.github.cao.awa.apsars.tree.ApsAst;
 import com.github.cao.awa.apsars.tree.statement.calculate.symbol.ApsSymbolAst;
+import com.github.cao.awa.language.translator.translate.tree.LanguageAst;
 
 public class ApsNotSymbol extends ApsSymbolAst {
-    public ApsNotSymbol(ApsAst ast) {
+    public ApsNotSymbol(LanguageAst ast) {
         super(ast);
     }
 

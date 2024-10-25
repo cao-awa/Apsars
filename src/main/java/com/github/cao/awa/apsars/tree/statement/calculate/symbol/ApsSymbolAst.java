@@ -1,11 +1,11 @@
 package com.github.cao.awa.apsars.tree.statement.calculate.symbol;
 
 import com.alibaba.fastjson2.JSONObject;
-import com.github.cao.awa.apsars.tree.ApsAst;
 import com.github.cao.awa.apsars.tree.statement.ApsStatementAst;
+import com.github.cao.awa.language.translator.translate.tree.LanguageAst;
 
 public abstract class ApsSymbolAst extends ApsStatementAst {
-    public ApsSymbolAst(ApsAst ast) {
+    public ApsSymbolAst(LanguageAst ast) {
         super(ast);
     }
 

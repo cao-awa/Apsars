@@ -1,10 +1,10 @@
 package com.github.cao.awa.apsars.builtin;
 
 import com.github.cao.awa.apricot.util.io.IOUtil;
-import com.github.cao.awa.apsars.translate.ApsTranslator;
-import com.github.cao.awa.apsars.translate.lang.TranslateTarget;
-import com.github.cao.awa.apsars.translate.lang.element.TranslateElement;
+import com.github.cao.awa.apsars.element.ApsarsTranslateElement;
 import com.github.cao.awa.apsars.tree.aps.ApsFileAst;
+import com.github.cao.awa.language.translator.translate.LanguageTranslator;
+import com.github.cao.awa.language.translator.translate.lang.TranslateTarget;
 
 import java.io.File;
 import java.io.FileReader;
@@ -13,7 +13,7 @@ import java.nio.charset.StandardCharsets;
 
 public abstract class ApsBasicType {
     public static void generateBuiltin(String stdPath, String stdSourcePath, String packageAt) throws IOException {
-        ApsTranslator<ApsFileAst> translator = ApsTranslator.translator(TranslateTarget.JAVA, TranslateElement.FILE);
+        LanguageTranslator<ApsFileAst> translator = LanguageTranslator.translator(TranslateTarget.JAVA, ApsarsTranslateElement.FILE);
 
         File sources = new File(stdSourcePath);
 

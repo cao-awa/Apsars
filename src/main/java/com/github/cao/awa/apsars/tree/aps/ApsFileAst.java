@@ -3,9 +3,9 @@ package com.github.cao.awa.apsars.tree.aps;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import com.github.cao.awa.apricot.util.collection.ApricotCollectionFactor;
-import com.github.cao.awa.apsars.tree.ApsAst;
 import com.github.cao.awa.apsars.tree.clazz.ApsClassAst;
 import com.github.cao.awa.apsars.tree.vararg.ApsArgTypeAst;
+import com.github.cao.awa.language.translator.translate.tree.LanguageAst;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -14,7 +14,7 @@ import java.util.List;
 
 @Getter
 @Accessors(fluent = true)
-public class ApsFileAst extends ApsAst {
+public class ApsFileAst extends LanguageAst {
     @Setter
     private String packageAt;
     private final List<ApsImportAst> imports = ApricotCollectionFactor.arrayList();

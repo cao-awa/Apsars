@@ -1,8 +1,8 @@
 package com.github.cao.awa.apsars.element.method.parameter;
 
-import com.github.cao.awa.apsars.element.modifier.ApsModifierType;
+import com.github.cao.awa.language.translator.translate.tree.modifier.ElementModifierType;
 
-public enum ApsMethodParamPresetValueType implements ApsModifierType {
+public enum ApsMethodParamPresetValueType implements ElementModifierType {
     INT("int"),
     LONG("long"),
     FLOAT("float"),

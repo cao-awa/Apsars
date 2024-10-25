@@ -2,18 +2,17 @@ package com.github.cao.awa.apsars.tree.method.parameter;
 
 import com.alibaba.fastjson2.JSONObject;
 import com.github.cao.awa.apricot.util.collection.ApricotCollectionFactor;
-import com.github.cao.awa.apsars.tree.ApsAst;
 import com.github.cao.awa.apsars.tree.method.ApsMethodAst;
 import com.github.cao.awa.apsars.tree.vararg.ApsArgTypeAst;
+import com.github.cao.awa.language.translator.translate.tree.LanguageAst;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 
 import java.util.LinkedList;
-import java.util.Map;
 
 @Getter
 @Accessors(fluent = true)
-public class ApsMethodParameterAst extends ApsAst {
+public class ApsMethodParameterAst extends LanguageAst {
     private final LinkedList<ApsMethodParamElementAst> params = ApricotCollectionFactor.linkedList();
 
     public ApsMethodParameterAst(ApsMethodAst parent) {

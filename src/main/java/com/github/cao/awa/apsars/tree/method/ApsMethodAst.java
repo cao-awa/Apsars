@@ -2,19 +2,13 @@ package com.github.cao.awa.apsars.tree.method;
 
 import com.alibaba.fastjson2.JSONObject;
 import com.github.cao.awa.apricot.util.collection.ApricotCollectionFactor;
-import com.github.cao.awa.apsars.element.ApsAccessibleType;
+import com.github.cao.awa.apsars.element.ApsarsTranslateElement;
 import com.github.cao.awa.apsars.element.method.ApsMethodModifierType;
-import com.github.cao.awa.apsars.element.modifier.ApsAccessibleModifier;
-import com.github.cao.awa.apsars.element.modifier.ApsModifierRequiredAst;
 import com.github.cao.awa.apsars.element.modifier.method.ApsMethodModifier;
 import com.github.cao.awa.apsars.element.modifier.method.parameter.ApsMethodParamModifier;
 import com.github.cao.awa.apsars.parser.token.keyword.method.ApsMethodKeyword;
 import com.github.cao.awa.apsars.parser.token.keyword.method.ApsMethodParamKeyword;
-import com.github.cao.awa.apsars.translate.ApsTranslator;
 import com.github.cao.awa.apsars.translate.java.pool.ApsarsClassPool;
-import com.github.cao.awa.apsars.translate.lang.TranslateTarget;
-import com.github.cao.awa.apsars.translate.lang.element.TranslateElement;
-import com.github.cao.awa.apsars.tree.ApsAst;
 import com.github.cao.awa.apsars.tree.annotation.ApsAnnotationAst;
 import com.github.cao.awa.apsars.tree.clazz.ApsClassAst;
 import com.github.cao.awa.apsars.tree.clazz.ApsMemberParameterAst;
@@ -29,7 +23,13 @@ import com.github.cao.awa.apsars.tree.statement.trys.ApsMethodExtraCatchAst;
 import com.github.cao.awa.apsars.tree.statement.trys.ApsTryCatchAst;
 import com.github.cao.awa.apsars.tree.statement.variable.ApsVariableAst;
 import com.github.cao.awa.apsars.tree.vararg.ApsArgTypeAst;
-import com.github.cao.awa.sinuatum.manipulate.Manipulate;
+import com.github.cao.awa.language.translator.translate.LanguageTranslator;
+import com.github.cao.awa.language.translator.translate.lang.TranslateTarget;
+import com.github.cao.awa.language.translator.translate.tree.LanguageAst;
+import com.github.cao.awa.language.translator.translate.tree.modifier.ModifierRequiredAst;
+import com.github.cao.awa.language.translator.translate.tree.modifier.accessible.AccessibleModifier;
+import com.github.cao.awa.language.translator.translate.tree.modifier.accessible.AccessibleType;
+import com.github.cao.awa.sinuatum.manipulate.QuickManipulate;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -43,7 +43,7 @@ import java.util.function.Function;
 
 @Getter
 @Accessors(fluent = true)
-public class ApsMethodAst extends ApsAst implements ApsModifierRequiredAst<ApsMethodModifier> {
+public class ApsMethodAst extends LanguageAst implements ModifierRequiredAst<ApsMethodModifier> {
     @Setter
     private String nameIdentity;
     @Setter
@@ -62,11 +62,11 @@ public class ApsMethodAst extends ApsAst implements ApsModifierRequiredAst<ApsMe
     private boolean isConstructor;
     private final Map<ApsMethodModifierType, ApsMethodModifier> modifiers = ApricotCollectionFactor.hashMap();
     @Setter
-    private ApsAccessibleModifier accessible = ApsAccessibleType.PRIVATE.generic();
+    private AccessibleModifier accessible = AccessibleType.PRIVATE.generic();
     private final Set<ApsAnnotationAst> annotations = ApricotCollectionFactor.hashSet();
     private final Set<String> compilerFlags = ApricotCollectionFactor.hashSet();
 
-    public ApsMethodAst(ApsAst parent) {
+    public ApsMethodAst(LanguageAst parent) {
         super(parent);
     }
 
@@ -134,7 +134,7 @@ public class ApsMethodAst extends ApsAst implements ApsModifierRequiredAst<ApsMe
     }
 
     @Override
-    public void addAccessible(ApsAccessibleModifier modifier) {
+    public void addAccessible(AccessibleModifier modifier) {
         this.accessible = modifier;
     }
 
@@ -294,7 +294,7 @@ public class ApsMethodAst extends ApsAst implements ApsModifierRequiredAst<ApsMe
         }
 
         if (this.compilerFlags.contains("try-inline")) {
-            Manipulate.notNull(ApsarsClassPool.annotation(ApsAnnotationAst.TRY_INLINE), this::addAnnotation);
+            QuickManipulate.notNull(ApsarsClassPool.annotation(ApsAnnotationAst.TRY_INLINE), this::addAnnotation);
         }
 
         if (this.modifiers.get(ApsMethodModifierType.IS_FINAL) != null) {
@@ -354,7 +354,7 @@ public class ApsMethodAst extends ApsAst implements ApsModifierRequiredAst<ApsMe
             if (this.returnType == null) {
                 invokeStatementAst = new ApsLiteralStatementAst(selfMethodBody, safepointMethod + "(" + paramBuilder + ")");
             } else {
-                invokeStatementAst = new ApsLiteralStatementAst(selfMethodBody, ApsTranslator.translate(TranslateTarget.JAVA, TranslateElement.ARG_TYPE, this.returnType) + " result=" + safepointMethod + "(" + paramBuilder + ")");
+                invokeStatementAst = new ApsLiteralStatementAst(selfMethodBody, LanguageTranslator.translate(TranslateTarget.JAVA, ApsarsTranslateElement.ARG_TYPE, this.returnType) + " result=" + safepointMethod + "(" + paramBuilder + ")");
             }
 
             selfMethodBody.addStatement(invokeStatementAst);
@@ -385,10 +385,10 @@ public class ApsMethodAst extends ApsAst implements ApsModifierRequiredAst<ApsMe
 
     @Override
     public void postprocess() {
-        Manipulate.notNull(this.param, ApsMethodParameterAst::postprocess);
-        Manipulate.notNull(this.methodBody, ApsMethodBodyAst::postprocess);
-        Manipulate.notNull(this.extraCatch, ApsMethodExtraCatchAst::postprocess);
-        Manipulate.notNull(this.returnType, ApsArgTypeAst::postprocess);
+        QuickManipulate.notNull(this.param, ApsMethodParameterAst::postprocess);
+        QuickManipulate.notNull(this.methodBody, ApsMethodBodyAst::postprocess);
+        QuickManipulate.notNull(this.extraCatch, ApsMethodExtraCatchAst::postprocess);
+        QuickManipulate.notNull(this.returnType, ApsArgTypeAst::postprocess);
 
         for (ApsAnnotationAst value : this.annotations) {
             value.postprocess();
@@ -397,17 +397,17 @@ public class ApsMethodAst extends ApsAst implements ApsModifierRequiredAst<ApsMe
 
     @Override
     public void consequence() {
-        Manipulate.notNull(this.param, ApsMethodParameterAst::consequence);
-        Manipulate.notNull(this.methodBody, ApsMethodBodyAst::consequence);
-        Manipulate.notNull(this.extraCatch, ApsMethodExtraCatchAst::consequence);
-        Manipulate.notNull(this.returnType, ApsArgTypeAst::consequence);
+        QuickManipulate.notNull(this.param, ApsMethodParameterAst::consequence);
+        QuickManipulate.notNull(this.methodBody, ApsMethodBodyAst::consequence);
+        QuickManipulate.notNull(this.extraCatch, ApsMethodExtraCatchAst::consequence);
+        QuickManipulate.notNull(this.returnType, ApsArgTypeAst::consequence);
 
         for (ApsAnnotationAst value : this.annotations) {
             value.consequence();
         }
     }
 
-    public static ApsMethodAst virtual(String nameIdentity, ApsArgTypeAst rType, Function<ApsMethodAst, ApsMethodParameterAst> param, ApsAst parentAst) {
+    public static ApsMethodAst virtual(String nameIdentity, ApsArgTypeAst rType, Function<ApsMethodAst, ApsMethodParameterAst> param, LanguageAst parentAst) {
         ApsMethodAst methodAst = new ApsMethodAst(
                 parentAst
         );
@@ -420,14 +420,14 @@ public class ApsMethodAst extends ApsAst implements ApsModifierRequiredAst<ApsMe
         return methodAst;
     }
 
-    public static ApsMethodAst accessor(String nameIdentity, ApsArgTypeAst type, boolean isGetter, boolean isStatic, boolean isPublic, ApsAst parentAst) {
+    public static ApsMethodAst accessor(String nameIdentity, ApsArgTypeAst type, boolean isGetter, boolean isStatic, boolean isPublic, LanguageAst parentAst) {
         if (isGetter) {
             ApsMethodAst methodAst = new ApsMethodAst(
                     parentAst
             );
             methodAst.returnType(type);
             methodAst.nameIdentity(nameIdentity);
-            methodAst.accessible(isPublic ? ApsAccessibleType.PUBLIC.generic() : ApsAccessibleType.PRIVATE.generic());
+            methodAst.accessible(isPublic ? AccessibleType.PUBLIC.generic() : AccessibleType.PRIVATE.generic());
             ApsMethodBodyAst methodBodyAst = new ApsMethodBodyAst(methodAst, null);
             ApsReturnAst returnAst = new ApsReturnAst(methodBodyAst);
             returnAst.result(
@@ -445,7 +445,7 @@ public class ApsMethodAst extends ApsAst implements ApsModifierRequiredAst<ApsMe
                     parentAst
             );
             methodAst.nameIdentity(nameIdentity);
-            methodAst.addAccessible(isPublic ? ApsAccessibleType.PUBLIC : ApsAccessibleType.PRIVATE);
+            methodAst.addAccessible(isPublic ? AccessibleType.PUBLIC : AccessibleType.PRIVATE);
             ApsMethodBodyAst methodBodyAst = new ApsMethodBodyAst(methodAst, null);
             ApsVariableAst variableAst = new ApsVariableAst(methodAst);
             variableAst.reference(
@@ -474,7 +474,7 @@ public class ApsMethodAst extends ApsAst implements ApsModifierRequiredAst<ApsMe
         }
     }
 
-    public static ApsMethodAst createByTemplate(String name, Function<ApsMethodAst, ApsMethodBodyAst> bodyGenerator, ApsAst parent) {
+    public static ApsMethodAst createByTemplate(String name, Function<ApsMethodAst, ApsMethodBodyAst> bodyGenerator, LanguageAst parent) {
         ApsMethodAst methodAst = new ApsMethodAst(parent);
         switch (name) {
             case "main" -> {
@@ -488,7 +488,7 @@ public class ApsMethodAst extends ApsAst implements ApsModifierRequiredAst<ApsMe
                         ).nameIdentity("args")
                 );
                 methodAst.addModifier(ApsMethodModifier.create(ApsMethodKeyword.STATIC));
-                methodAst.accessible(ApsAccessibleType.PUBLIC.generic());
+                methodAst.accessible(AccessibleType.PUBLIC.generic());
                 methodAst.param(parameters);
                 methodAst.methodBody(bodyGenerator.apply(methodAst));
             }

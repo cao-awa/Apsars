@@ -2,18 +2,15 @@ package com.github.cao.awa.apsars.visitor.pure;
 
 import com.github.cao.awa.apsars.antlr.pure.PureApsarsBaseVisitor;
 import com.github.cao.awa.apsars.antlr.pure.PureApsarsParser;
-import com.github.cao.awa.apsars.element.ApsAccessibleType;
 import com.github.cao.awa.apsars.element.clazz.ApsMemberParameterModifierType;
 import com.github.cao.awa.apsars.element.method.ApsMethodModifierType;
 import com.github.cao.awa.apsars.element.method.parameter.ApsMethodParamModifierType;
-import com.github.cao.awa.apsars.element.modifier.ApsModifierRequiredAst;
 import com.github.cao.awa.apsars.element.modifier.clazz.ApsClassModifier;
 import com.github.cao.awa.apsars.element.modifier.parameter.ApsMemberParameterModifier;
 import com.github.cao.awa.apsars.element.statement.ApsLocalVariableModifierType;
 import com.github.cao.awa.apsars.parser.token.keyword.clazz.ApsClassKeyword;
 import com.github.cao.awa.apsars.parser.token.keyword.clazz.ApsMemberParameterKeyword;
 import com.github.cao.awa.apsars.translate.java.pool.ApsarsClassPool;
-import com.github.cao.awa.apsars.tree.ApsAst;
 import com.github.cao.awa.apsars.tree.annotation.ApsAnnotationAst;
 import com.github.cao.awa.apsars.tree.aps.ApsFileAst;
 import com.github.cao.awa.apsars.tree.aps.ApsImportAst;
@@ -40,7 +37,10 @@ import com.github.cao.awa.apsars.tree.statement.trys.ApsCatchListAst;
 import com.github.cao.awa.apsars.tree.statement.trys.ApsTryCatchAst;
 import com.github.cao.awa.apsars.tree.statement.variable.ApsVariableAst;
 import com.github.cao.awa.apsars.tree.vararg.ApsArgTypeAst;
-import com.github.cao.awa.sinuatum.manipulate.Manipulate;
+import com.github.cao.awa.language.translator.translate.tree.LanguageAst;
+import com.github.cao.awa.language.translator.translate.tree.modifier.ModifierRequiredAst;
+import com.github.cao.awa.language.translator.translate.tree.modifier.accessible.AccessibleType;
+import com.github.cao.awa.sinuatum.manipulate.QuickManipulate;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.RuleNode;
@@ -50,9 +50,9 @@ import org.apache.logging.log4j.Logger;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class PureApsarsTreeVisitor extends PureApsarsBaseVisitor<ApsAst> {
+public class PureApsarsTreeVisitor extends PureApsarsBaseVisitor<LanguageAst> {
     private static final Logger LOGGER = LogManager.getLogger("ApsarsTreeVisitor");
-    private ApsAst current;
+    private LanguageAst current;
 
     @Override
     public ApsFileAst visitProgram(PureApsarsParser.ProgramContext ctx) {
@@ -63,7 +63,7 @@ public class PureApsarsTreeVisitor extends PureApsarsBaseVisitor<ApsAst> {
     }
 
     @Override
-    public ApsAst visitDefinePackage(PureApsarsParser.DefinePackageContext ctx) {
+    public LanguageAst visitDefinePackage(PureApsarsParser.DefinePackageContext ctx) {
         if (this.current instanceof ApsFileAst fileAst) {
             fileAst.packageAt(ctx.packageIdentifier().getText());
             return this.current;
@@ -72,7 +72,7 @@ public class PureApsarsTreeVisitor extends PureApsarsBaseVisitor<ApsAst> {
     }
 
     @Override
-    public ApsAst visitDefineImport(PureApsarsParser.DefineImportContext ctx) {
+    public LanguageAst visitDefineImport(PureApsarsParser.DefineImportContext ctx) {
         if (this.current instanceof ApsFileAst fileAst) {
             ApsImportAst ast = new ApsImportAst(fileAst);
             ast.fullName(ctx.fullNameIdentifier().getText());
@@ -83,42 +83,42 @@ public class PureApsarsTreeVisitor extends PureApsarsBaseVisitor<ApsAst> {
     }
 
     @Override
-    public ApsAst visitFieldModifiers(PureApsarsParser.FieldModifiersContext ctx) {
+    public LanguageAst visitFieldModifiers(PureApsarsParser.FieldModifiersContext ctx) {
         return visitChildren(ctx);
     }
 
     @Override
-    public ApsAst visitMakeAlternateLet(PureApsarsParser.MakeAlternateLetContext ctx) {
+    public LanguageAst visitMakeAlternateLet(PureApsarsParser.MakeAlternateLetContext ctx) {
         return visitChildren(ctx);
     }
 
     @Override
-    public ApsAst visitOptionalFieldStaticAndFinal(PureApsarsParser.OptionalFieldStaticAndFinalContext ctx) {
+    public LanguageAst visitOptionalFieldStaticAndFinal(PureApsarsParser.OptionalFieldStaticAndFinalContext ctx) {
         return visitChildren(ctx);
     }
 
     @Override
-    public ApsAst visitOptionalStaticAndFinal(PureApsarsParser.OptionalStaticAndFinalContext ctx) {
+    public LanguageAst visitOptionalStaticAndFinal(PureApsarsParser.OptionalStaticAndFinalContext ctx) {
         return visitChildren(ctx);
     }
 
     @Override
-    public ApsAst visitPermissionModifiers(PureApsarsParser.PermissionModifiersContext ctx) {
+    public LanguageAst visitPermissionModifiers(PureApsarsParser.PermissionModifiersContext ctx) {
         return visitChildren(ctx);
     }
 
     @Override
-    public ApsAst visitFieldFinal(PureApsarsParser.FieldFinalContext ctx) {
+    public LanguageAst visitFieldFinal(PureApsarsParser.FieldFinalContext ctx) {
         return visitChildren(ctx);
     }
 
     @Override
-    public ApsAst visitMethodFinal(PureApsarsParser.MethodFinalContext ctx) {
+    public LanguageAst visitMethodFinal(PureApsarsParser.MethodFinalContext ctx) {
         return visitChildren(ctx);
     }
 
     @Override
-    public ApsAst visitClassFinal(PureApsarsParser.ClassFinalContext ctx) {
+    public LanguageAst visitClassFinal(PureApsarsParser.ClassFinalContext ctx) {
         return visitChildren(ctx);
     }
 
@@ -140,16 +140,16 @@ public class PureApsarsTreeVisitor extends PureApsarsBaseVisitor<ApsAst> {
         }
     }
 
-    private void ifPermission(PureApsarsParser.PermissionModifiersContext ctx, ApsModifierRequiredAst<?> ast) {
+    private void ifPermission(PureApsarsParser.PermissionModifiersContext ctx, ModifierRequiredAst<?> ast) {
         if (ctx != null) {
             if (ctx.isPrivate() != null) {
-                ast.addAccessible(ApsAccessibleType.PRIVATE.generic());
+                ast.addAccessible(AccessibleType.PRIVATE.generic());
             }
             if (ctx.isPublic() != null) {
-                ast.addAccessible(ApsAccessibleType.PUBLIC.generic());
+                ast.addAccessible(AccessibleType.PUBLIC.generic());
             }
             if (ctx.isProtected() != null) {
-                ast.addAccessible(ApsAccessibleType.PROTECTED.generic());
+                ast.addAccessible(AccessibleType.PROTECTED.generic());
             }
         }
     }
@@ -206,7 +206,7 @@ public class PureApsarsTreeVisitor extends PureApsarsBaseVisitor<ApsAst> {
         this.current = ast;
 
         if (permissionModifiers == null) {
-            ast.accessible(isConstructor ? ApsAccessibleType.PUBLIC.generic() : ApsAccessibleType.PRIVATE.generic());
+            ast.accessible(isConstructor ? AccessibleType.PUBLIC.generic() : AccessibleType.PRIVATE.generic());
         } else {
             ifPermission(permissionModifiers, ast);
         }
@@ -307,7 +307,7 @@ public class PureApsarsTreeVisitor extends PureApsarsBaseVisitor<ApsAst> {
                 ctx.resultPresenting(),
                 ctx.defineMethodBody(),
                 ctx.methodParamListDefinition(),
-                Manipulate.supplyWhenNotNull(ctx.methodReturnType(), PureApsarsParser.MethodReturnTypeContext::argType),
+                QuickManipulate.supplyWhenNotNull(ctx.methodReturnType(), PureApsarsParser.MethodReturnTypeContext::argType),
                 false
         );
     }
@@ -927,22 +927,22 @@ public class PureApsarsTreeVisitor extends PureApsarsBaseVisitor<ApsAst> {
     }
 
     @Override
-    public ApsAst visitTokenList(PureApsarsParser.TokenListContext ctx) {
+    public LanguageAst visitTokenList(PureApsarsParser.TokenListContext ctx) {
         return super.visitTokenList(ctx);
     }
 
     @Override
-    public ApsAst visitValidToken(PureApsarsParser.ValidTokenContext ctx) {
+    public LanguageAst visitValidToken(PureApsarsParser.ValidTokenContext ctx) {
         return super.visitValidToken(ctx);
     }
 
     @Override
-    public ApsAst visitExtraToken(PureApsarsParser.ExtraTokenContext ctx) {
+    public LanguageAst visitExtraToken(PureApsarsParser.ExtraTokenContext ctx) {
         return super.visitExtraToken(ctx);
     }
 
     @Override
-    public ApsAst visitDefineStatement(PureApsarsParser.DefineStatementContext ctx) {
+    public LanguageAst visitDefineStatement(PureApsarsParser.DefineStatementContext ctx) {
         return visitChildren(ctx);
     }
 
@@ -1032,7 +1032,7 @@ public class PureApsarsTreeVisitor extends PureApsarsBaseVisitor<ApsAst> {
     }
 
     @Override
-    public ApsAst visitDefineClass(PureApsarsParser.DefineClassContext ctx) {
+    public LanguageAst visitDefineClass(PureApsarsParser.DefineClassContext ctx) {
         if (this.current instanceof ApsFileAst fileAst) {
             ApsClassAst ast = new ApsClassAst(fileAst);
             this.current = ast;
@@ -1087,12 +1087,12 @@ public class PureApsarsTreeVisitor extends PureApsarsBaseVisitor<ApsAst> {
     }
 
     @Override
-    public ApsAst visitMakeAlternateLetAndContent(PureApsarsParser.MakeAlternateLetAndContentContext ctx) {
+    public LanguageAst visitMakeAlternateLetAndContent(PureApsarsParser.MakeAlternateLetAndContentContext ctx) {
         return visitChildren(ctx);
     }
 
     @Override
-    public ApsAst visitDefineClassContent(PureApsarsParser.DefineClassContentContext ctx) {
+    public LanguageAst visitDefineClassContent(PureApsarsParser.DefineClassContentContext ctx) {
         if (this.current instanceof ApsClassAst classAst) {
             for (PureApsarsParser.DefineMethodUsingTemplateContext defineMethod : ctx.defineMethodUsingTemplate()) {
                 this.current = classAst;
@@ -1266,8 +1266,8 @@ public class PureApsarsTreeVisitor extends PureApsarsBaseVisitor<ApsAst> {
     }
 
     @Override
-    public ApsAst visitChildren(RuleNode node) {
-        ApsAst parent = this.current;
+    public LanguageAst visitChildren(RuleNode node) {
+        LanguageAst parent = this.current;
         int n = node.getChildCount();
         for (int i = 0; i < n; i++) {
             if (!shouldVisitNextChild(node, null)) {

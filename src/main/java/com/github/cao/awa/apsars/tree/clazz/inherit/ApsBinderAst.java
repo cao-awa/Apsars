@@ -3,14 +3,14 @@ package com.github.cao.awa.apsars.tree.clazz.inherit;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import com.github.cao.awa.apricot.util.collection.ApricotCollectionFactor;
-import com.github.cao.awa.apsars.element.ApsAccessibleType;
 import com.github.cao.awa.apsars.element.clazz.inherit.ApsBinderModifierType;
-import com.github.cao.awa.apsars.element.modifier.ApsAccessibleModifier;
-import com.github.cao.awa.apsars.element.modifier.ApsModifierRequiredAst;
 import com.github.cao.awa.apsars.element.modifier.clazz.inherit.ApsBinderModifier;
-import com.github.cao.awa.apsars.tree.ApsAst;
 import com.github.cao.awa.apsars.tree.method.ApsMethodAst;
 import com.github.cao.awa.apsars.tree.method.parameter.ApsMethodParameterAst;
+import com.github.cao.awa.language.translator.translate.tree.LanguageAst;
+import com.github.cao.awa.language.translator.translate.tree.modifier.ModifierRequiredAst;
+import com.github.cao.awa.language.translator.translate.tree.modifier.accessible.AccessibleModifier;
+import com.github.cao.awa.language.translator.translate.tree.modifier.accessible.AccessibleType;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -21,15 +21,15 @@ import java.util.Map;
 
 @Getter
 @Accessors(fluent = true)
-public class ApsBinderAst extends ApsAst implements ApsModifierRequiredAst<ApsBinderModifier> {
+public class ApsBinderAst extends LanguageAst implements ModifierRequiredAst<ApsBinderModifier> {
     @Setter
     private String nameIdentity;
     private final Map<ApsBinderModifierType, ApsBinderModifier> modifiers = ApricotCollectionFactor.hashMap();
-    private ApsAccessibleModifier accessible = ApsAccessibleType.PUBLIC.generic();
+    private AccessibleModifier accessible = AccessibleType.PUBLIC.generic();
     private final List<ApsBindingParameterAst> parameters = ApricotCollectionFactor.arrayList();
     private final List<ApsMethodAst> methods = ApricotCollectionFactor.arrayList();
 
-    public ApsBinderAst(ApsAst parent) {
+    public ApsBinderAst(LanguageAst parent) {
         super(parent);
     }
 
@@ -71,7 +71,7 @@ public class ApsBinderAst extends ApsAst implements ApsModifierRequiredAst<ApsBi
     }
 
     @Override
-    public void addAccessible(ApsAccessibleModifier modifier) {
+    public void addAccessible(AccessibleModifier modifier) {
         this.accessible = modifier;
     }
 

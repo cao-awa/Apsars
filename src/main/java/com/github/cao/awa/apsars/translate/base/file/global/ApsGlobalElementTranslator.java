@@ -1,14 +1,14 @@
 package com.github.cao.awa.apsars.translate.base.file.global;
 
-import com.github.cao.awa.apsars.translate.ApsTranslator;
-import com.github.cao.awa.apsars.translate.base.ApsElementTranslator;
-import com.github.cao.awa.apsars.translate.lang.element.TranslateElement;
+import com.github.cao.awa.apsars.element.ApsarsTranslateElement;
 import com.github.cao.awa.apsars.tree.global.ApsGlobalAst;
+import com.github.cao.awa.language.translator.translate.LanguageTranslator;
+import com.github.cao.awa.language.translator.translate.base.LanguageElementTranslator;
 
-public interface ApsGlobalElementTranslator extends ApsElementTranslator<ApsGlobalAst> {
-    default void translateMethods(ApsTranslator<ApsGlobalAst> translator) {
+public interface ApsGlobalElementTranslator extends LanguageElementTranslator<ApsGlobalAst> {
+    default void translateMethods(LanguageTranslator<ApsGlobalAst> translator) {
         translator.translator(
-                TranslateElement.METHOD,
+                ApsarsTranslateElement.METHOD,
                 next -> translator.ast().aliasMethods().forEach((name, method) -> next.postTranslate(translator.builder(), method))
         );
     }

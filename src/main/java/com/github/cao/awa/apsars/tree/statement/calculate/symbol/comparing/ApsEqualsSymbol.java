@@ -1,10 +1,10 @@
 package com.github.cao.awa.apsars.tree.statement.calculate.symbol.comparing;
 
-import com.github.cao.awa.apsars.tree.ApsAst;
 import com.github.cao.awa.apsars.tree.statement.calculate.symbol.ApsSymbolAst;
+import com.github.cao.awa.language.translator.translate.tree.LanguageAst;
 
 public class ApsEqualsSymbol extends ApsSymbolAst {
-    public ApsEqualsSymbol(ApsAst ast) {
+    public ApsEqualsSymbol(LanguageAst ast) {
         super(ast);
     }
 

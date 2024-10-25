@@ -3,13 +3,9 @@ package com.github.cao.awa.apsars.tree.clazz;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import com.github.cao.awa.apricot.util.collection.ApricotCollectionFactor;
-import com.github.cao.awa.apsars.element.ApsAccessibleType;
 import com.github.cao.awa.apsars.element.clazz.ApsClassModifierType;
-import com.github.cao.awa.apsars.element.modifier.ApsAccessibleModifier;
-import com.github.cao.awa.apsars.element.modifier.ApsModifierRequiredAst;
 import com.github.cao.awa.apsars.element.modifier.clazz.ApsClassModifier;
 import com.github.cao.awa.apsars.translate.java.pool.ApsarsClassPool;
-import com.github.cao.awa.apsars.tree.ApsAst;
 import com.github.cao.awa.apsars.tree.annotation.ApsAnnotationAst;
 import com.github.cao.awa.apsars.tree.clazz.inherit.ApsBinderAst;
 import com.github.cao.awa.apsars.tree.clazz.inherit.ApsBindingParameterAst;
@@ -17,6 +13,10 @@ import com.github.cao.awa.apsars.tree.method.ApsMethodAst;
 import com.github.cao.awa.apsars.tree.method.ApsMethodBodyAst;
 import com.github.cao.awa.apsars.tree.method.parameter.ApsMethodParamElementAst;
 import com.github.cao.awa.apsars.tree.vararg.ApsArgTypeAst;
+import com.github.cao.awa.language.translator.translate.tree.LanguageAst;
+import com.github.cao.awa.language.translator.translate.tree.modifier.ModifierRequiredAst;
+import com.github.cao.awa.language.translator.translate.tree.modifier.accessible.AccessibleModifier;
+import com.github.cao.awa.language.translator.translate.tree.modifier.accessible.AccessibleType;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -29,11 +29,11 @@ import java.util.function.Function;
 
 @Getter
 @Accessors(fluent = true)
-public class ApsClassAst extends ApsAst implements ApsModifierRequiredAst<ApsClassModifier> {
+public class ApsClassAst extends LanguageAst implements ModifierRequiredAst<ApsClassModifier> {
     @Setter
     private String nameIdentity;
     @Setter
-    private ApsAccessibleModifier accessible = ApsAccessibleType.PRIVATE.generic();
+    private AccessibleModifier accessible = AccessibleType.PRIVATE.generic();
     private final Map<ApsClassModifierType, ApsClassModifier> modifiers = ApricotCollectionFactor.hashMap();
     private final List<ApsMemberParameterAst> parameters = ApricotCollectionFactor.arrayList();
     private final List<ApsMethodAst> methods = ApricotCollectionFactor.arrayList();
@@ -41,7 +41,7 @@ public class ApsClassAst extends ApsAst implements ApsModifierRequiredAst<ApsCla
     private final List<ApsLetAst> lets = ApricotCollectionFactor.arrayList();
     private final List<ApsAnnotationAst> annotations = ApricotCollectionFactor.arrayList();
 
-    public ApsClassAst(ApsAst parent) {
+    public ApsClassAst(LanguageAst parent) {
         super(parent);
     }
 
@@ -179,7 +179,7 @@ public class ApsClassAst extends ApsAst implements ApsModifierRequiredAst<ApsCla
     }
 
     @Override
-    public void addAccessible(ApsAccessibleModifier modifier) {
+    public void addAccessible(AccessibleModifier modifier) {
         this.accessible = modifier;
     }
 

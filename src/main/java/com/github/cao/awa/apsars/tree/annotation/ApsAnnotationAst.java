@@ -1,8 +1,8 @@
 package com.github.cao.awa.apsars.tree.annotation;
 
 import com.alibaba.fastjson2.JSONObject;
-import com.github.cao.awa.apsars.tree.ApsAst;
 import com.github.cao.awa.apsars.tree.statement.ApsStatementAst;
+import com.github.cao.awa.language.translator.translate.tree.LanguageAst;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 
@@ -13,7 +13,7 @@ public class ApsAnnotationAst extends ApsStatementAst {
     public static final String TRY_INLINE = "com.github.cao.awa.apsars.std.TryInline";
     private final String nameIdentity;
 
-    public ApsAnnotationAst(ApsAst ast, String nameIdentity) {
+    public ApsAnnotationAst(LanguageAst ast, String nameIdentity) {
         super(ast);
         this.nameIdentity = nameIdentity;
     }

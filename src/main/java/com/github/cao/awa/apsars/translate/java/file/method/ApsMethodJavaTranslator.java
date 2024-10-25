@@ -1,11 +1,11 @@
 package com.github.cao.awa.apsars.translate.java.file.method;
 
-import com.github.cao.awa.apsars.translate.ApsTranslator;
+import com.github.cao.awa.apsars.element.ApsarsTranslateElement;
 import com.github.cao.awa.apsars.translate.base.file.method.ApsMethodElementTranslator;
 import com.github.cao.awa.apsars.translate.java.ApsJavaTranslator;
-import com.github.cao.awa.apsars.translate.lang.element.TranslateElement;
 import com.github.cao.awa.apsars.tree.annotation.ApsAnnotationAst;
 import com.github.cao.awa.apsars.tree.method.ApsMethodAst;
+import com.github.cao.awa.language.translator.translate.LanguageTranslator;
 
 import java.util.function.Consumer;
 
@@ -13,7 +13,7 @@ public class ApsMethodJavaTranslator extends ApsJavaTranslator<ApsMethodAst> imp
     @Override
     public void translate(StringBuilder builder, ApsMethodAst ast) {
         if (!ast.annotations().isEmpty()) {
-            translator(TranslateElement.ANNOTATION, next -> {
+            translator(ApsarsTranslateElement.ANNOTATION, next -> {
                 for (ApsAnnotationAst annotationAst : ast.annotations()) {
                     next.postTranslate(builder, annotationAst);
                     builder.append(" ");
@@ -34,7 +34,7 @@ public class ApsMethodJavaTranslator extends ApsJavaTranslator<ApsMethodAst> imp
         if (ast.returnType() == null && !ast.isConstructor()) {
             builder.append("void ");
         } else if (ast.returnType() != null) {
-            postTranslate(TranslateElement.ARG_TYPE, ast.returnType());
+            postTranslate(ApsarsTranslateElement.ARG_TYPE, ast.returnType());
             builder.append(" ");
         }
 
@@ -50,7 +50,7 @@ public class ApsMethodJavaTranslator extends ApsJavaTranslator<ApsMethodAst> imp
     }
 
     @Override
-    public void preTranslateBody(Consumer<ApsTranslator<ApsMethodAst>> bodyTranslator) {
+    public void preTranslateBody(Consumer<LanguageTranslator<ApsMethodAst>> bodyTranslator) {
         braces(this, bodyTranslator);
     }
 }

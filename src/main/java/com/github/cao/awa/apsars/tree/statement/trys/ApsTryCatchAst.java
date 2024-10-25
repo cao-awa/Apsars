@@ -1,11 +1,11 @@
 package com.github.cao.awa.apsars.tree.statement.trys;
 
 import com.alibaba.fastjson2.JSONObject;
-import com.github.cao.awa.apsars.tree.ApsAst;
 import com.github.cao.awa.apsars.tree.method.ApsMethodBodyAst;
 import com.github.cao.awa.apsars.tree.statement.ApsStatementAst;
 import com.github.cao.awa.apsars.tree.statement.result.ApsRefReferenceAst;
 import com.github.cao.awa.apsars.tree.statement.variable.ApsVariableAst;
+import com.github.cao.awa.language.translator.translate.tree.LanguageAst;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -21,7 +21,7 @@ public class ApsTryCatchAst extends ApsStatementAst {
     private ApsCatchListAst catchList;
     private final ApsMethodBodyAst parentBody;
 
-    public ApsTryCatchAst(ApsAst parent, ApsMethodBodyAst parentBody) {
+    public ApsTryCatchAst(LanguageAst parent, ApsMethodBodyAst parentBody) {
         super(parent);
         this.parentBody = parentBody;
     }

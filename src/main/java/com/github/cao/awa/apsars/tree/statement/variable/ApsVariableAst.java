@@ -3,12 +3,9 @@ package com.github.cao.awa.apsars.tree.statement.variable;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import com.github.cao.awa.apricot.util.collection.ApricotCollectionFactor;
+import com.github.cao.awa.apsars.element.ApsarsTranslateElement;
 import com.github.cao.awa.apsars.element.modifier.statement.ApsLocalVariableModifier;
 import com.github.cao.awa.apsars.element.statement.ApsLocalVariableModifierType;
-import com.github.cao.awa.apsars.translate.ApsTranslator;
-import com.github.cao.awa.apsars.translate.lang.TranslateTarget;
-import com.github.cao.awa.apsars.translate.lang.element.TranslateElement;
-import com.github.cao.awa.apsars.tree.ApsAst;
 import com.github.cao.awa.apsars.tree.method.ApsMethodBodyAst;
 import com.github.cao.awa.apsars.tree.statement.ApsStatementAst;
 import com.github.cao.awa.apsars.tree.statement.control.ApsIfStatementAst;
@@ -17,6 +14,9 @@ import com.github.cao.awa.apsars.tree.statement.result.ApsRefReferenceAst;
 import com.github.cao.awa.apsars.tree.statement.result.ApsResultPresentingAst;
 import com.github.cao.awa.apsars.tree.statement.result.instance.ApsNewInstanceStatementAst;
 import com.github.cao.awa.apsars.tree.vararg.ApsArgTypeAst;
+import com.github.cao.awa.language.translator.translate.LanguageTranslator;
+import com.github.cao.awa.language.translator.translate.lang.TranslateTarget;
+import com.github.cao.awa.language.translator.translate.tree.LanguageAst;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -38,7 +38,7 @@ public class ApsVariableAst extends ApsStatementAst {
     private int visitArrayIndex = -1;
     private final Map<ApsLocalVariableModifierType, ApsLocalVariableModifier> modifiers = ApricotCollectionFactor.hashMap();
 
-    public ApsVariableAst(ApsAst ast) {
+    public ApsVariableAst(LanguageAst ast) {
         super(ast);
         withEnd(true);
     }
@@ -96,9 +96,9 @@ public class ApsVariableAst extends ApsStatementAst {
     @Override
     public void print(String ident) {
         if (this.defining) {
-            System.out.println("Local variable (" + ApsTranslator.translate(TranslateTarget.JAVA, TranslateElement.ARG_TYPE, this.type) + ") ‘" + ApsTranslator.translate(TranslateTarget.JAVA, TranslateElement.REFERENCE, this.reference) + "': ");
+            System.out.println("Local variable (" + LanguageTranslator.translate(TranslateTarget.JAVA, ApsarsTranslateElement.ARG_TYPE, this.type) + ") ‘" + LanguageTranslator.translate(TranslateTarget.JAVA, ApsarsTranslateElement.REFERENCE, this.reference) + "': ");
         } else {
-            System.out.println("Reassignment local variable (" + ApsTranslator.translate(TranslateTarget.JAVA, TranslateElement.ARG_TYPE, this.type) + ") '" + ApsTranslator.translate(TranslateTarget.JAVA, TranslateElement.REFERENCE, this.reference) + "': ");
+            System.out.println("Reassignment local variable (" + LanguageTranslator.translate(TranslateTarget.JAVA, ApsarsTranslateElement.ARG_TYPE, this.type) + ") '" + LanguageTranslator.translate(TranslateTarget.JAVA, ApsarsTranslateElement.REFERENCE, this.reference) + "': ");
         }
         if (this.assignment != null) {
             System.out.print(ident);

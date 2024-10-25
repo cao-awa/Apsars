@@ -1,10 +1,10 @@
 package com.github.cao.awa.apsars.tree.statement.calculate.symbol.arithmetic;
 
-import com.github.cao.awa.apsars.tree.ApsAst;
 import com.github.cao.awa.apsars.tree.statement.calculate.symbol.ApsSymbolAst;
+import com.github.cao.awa.language.translator.translate.tree.LanguageAst;
 
 public class ApsMinusSymbol extends ApsSymbolAst {
-    public ApsMinusSymbol(ApsAst ast) {
+    public ApsMinusSymbol(LanguageAst ast) {
         super(ast);
     }
 

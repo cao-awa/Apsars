@@ -15,10 +15,6 @@ public class Sample2 {
         int f = 1;
         int g = 1;
 
-        String[] array = null;
-
-        array[1] = "awa";
-
         if (a > b > c > d > e) {
         }
     }

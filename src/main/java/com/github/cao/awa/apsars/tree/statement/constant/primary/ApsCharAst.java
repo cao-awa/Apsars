@@ -1,8 +1,8 @@
 package com.github.cao.awa.apsars.tree.statement.constant.primary;
 
-import com.github.cao.awa.apsars.tree.ApsAst;
 import com.github.cao.awa.apsars.tree.statement.constant.ApsConstantAst;
 import com.github.cao.awa.apsars.tree.vararg.ApsArgTypeAst;
+import com.github.cao.awa.language.translator.translate.tree.LanguageAst;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -13,7 +13,7 @@ import lombok.experimental.Accessors;
 public class ApsCharAst extends ApsConstantAst<Character> {
     private char value;
 
-    public ApsCharAst(ApsAst parent) {
+    public ApsCharAst(LanguageAst parent) {
         super(parent);
     }
 

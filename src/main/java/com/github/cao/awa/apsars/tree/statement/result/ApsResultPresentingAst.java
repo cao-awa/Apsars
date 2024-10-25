@@ -1,13 +1,13 @@
 package com.github.cao.awa.apsars.tree.statement.result;
 
 import com.alibaba.fastjson2.JSONObject;
-import com.github.cao.awa.apsars.translate.ApsTranslator;
-import com.github.cao.awa.apsars.translate.lang.TranslateTarget;
-import com.github.cao.awa.apsars.translate.lang.element.TranslateElement;
-import com.github.cao.awa.apsars.tree.ApsAst;
+import com.github.cao.awa.apsars.element.ApsarsTranslateElement;
 import com.github.cao.awa.apsars.tree.statement.constant.ApsConstantAst;
 import com.github.cao.awa.apsars.tree.statement.special.literal.ApsLiteralStatementAst;
 import com.github.cao.awa.apsars.tree.vararg.ApsArgTypeAst;
+import com.github.cao.awa.language.translator.translate.LanguageTranslator;
+import com.github.cao.awa.language.translator.translate.lang.TranslateTarget;
+import com.github.cao.awa.language.translator.translate.tree.LanguageAst;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -15,29 +15,29 @@ import lombok.experimental.Accessors;
 @Setter
 @Getter
 @Accessors(fluent = true)
-public class ApsResultPresentingAst extends ApsAst {
+public class ApsResultPresentingAst extends LanguageAst {
     private ApsConstantAst<?> constant;
     private ApsLiteralStatementAst literal;
     private ApsRefReferenceAst reference;
     private ApsResultingStatementAst resultingStatement;
 
-    public ApsResultPresentingAst(ApsAst parent) {
+    public ApsResultPresentingAst(LanguageAst parent) {
         super(parent);
     }
 
-    public static ApsResultPresentingAst statement(ApsAst parent, ApsResultingStatementAst statement) {
+    public static ApsResultPresentingAst statement(LanguageAst parent, ApsResultingStatementAst statement) {
         return new ApsResultPresentingAst(parent).resultingStatement(statement);
     }
 
-    public static ApsResultPresentingAst ref(ApsAst parent, String refToken) {
+    public static ApsResultPresentingAst ref(LanguageAst parent, String refToken) {
         return new ApsResultPresentingAst(parent).reference(new ApsRefReferenceAst(parent).nameIdentity(refToken));
     }
 
-    public static ApsResultPresentingAst literal(ApsAst parent, String constant) {
+    public static ApsResultPresentingAst literal(LanguageAst parent, String constant) {
         return new ApsResultPresentingAst(parent).literal(new ApsLiteralStatementAst(null, constant));
     }
 
-    public static ApsResultPresentingAst constant(ApsAst parent, ApsConstantAst<?> constant) {
+    public static ApsResultPresentingAst constant(LanguageAst parent, ApsConstantAst<?> constant) {
         return new ApsResultPresentingAst(parent).constant(constant);
     }
 
@@ -91,9 +91,9 @@ public class ApsResultPresentingAst extends ApsAst {
         } else if (this.resultingStatement != null) {
             this.resultingStatement.print(ident);
         } else if (this.literal != null) {
-            System.out.println("Literal: " + ApsTranslator.translate(TranslateTarget.JAVA, TranslateElement.LITERAL_STATEMENT, this.literal));
+            System.out.println("Literal: " + LanguageTranslator.translate(TranslateTarget.JAVA, ApsarsTranslateElement.LITERAL_STATEMENT, this.literal));
         } else if (this.constant != null) {
-            System.out.println("Constant: " + ApsTranslator.translate(TranslateTarget.JAVA, TranslateElement.CONSTANT, this.constant));
+            System.out.println("Constant: " + LanguageTranslator.translate(TranslateTarget.JAVA, ApsarsTranslateElement.CONSTANT, this.constant));
         }
     }
 

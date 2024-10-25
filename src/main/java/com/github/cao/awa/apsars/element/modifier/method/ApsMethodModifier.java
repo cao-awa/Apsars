@@ -1,10 +1,10 @@
 package com.github.cao.awa.apsars.element.modifier.method;
 
 import com.github.cao.awa.apsars.element.method.ApsMethodModifierType;
-import com.github.cao.awa.apsars.element.modifier.ApsModifier;
 import com.github.cao.awa.apsars.parser.token.keyword.method.ApsMethodKeyword;
+import com.github.cao.awa.language.translator.translate.tree.modifier.ElementModifier;
 
-public abstract class ApsMethodModifier extends ApsModifier<ApsMethodModifierType> {
+public abstract class ApsMethodModifier extends ElementModifier<ApsMethodModifierType> {
     public static ApsMethodModifier create(ApsMethodKeyword keyword) {
         return switch (keyword) {
             case FINAL -> new ApsMethodFinalModifier();

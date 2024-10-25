@@ -1,11 +1,11 @@
 package com.github.cao.awa.apsars.tree.statement.invoke;
 
-import com.github.cao.awa.apsars.tree.ApsAst;
 import com.github.cao.awa.apsars.tree.method.ApsMethodBodyAst;
 import com.github.cao.awa.apsars.tree.statement.result.ApsRefReferenceAst;
 import com.github.cao.awa.apsars.tree.statement.result.ApsResultPresentingAst;
 import com.github.cao.awa.apsars.tree.statement.variable.ApsVariableAst;
 import com.github.cao.awa.apsars.tree.vararg.ApsArgTypeAst;
+import com.github.cao.awa.language.translator.translate.tree.LanguageAst;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -21,7 +21,7 @@ public class ApsInvokeObjectAst extends ApsInvokeAst {
         return this;
     }
 
-    public ApsInvokeObjectAst(ApsAst ast) {
+    public ApsInvokeObjectAst(LanguageAst ast) {
         super(ast);
     }
 

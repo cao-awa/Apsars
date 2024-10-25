@@ -4,17 +4,18 @@ import com.alibaba.fastjson2.JSONObject;
 import com.alibaba.fastjson2.JSONWriter;
 import com.github.cao.awa.apricot.util.io.IOUtil;
 import com.github.cao.awa.apsars.builtin.ApsarsBuiltin;
-import com.github.cao.awa.apsars.translate.ApsTranslator;
-import com.github.cao.awa.apsars.translate.lang.TranslateTarget;
-import com.github.cao.awa.apsars.translate.lang.element.TranslateElement;
+import com.github.cao.awa.apsars.element.ApsarsTranslateElement;
+import com.github.cao.awa.apsars.translate.java.ApsJavaTranslator;
 import com.github.cao.awa.apsars.tree.aps.ApsFileAst;
+import com.github.cao.awa.language.translator.translate.LanguageTranslator;
+import com.github.cao.awa.language.translator.translate.lang.TranslateTarget;
 
 import java.io.FileReader;
 
 public class Main {
     public static void main(String[] args) {
         try {
-            ApsTranslator.registerJava();
+            ApsJavaTranslator.postRegister();
 
             ApsarsBuiltin.generateBuiltin(
                     "src/main/java/com/github/cao/awa/apsars/std",
@@ -41,7 +42,7 @@ public class Main {
 
             System.out.println("-- Generate java");
 
-            String generatedJava = ApsTranslator.translate(TranslateTarget.JAVA, TranslateElement.FILE, ast);
+            String generatedJava = LanguageTranslator.translate(TranslateTarget.JAVA, ApsarsTranslateElement.FILE, ast);
             System.out.println(generatedJava);
 
 //            System.out.println("-- Native java");

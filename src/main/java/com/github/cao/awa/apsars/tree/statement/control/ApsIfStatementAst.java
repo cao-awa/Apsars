@@ -1,7 +1,6 @@
 package com.github.cao.awa.apsars.tree.statement.control;
 
 import com.alibaba.fastjson2.JSONObject;
-import com.github.cao.awa.apsars.tree.ApsAst;
 import com.github.cao.awa.apsars.tree.annotation.ApsAnnotationAst;
 import com.github.cao.awa.apsars.tree.clazz.ApsClassAst;
 import com.github.cao.awa.apsars.tree.method.ApsMethodBodyAst;
@@ -11,6 +10,7 @@ import com.github.cao.awa.apsars.tree.statement.result.ApsResultingStatementAst;
 import com.github.cao.awa.apsars.tree.statement.result.ApsYieldAst;
 import com.github.cao.awa.apsars.tree.statement.variable.ApsVariableAst;
 import com.github.cao.awa.apsars.tree.vararg.ApsArgTypeAst;
+import com.github.cao.awa.language.translator.translate.tree.LanguageAst;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -24,7 +24,7 @@ public class ApsIfStatementAst extends ApsResultingStatementAst {
     private ApsIfStatementAst elseIfStatement;
     private ApsResultPresentingAst predicate;
 
-    public ApsIfStatementAst(ApsAst ast) {
+    public ApsIfStatementAst(LanguageAst ast) {
         super(ast);
     }
 

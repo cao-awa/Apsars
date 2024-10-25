@@ -1,35 +1,35 @@
 package com.github.cao.awa.apsars.translate.base.file.method.body.statement.control;
 
-import com.github.cao.awa.apsars.translate.ApsTranslator;
+import com.github.cao.awa.apsars.element.ApsarsTranslateElement;
 import com.github.cao.awa.apsars.translate.base.file.method.body.statement.resulting.ApsResultingStatementElementTranslator;
-import com.github.cao.awa.apsars.translate.lang.element.TranslateElement;
 import com.github.cao.awa.apsars.tree.statement.control.ApsIfStatementAst;
+import com.github.cao.awa.language.translator.translate.LanguageTranslator;
 
 public interface ApsIfStatementElementTranslator extends ApsResultingStatementElementTranslator<ApsIfStatementAst> {
-    default void translatePredicate(ApsTranslator<ApsIfStatementAst> translator) {
+    default void translatePredicate(LanguageTranslator<ApsIfStatementAst> translator) {
         translator.postNextTranslate(
-                TranslateElement.RESULT_PRESENTING_STATEMENT,
+                ApsarsTranslateElement.RESULT_PRESENTING_STATEMENT,
                 ApsIfStatementAst::predicate
         );
     }
 
-    default void translateContext(ApsTranslator<ApsIfStatementAst> translator) {
+    default void translateContext(LanguageTranslator<ApsIfStatementAst> translator) {
         translator.postNextTranslate(
-                TranslateElement.METHOD_BODY,
+                ApsarsTranslateElement.METHOD_BODY,
                 ApsIfStatementAst::statements
         );
     }
 
-    default void translateElse(ApsTranslator<ApsIfStatementAst> translator) {
+    default void translateElse(LanguageTranslator<ApsIfStatementAst> translator) {
         translator.postNextTranslate(
-                TranslateElement.METHOD_BODY,
+                ApsarsTranslateElement.METHOD_BODY,
                 ApsIfStatementAst::elseStatements
         );
     }
 
-    default void translateElseIf(ApsTranslator<ApsIfStatementAst> translator) {
+    default void translateElseIf(LanguageTranslator<ApsIfStatementAst> translator) {
         translator.postNextTranslate(
-                TranslateElement.IF_STATEMENT,
+                ApsarsTranslateElement.IF_STATEMENT,
                 ApsIfStatementAst::elseIfStatement
         );
     }

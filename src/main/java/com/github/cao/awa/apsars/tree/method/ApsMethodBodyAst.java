@@ -2,7 +2,6 @@ package com.github.cao.awa.apsars.tree.method;
 
 import com.alibaba.fastjson2.JSONObject;
 import com.github.cao.awa.apricot.util.collection.ApricotCollectionFactor;
-import com.github.cao.awa.apsars.tree.ApsAst;
 import com.github.cao.awa.apsars.tree.clazz.ApsClassAst;
 import com.github.cao.awa.apsars.tree.clazz.ApsMemberParameterAst;
 import com.github.cao.awa.apsars.tree.statement.ApsStatementAst;
@@ -10,6 +9,7 @@ import com.github.cao.awa.apsars.tree.statement.invoke.ApsInvokeAst;
 import com.github.cao.awa.apsars.tree.statement.reference.ApsReferenceLocatableStatement;
 import com.github.cao.awa.apsars.tree.statement.special.literal.ApsLiteralStatementAst;
 import com.github.cao.awa.apsars.tree.statement.variable.ApsVariableAst;
+import com.github.cao.awa.language.translator.translate.tree.LanguageAst;
 import kotlin.Pair;
 import lombok.Getter;
 import lombok.experimental.Accessors;
@@ -22,13 +22,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 @Getter
 @Accessors(fluent = true)
-public class ApsMethodBodyAst extends ApsAst implements ApsReferenceLocatableStatement {
+public class ApsMethodBodyAst extends LanguageAst implements ApsReferenceLocatableStatement {
     private final Map<String, Pair<ApsVariableAst, ApsVariableAst>> duplicatedFieldVariables = ApricotCollectionFactor.hashMap();
     private final LinkedList<ApsVariableAst> fieldVariables = ApricotCollectionFactor.linkedList();
     private final LinkedList<ApsStatementAst> statements = ApricotCollectionFactor.linkedList();
     private final ApsMethodBodyAst parentBody;
 
-    public ApsMethodBodyAst(ApsAst parent, ApsMethodBodyAst parentBody) {
+    public ApsMethodBodyAst(LanguageAst parent, ApsMethodBodyAst parentBody) {
         super(parent);
         this.parentBody = parentBody;
     }

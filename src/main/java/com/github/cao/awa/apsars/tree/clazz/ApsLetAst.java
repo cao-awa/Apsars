@@ -3,13 +3,13 @@ package com.github.cao.awa.apsars.tree.clazz;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import com.github.cao.awa.apricot.util.collection.ApricotCollectionFactor;
-import com.github.cao.awa.apsars.element.modifier.ApsAccessibleModifier;
-import com.github.cao.awa.apsars.element.modifier.ApsModifier;
-import com.github.cao.awa.apsars.element.modifier.ApsModifierRequiredAst;
 import com.github.cao.awa.apsars.element.modifier.method.ApsMethodModifier;
 import com.github.cao.awa.apsars.element.modifier.parameter.ApsMemberParameterModifier;
-import com.github.cao.awa.apsars.tree.ApsAst;
 import com.github.cao.awa.apsars.tree.method.ApsMethodAst;
+import com.github.cao.awa.language.translator.translate.tree.LanguageAst;
+import com.github.cao.awa.language.translator.translate.tree.modifier.ElementModifier;
+import com.github.cao.awa.language.translator.translate.tree.modifier.ModifierRequiredAst;
+import com.github.cao.awa.language.translator.translate.tree.modifier.accessible.AccessibleModifier;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -20,13 +20,13 @@ import java.util.Set;
 
 @Getter
 @Accessors(fluent = true)
-public class ApsLetAst extends ApsAst implements ApsModifierRequiredAst<ApsModifier<?>> {
-    private final List<ApsModifier<?>> modifiers = ApricotCollectionFactor.arrayList();
+public class ApsLetAst extends LanguageAst implements ModifierRequiredAst<ElementModifier<?>> {
+    private final List<ElementModifier<?>> modifiers = ApricotCollectionFactor.arrayList();
     private final List<ApsMethodAst> methods = ApricotCollectionFactor.arrayList();
     private final List<ApsMemberParameterAst> parameters = ApricotCollectionFactor.arrayList();
     private final Set<String> compilerFlags = ApricotCollectionFactor.hashSet();
     @Setter
-    private ApsAccessibleModifier accessible = null;
+    private AccessibleModifier accessible = null;
 
     public void addMethod(ApsMethodAst method) {
         this.methods.add(method);
@@ -37,20 +37,20 @@ public class ApsLetAst extends ApsAst implements ApsModifierRequiredAst<ApsModif
     }
 
     @Override
-    public Collection<ApsModifier<?>> modifierValues() {
+    public Collection<ElementModifier<?>> modifierValues() {
         return this.modifiers;
     }
 
-    public void addModifier(final ApsModifier<?> modifier) {
+    public void addModifier(final ElementModifier<?> modifier) {
         this.modifiers.add(modifier);
     }
 
     @Override
-    public void addAccessible(ApsAccessibleModifier modifier) {
+    public void addAccessible(AccessibleModifier modifier) {
         this.accessible = modifier;
     }
 
-    public ApsLetAst(ApsAst parent) {
+    public ApsLetAst(LanguageAst parent) {
         super(parent);
     }
 
@@ -77,7 +77,7 @@ public class ApsLetAst extends ApsAst implements ApsModifierRequiredAst<ApsModif
         json.put("parameters", parameters);
 
         JSONArray modifiers = new JSONArray();
-        for (ApsModifier<?> modifier : this.modifiers) {
+        for (ElementModifier<?> modifier : this.modifiers) {
             modifiers.add(modifier.literal());
         }
         json.put("apply_modifiers", modifiers);
@@ -93,7 +93,7 @@ public class ApsLetAst extends ApsAst implements ApsModifierRequiredAst<ApsModif
         ApsClassAst classAst = findAst(ApsClassAst.class);
 
         if (!this.modifiers.isEmpty()) {
-            for (ApsModifier<?> modifier : this.modifiers) {
+            for (ElementModifier<?> modifier : this.modifiers) {
                 if (modifier instanceof ApsMethodModifier methodModifier) {
                     for (ApsMethodAst method : methods()) {
                         method.addModifierIgnoredPresent(methodModifier);

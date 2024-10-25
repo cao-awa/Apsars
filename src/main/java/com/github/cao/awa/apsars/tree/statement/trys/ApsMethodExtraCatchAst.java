@@ -1,8 +1,8 @@
 package com.github.cao.awa.apsars.tree.statement.trys;
 
 import com.alibaba.fastjson2.JSONObject;
-import com.github.cao.awa.apsars.tree.ApsAst;
 import com.github.cao.awa.apsars.tree.method.ApsMethodBodyAst;
+import com.github.cao.awa.language.translator.translate.tree.LanguageAst;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -10,12 +10,12 @@ import lombok.experimental.Accessors;
 @Setter
 @Getter
 @Accessors(fluent = true)
-public class ApsMethodExtraCatchAst extends ApsAst {
+public class ApsMethodExtraCatchAst extends LanguageAst {
     private ApsMethodBodyAst methodBody;
     private ApsMethodBodyAst catchingMethodBody;
     private ApsCatchListAst catchList;
 
-    public ApsMethodExtraCatchAst(ApsAst parent) {
+    public ApsMethodExtraCatchAst(LanguageAst parent) {
         super(parent);
     }
 

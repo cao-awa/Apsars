@@ -1,8 +1,8 @@
 package com.github.cao.awa.apsars.tree.aps;
 
 import com.alibaba.fastjson2.JSONObject;
-import com.github.cao.awa.apsars.tree.ApsAst;
 import com.github.cao.awa.apsars.tree.vararg.ApsArgTypeAst;
+import com.github.cao.awa.language.translator.translate.tree.LanguageAst;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -10,7 +10,7 @@ import lombok.experimental.Accessors;
 @Setter
 @Getter
 @Accessors(fluent = true)
-public class ApsImportAst extends ApsAst {
+public class ApsImportAst extends LanguageAst {
     private String fullName;
     private ApsArgTypeAst argType;
     private boolean importStatic;
